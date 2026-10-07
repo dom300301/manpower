@@ -47,6 +47,7 @@ HERE = Path(__file__).resolve().parent
 COVER_MAX_CHARS = 120          # 第一頁內文少於此字數視為封面
 MIN_IMAGE_BYTES = 500          # 小於此大小的圖形物件視為裝飾（文字方塊、線條），略過
 MAX_NUMBER_SENTENCES = 10
+APPENDIX_RE = re.compile(r"^(?:附表|附件|附錄|參考資料)")
 SECTION_MAX_CHARS = 40         # 主題分頁標題頁的字數上限
 SECTION_RE = re.compile(r"^(?:[壹貳參肆伍陸柒捌玖拾]+[、.．]|第[一二三四五六七八九十百0-9０-９]+[章篇部節類]|專區)")
 
@@ -416,6 +417,21 @@ def parse_docx(path: Path, images: ImageStore) -> dict:
         if (not has_rich and page_chars <= SECTION_MAX_CHARS and SECTION_RE.match(first_text(page))
                 and not any(b["kind"] == "p" and (b["bold"] or b["heading"]) for b in lines[1:])):
             section = next(b for b in page if b["text"].strip())["text"].strip()
+            continue
+
+        # 附表／附件：頁首以「附表、附件、附錄」開頭者自成一筆（跨頁表格的續頁會併入），不併入最後一題
+        if APPENDIX_RE.match(first_text(page)):
+            first = next(b for b in page if b["text"].strip())
+            body_blocks = [b for b in page if b is not first]
+            items.append(dict(
+                title=first["text"].strip(), pre="附錄",
+                html="".join(b["html"] for b in body_blocks),
+                text="\n".join(b["text"] for b in body_blocks),
+                para_text="", pages=1,
+                hasTable=any(b["kind"] == "tbl" for b in body_blocks),
+                hasImage=any("<img" in b["html"] for b in body_blocks),
+            ))
+            section = "附錄"
             continue
 
         # 找題目
