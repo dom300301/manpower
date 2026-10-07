@@ -47,6 +47,8 @@ HERE = Path(__file__).resolve().parent
 COVER_MAX_CHARS = 120          # 第一頁內文少於此字數視為封面
 MIN_IMAGE_BYTES = 500          # 小於此大小的圖形物件視為裝飾（文字方塊、線條），略過
 MAX_NUMBER_SENTENCES = 10
+SECTION_MAX_CHARS = 40         # 主題分頁標題頁的字數上限
+SECTION_RE = re.compile(r"^(?:[壹貳參肆伍陸柒捌玖拾]+[、.．]|第[一二三四五六七八九十百0-9０-９]+[章篇部節類]|專區)")
 
 NUM_RE = re.compile(r"[0-9０-９]|[一二三四五六七八九十百千萬億零〇]+(?:人|名|員|個|％|%|億|萬|年|元|席|案|類|成)")
 SENT_SPLIT_RE = re.compile(r"(?<=[。；！？!?；])|\n")
@@ -377,34 +379,71 @@ def parse_docx(path: Path, images: ImageStore) -> dict:
             pages[-1].append(dict(kind="tbl", html=h, text=t, bold=False, heading=False))
     pages = [p for p in pages if p]
 
-    dept = ""
+    def first_text(page):
+        b = next((b for b in page if b["text"].strip()), None)
+        return re.sub(r"[\s\u3000]", "", b["text"]) if b else ""
+
+    def is_toc(page):
+        t = first_text(page)
+        return len(t) <= 20 and t.endswith(("目錄", "目次", "目錄表"))
+
+    # 本檔若以 Word「標題」樣式標示題目（至少 2 題），則只認標題樣式段落為題目；
+    # 其他頁面開頭的粗體段落（答復要點）視為上一題的跨頁內容，避免一題被切成多題
+    heading_titles = 0
+    for page in pages:
+        b = next((b for b in page if b["kind"] == "p" and (b["bold"] or b["heading"])), None)
+        if b and b["heading"] and not SECTION_RE.match(b["text"]) and not is_toc(page):
+            heading_titles += 1
+    heading_mode = heading_titles >= 2
+
+    cover = ""
+    section = ""
     items = []
     in_toc = False
     for idx, page in enumerate(pages):
-        # 目錄頁：第一段為「目錄／目次」者略過；緊接其後、沒有題目的頁面視為目錄續頁
-        first = next((b for b in page if b["text"].strip()), None)
-        if first is not None and re.sub(r"[\s\u3000]", "", first["text"]) in ("目錄", "目次", "目錄表"):
+        # 目錄頁：第一段以「目錄／目次」結尾者略過（如「組編人力處目錄」）；其後沒有題目的頁面視為目錄續頁
+        if is_toc(page):
             in_toc = True
             continue
-        if in_toc and not any(b["kind"] == "p" and b["bold"] for b in page):
+        if in_toc and not any(b["kind"] == "p" and (b["bold"] or b["heading"]) for b in page):
             continue
         in_toc = False
 
-        # 找題目：第一個整段粗體的段落
-        title_i = next((i for i, b in enumerate(page) if b["kind"] == "p" and b["bold"]), None)
+        page_chars = sum(len(b["text"].strip()) for b in page)
+        has_rich = any(b["kind"] == "tbl" or "<img" in b["html"] for b in page)
+        # 主題分頁標題（如「壹、與組織編制有關」）：整頁只有短短一行，記為後續題目的分類標籤
+        lines = [b for b in page if b["text"].strip()]
+        if (not has_rich and page_chars <= SECTION_MAX_CHARS and SECTION_RE.match(first_text(page))
+                and not any(b["kind"] == "p" and (b["bold"] or b["heading"]) for b in lines[1:])):
+            section = next(b for b in page if b["text"].strip())["text"].strip()
+            continue
+
+        # 找題目
+        if heading_mode:
+            title_i = next((i for i, b in enumerate(page) if b["kind"] == "p" and b["heading"]), None)
+        else:
+            title_i = next((i for i, b in enumerate(page) if b["kind"] == "p" and b["bold"]), None)
+        # 同一頁先有分類標題、後有題目：分類標題記為標籤，題目取下一個
+        if title_i is not None and SECTION_RE.match(page[title_i]["text"].strip()):
+            key = "heading" if heading_mode else "bold"
+            nxt = next((i for i in range(title_i + 1, len(page)) if page[i]["kind"] == "p" and page[i][key]), None)
+            if nxt is not None:
+                section = page[title_i]["text"].strip()
+                page = page[:title_i] + page[title_i + 1:]
+                title_i = nxt - 1
         pre = [b for b in page[:title_i] if b["kind"] == "p"] if title_i is not None else []
         body_blocks = page[title_i + 1:] if title_i is not None else page
         body_chars = sum(len(b["text"].strip()) for b in body_blocks)
-        has_rich = any(b["kind"] == "tbl" or "<img" in b["html"] for b in page)
 
-        if idx == 0 and not items and body_chars < COVER_MAX_CHARS and not has_rich:
-            # 封面：第一段當科別
-            first = next((b for b in page if b["text"].strip()), None)
-            dept = first["text"].strip() if first else ""
+        # 封面：只看第一頁；題目樣式的段落（標題樣式、或以問號結尾）不會被當成封面
+        looks_like_q = title_i is not None and (heading_mode or page[title_i]["text"].strip().endswith(("？", "?")))
+        if idx == 0 and not items and body_chars < COVER_MAX_CHARS and not has_rich and not looks_like_q:
+            # 封面：第一段記為封面文字（僅供參考，來源以檔名顯示）
+            cover = first_text(page)
             continue
 
         if title_i is None:
-            # 沒有粗體標題的頁面：併入前一題（跨頁內容）
+            # 沒有題目的頁面：併入前一題（跨頁內容）
             if items:
                 items[-1]["html"] += "".join(b["html"] for b in page)
                 items[-1]["text"] += "\n" + "\n".join(b["text"] for b in page)
@@ -415,9 +454,10 @@ def parse_docx(path: Path, images: ImageStore) -> dict:
         else:
             title = page[title_i]["text"].strip()
 
+        pre_text = " ".join(b["text"].strip() for b in pre if b["text"].strip())
         items.append(dict(
             title=title,
-            pre=" ".join(b["text"].strip() for b in pre if b["text"].strip()),
+            pre=" ".join(x for x in (section, pre_text) if x),
             html="".join(b["html"] for b in body_blocks),
             text="\n".join(b["text"] for b in body_blocks),
             # 數字速查只取段落文字，表格內容不拆句（表格會完整顯示在全文中）
@@ -427,9 +467,10 @@ def parse_docx(path: Path, images: ImageStore) -> dict:
             hasImage=any("<img" in b["html"] for b in body_blocks),
         ))
 
-    if not dept:
-        dept = path.stem
-    return dict(file=path.name, dept=dept, items=items)
+    # 來源一律以檔名顯示（同一題的摘要版／詳細版等不同版本，靠檔名區分）
+    return dict(file=path.name, dept=path.stem, items=items, cover=cover,
+                mode="標題樣式" if heading_mode else "粗體段落")
+
 
 
 def number_sentences(text: str) -> list[str]:
@@ -613,7 +654,7 @@ def build(input_dir: Path, output: Path, synonyms_path: Path, template_path: Pat
     docs, items = [], []
     for f in files:
         d = parse_docx(f, images)
-        docs.append(dict(file=d["file"], dept=d["dept"], count=len(d["items"])))
+        docs.append(dict(file=d["file"], dept=d["dept"], count=len(d["items"]), mode=d["mode"]))
         for order, it in enumerate(d["items"], 1):
             full = it["title"] + "\n" + it["text"]
             tags = [name for name, words in topics.items() if any(w in full for w in words)]
@@ -629,16 +670,24 @@ def build(input_dir: Path, output: Path, synonyms_path: Path, template_path: Pat
 
     print(f"讀取 {len(files)} 份檔案，切出 {len(items)} 題，內嵌圖片 {images.count} 張（略過裝飾物件 {images.skipped} 個）")
     for d in docs:
-        print(f"  - {d['file']}  科別={d['dept']}  題數={d['count']}")
+        warn = "  ⚠ 0 題：此檔沒有可辨識的題目" if d["count"] == 0 else ""
+        print(f"  - {d['file']}  題數={d['count']}  （題目判定：{d['mode']}）{warn}")
     if report_only:
         print("\n題目清單（請核對切題是否正確）：")
         for it in items:
-            flag = " ⚠" if it["title"].startswith("（未偵測到題目）") else ""
+            flag = ""
+            if it["title"].startswith("（未偵測到題目）"):
+                flag = " ⚠未偵測到題目"
+            elif len(it["text"].strip()) < 30:
+                flag = " ⚠內容過短（可能是分隔頁）"
+            elif len(it["title"]) > 120:
+                flag = " ⚠題目過長（可能把內文當題目）"
             extra = []
             if it["hasTable"]: extra.append("表")
             if it["hasImage"]: extra.append("圖")
             if it["pages"] > 1: extra.append(f"{it['pages']}頁")
-            print(f"[{it['dept']}] {it['order']:3d}. {it['title'][:60]}{flag}  {' '.join(extra)}")
+            sec = f"〔{it['pre'][:12]}〕" if it["pre"] else ""
+            print(f"[{it['dept'][:16]}] {it['order']:3d}. {sec}{it['title'][:50]}{flag}  {' '.join(extra)}")
         return
 
     # 第二階段：語意相近題目（本機模型，離線計算；環境不具備時自動略過）

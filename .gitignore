@@ -11,3 +11,4 @@ qa-search/models/
 qa-search/.cache/
 qa-search/public/
 qa-search/.firebase/
+qa-search/report.txt

@@ -130,7 +130,7 @@ footer{color:var(--muted);font-size:.8em;text-align:center;padding:10px}
   </div>
   <div class="searchrow">
     <input id="q" type="search" placeholder="輸入關鍵字，空格分隔表示同時符合（例：司法 員額）" autofocus autocomplete="off">
-    <button id="filterBtn" title="科別與主題篩選">篩選</button>
+    <button id="filterBtn" title="來源與主題篩選">篩選</button>
     <button id="semBtn" style="display:none" title="以語意比對，找出用詞不同但意思相近的題目">語意搜尋：關</button>
     <button id="clearBtn">清除</button>
   </div>
@@ -182,7 +182,7 @@ const deptPrefix=(()=>{ if(depts.length<2) return ''; let p=depts[0]; for(const 
 const shortDept=d=>d.startsWith(deptPrefix)? d.slice(deptPrefix.length).trim()||d : d;
 const isMobile=()=>matchMedia('(max-width:900px)').matches;
 function renderChips(){
-  const dc=$('#deptChips'); dc.innerHTML='<span class="lbl">科別</span>';
+  const dc=$('#deptChips'); dc.innerHTML='<span class="lbl">來源</span>';
   depts.forEach(d=>{
     const b=document.createElement('button'); b.className='chip'+(state.dept===d?' on':''); b.textContent=shortDept(d); b.title=d;
     b.onclick=()=>{ state.dept = state.dept===d?null:d; renderChips(); search(); }; dc.appendChild(b);
@@ -313,7 +313,11 @@ function show(id){
   const sem=(it.related||[]).map(r=>byId(r.id)).filter(Boolean);
   const semIds=new Set(sem.map(o=>o.id));
   const topicRel=items.filter(o=>o.id!==it.id && !semIds.has(o.id) && o.topics.some(t=>it.topics.includes(t)));
-  const rel=[...sem.map(o=>({o,why:DATA.semantic?'語意相近':'內容相近'})), ...topicRel.map(o=>({o,why:'同主題'}))].slice(0,10);
+  // 其他版本：題目幾乎相同的題目（如摘要版／詳細版、處長版／科內版）
+  const ver=items.filter(o=>o.id!==it.id && titleSim(o.title,it.title)>=0.6).sort((a,b)=>titleSim(b.title,it.title)-titleSim(a.title,it.title));
+  const verIds=new Set(ver.map(o=>o.id));
+  const rel=[...ver.map(o=>({o,why:'其他版本'})),
+    ...[...sem.filter(o=>!verIds.has(o.id)).map(o=>({o,why:DATA.semantic?'語意相近':'內容相近'})), ...topicRel.filter(o=>!verIds.has(o.id)).map(o=>({o,why:'同主題'}))].slice(0,10)];
   const el=$('#detail');
   el.innerHTML=`
     <div class="dbar"><button id="backBtn">← 回列表</button><span class="spacer"></span><button id="copyBtn2">複製全文</button></div>
@@ -346,6 +350,11 @@ function show(id){
   document.body.classList.add('showdetail'); window.scrollTo(0,0);
   const recent=pref.get('recent',[]).filter(x=>x!==id); recent.unshift(id); pref.set('recent',recent.slice(0,10));
 }
+// 題目相似度：去掉編號與標點後，以兩字詞重疊比例（Dice）計算
+const normTitle=t=>t.replace(/^[\s\d０-９一二三四五六七八九十百壹貳參肆伍陸柒捌玖拾()（）、.．\-–]+/,'').replace(/[^0-9A-Za-z\u4e00-\u9fff]/g,'');
+const bgCache=new Map();
+function bg(t){ if(!bgCache.has(t)){ const n=normTitle(t), s=new Set(); for(let i=0;i<n.length-1;i++) s.add(n.slice(i,i+2)); bgCache.set(t,s);} return bgCache.get(t); }
+function titleSim(a,b){ const A=bg(a),B=bg(b); if(!A.size||!B.size) return 0; let n=0; for(const x of A) if(B.has(x)) n++; return 2*n/(A.size+B.size); }
 function closeDetail(){ document.body.classList.remove('showdetail'); }
 addEventListener('popstate',()=>{ if(document.body.classList.contains('showdetail')) closeDetail(); });
 function gotoHit(i){
