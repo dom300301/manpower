@@ -1,0 +1,11 @@
+# 質詢資料與產出網頁一律不進版控（避免資料外流）
+qa-search/input/
+qa-search/output/
+*.doc
+*.docx
+.venv/
+__pycache__/
+# 原本地端的語意模型與執行引擎（檔案大，留在本機）
+qa-search/vendor/
+qa-search/models/
+qa-search/.cache/

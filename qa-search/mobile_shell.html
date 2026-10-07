@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>質詢擬答查詢</title>
+<style>
+:root{--bg:#f5f6f8;--panel:#fff;--text:#1c1e21;--muted:#6b7280;--line:#e2e5ea;--accent:#1f5fa8;--danger:#b4232c}
+@media (prefers-color-scheme: dark){:root{--bg:#121417;--panel:#1b1e23;--text:#e7e9ee;--muted:#9aa3b2;--line:#2b3038;--accent:#7fb1f0;--danger:#ff8a8a}}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--bg);color:var(--text);font:17px/1.6 -apple-system,"Noto Sans TC","Microsoft JhengHei",sans-serif;display:flex;align-items:center;justify-content:center;padding:16px}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:24px 20px;width:100%;max-width:380px}
+h1{font-size:1.25em;margin:0 0 4px}
+p{color:var(--muted);font-size:.9em;margin:0 0 16px}
+input{width:100%;font:inherit;font-size:1.1em;padding:12px;border:2px solid var(--line);border-radius:10px;background:var(--bg);color:var(--text)}
+input:focus{outline:none;border-color:var(--accent)}
+label.show{display:flex;align-items:center;gap:6px;color:var(--muted);font-size:.9em;margin:10px 0 14px}
+label.show input{width:auto}
+button{width:100%;font:inherit;font-size:1.1em;padding:12px;border:none;border-radius:10px;background:var(--accent);color:#fff;cursor:pointer}
+button:disabled{opacity:.6}
+#msg{min-height:1.4em;margin-top:12px;font-size:.9em;color:var(--danger)}
+#msg.ok{color:var(--muted)}
+</style>
+</head>
+<body>
+<form class="box" id="f" autocomplete="off">
+  <h1>質詢擬答查詢</h1>
+  <p>本頁內容已加密，請輸入密碼後檢視。</p>
+  <input id="pw" type="password" placeholder="密碼" autofocus enterkeyhint="go">
+  <label class="show"><input type="checkbox" id="sh"> 顯示密碼</label>
+  <button id="go" type="submit">開啟</button>
+  <div id="msg"></div>
+</form>
+<script id="enc" type="application/json">/*__ENC__*/</script>
+<script>
+(function(){
+const $=s=>document.querySelector(s);
+const E=JSON.parse($('#enc').textContent);
+const b64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+$('#sh').onchange=e=>{ $('#pw').type=e.target.checked?'text':'password'; };
+if(!(window.crypto && crypto.subtle && window.DecompressionStream)){
+  $('#msg').textContent='此瀏覽器版本過舊，無法開啟。請改用最新版 Chrome。'; $('#go').disabled=true; return;
+}
+$('#f').onsubmit=async ev=>{
+  ev.preventDefault();
+  const pw=$('#pw').value; if(!pw) return;
+  const btn=$('#go'), msg=$('#msg');
+  btn.disabled=true; msg.className='ok'; msg.textContent='解密中…';
+  try{
+    const base=await crypto.subtle.importKey('raw',new TextEncoder().encode(pw),'PBKDF2',false,['deriveKey']);
+    const key=await crypto.subtle.deriveKey({name:'PBKDF2',salt:b64(E.salt),iterations:E.iter,hash:'SHA-256'},base,{name:'AES-GCM',length:256},false,['decrypt']);
+    const plain=await crypto.subtle.decrypt({name:'AES-GCM',iv:b64(E.iv)},key,b64(E.ct));
+    const html=await new Response(new Blob([plain]).stream().pipeThrough(new DecompressionStream('gzip'))).text();
+    document.open(); document.write(html); document.close();
+  }catch(e){
+    msg.className=''; msg.textContent='密碼不正確，請再試一次。'; btn.disabled=false; $('#pw').select();
+  }
+};
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>質詢擬答查詢</title>
+<style>
+:root{
+  --bg:#f5f6f8; --panel:#fff; --text:#1c1e21; --muted:#6b7280; --line:#e2e5ea;
+  --accent:#1f5fa8; --accent-soft:#e6eef9; --mark:#fff2a8; --mark-text:#000;
+  --chip:#eef0f3; --chip-on:#1f5fa8; --chip-on-text:#fff; --danger:#b4232c;
+  --fs:16px;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#121417; --panel:#1b1e23; --text:#e7e9ee; --muted:#9aa3b2; --line:#2b3038;
+  --accent:#7fb1f0; --accent-soft:#1d2a3d; --mark:#8a6d00; --mark-text:#fff;
+  --chip:#262b33; --chip-on:#7fb1f0; --chip-on-text:#0f1319;
+}}
+:root[data-theme="dark"]{
+  --bg:#121417; --panel:#1b1e23; --text:#e7e9ee; --muted:#9aa3b2; --line:#2b3038;
+  --accent:#7fb1f0; --accent-soft:#1d2a3d; --mark:#8a6d00; --mark-text:#fff;
+  --chip:#262b33; --chip-on:#7fb1f0; --chip-on-text:#0f1319;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--bg);color:var(--text);font:var(--fs)/1.65 -apple-system,"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif}
+button{font:inherit;color:inherit;background:none;border:1px solid var(--line);border-radius:8px;padding:4px 10px;cursor:pointer}
+button:hover{border-color:var(--accent)}
+button.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+mark{background:var(--mark);color:var(--mark-text);padding:0 1px;border-radius:2px}
+mark.cur{outline:2px solid var(--danger)}
+
+header{position:sticky;top:0;z-index:5;background:var(--panel);border-bottom:1px solid var(--line);padding:10px 16px}
+.topbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.topbar h1{font-size:1.1em;margin:0;white-space:nowrap}
+.meta{color:var(--muted);font-size:.85em}
+.spacer{flex:1}
+.searchrow{display:flex;gap:8px;margin-top:8px;align-items:center}
+.searchrow button{white-space:nowrap;flex:0 0 auto}
+#q{flex:1;font:inherit;font-size:1.1em;padding:9px 12px;border:2px solid var(--line);border-radius:10px;background:var(--bg);color:var(--text)}
+#q:focus{outline:none;border-color:var(--accent)}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;align-items:center}
+.chips .lbl{color:var(--muted);font-size:.85em;margin-right:2px;white-space:nowrap;flex:0 0 auto}
+.chip{background:var(--chip);border:none;border-radius:999px;padding:3px 11px;font-size:.9em}
+.chip.on{background:var(--chip-on);color:var(--chip-on-text)}
+.expand{color:var(--muted);font-size:.85em;margin-top:6px;min-height:1.2em}
+#semBtn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.badge.sem{background:#e8f5ec;color:#1d6b3a}
+:root[data-theme="dark"] .badge.sem{background:#1c3325;color:#8fd6a8}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .badge.sem{background:#1c3325;color:#8fd6a8} }
+
+main{display:grid;grid-template-columns:minmax(300px,420px) 1fr;gap:0;height:calc(100vh - var(--hh,150px))}
+#list{overflow:auto;border-right:1px solid var(--line);padding:10px}
+#detail{overflow:auto;padding:16px 24px 60px}
+@media (max-width:900px){
+  main{display:block;height:auto}
+  #list{border-right:none}
+  #detail{display:none;padding:12px 16px 60px}
+  body.showdetail #list{display:none}
+  body.showdetail #detail{display:block}
+}
+
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:8px;cursor:pointer}
+.card:hover,.card.active{border-color:var(--accent)}
+.card.active{background:var(--accent-soft)}
+.card .t{font-weight:700;margin:2px 0}
+.card .snip{color:var(--muted);font-size:.9em;margin-top:4px;border-left:3px solid var(--line);padding-left:8px}
+.badge{display:inline-block;font-size:.75em;padding:1px 7px;border-radius:6px;background:var(--chip);color:var(--muted);margin-right:4px}
+.badge.dept{background:var(--accent-soft);color:var(--accent)}
+.empty{color:var(--muted);padding:30px;text-align:center}
+.count{color:var(--muted);font-size:.85em;margin:4px 4px 8px}
+
+.dtitle{font-size:1.35em;font-weight:700;margin:0 0 6px;line-height:1.4}
+.dmeta{color:var(--muted);font-size:.85em;margin-bottom:12px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin-bottom:14px}
+.box h3{margin:0 0 8px;font-size:1em;color:var(--accent);display:flex;align-items:center;gap:8px}
+.box h3 .spacer{flex:1}
+.nums li{margin:4px 0}
+.body p{margin:.5em 0;white-space:pre-wrap}
+.body table{border-collapse:collapse;margin:10px 0;max-width:100%;overflow:auto;display:block}
+.body td{border:1px solid var(--line);padding:4px 8px;vertical-align:top;white-space:pre-wrap}
+.body td p{margin:0}
+.body figure{margin:10px 0}
+.body img{max-width:100%;height:auto;border:1px solid var(--line);border-radius:6px;background:#fff}
+.img-missing{color:var(--muted);font-style:italic;border:1px dashed var(--line);padding:6px 10px;border-radius:6px}
+.related a{display:block;color:var(--accent);text-decoration:none;padding:3px 0}
+.related a:hover{text-decoration:underline}
+.hitnav{position:sticky;bottom:12px;float:right;display:flex;gap:6px;background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:4px 8px;box-shadow:0 2px 10px rgba(0,0,0,.15)}
+#filterBtn,.dbar,.mobile-only{display:none}
+@media (max-width:900px){
+  header{padding:8px 12px}
+  .topbar{gap:8px}
+  .topbar h1{font-size:1em}
+  .topbar .meta{display:none}
+  .topbar button{padding:2px 8px;font-size:.85em}
+  .searchrow{margin-top:6px}
+  #q{font-size:1em;padding:8px 10px}
+  #filterBtn{display:inline-block}
+  #filterBtn.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .filters{display:none}
+  body.filters-open .filters{display:block}
+  .chips{flex-wrap:nowrap;overflow-x:auto;-webkit-overflow-scrolling:touch;padding-bottom:2px;scrollbar-width:none}
+  .chips::-webkit-scrollbar{display:none}
+  .chips .chip{white-space:nowrap;flex:0 0 auto}
+  .expand{display:none}
+  .mobile-only{display:block}
+  body.showdetail header{display:none}
+  .dbar{display:flex;position:sticky;top:0;z-index:5;background:var(--panel);border-bottom:1px solid var(--line);margin:-12px -12px 12px;padding:8px 12px;gap:8px;align-items:center}
+  .dtitle{font-size:1.15em}
+  .dmeta{font-size:.8em}
+  .dmeta #copyBtn{display:none}
+  #detail{padding:12px 12px 70px}
+  .box{padding:10px 12px}
+  .card{padding:9px 10px}
+  .count{margin:2px 2px 6px}
+  .hitnav{bottom:16px}
+}
+footer{color:var(--muted);font-size:.8em;text-align:center;padding:10px}
+@media print{header,#list,.hitnav,.back{display:none!important} main{display:block;height:auto} #detail{display:block}}
+</style>
+</head>
+<body>
+<header id="hdr">
+  <div class="topbar">
+    <h1>質詢擬答查詢</h1>
+    <span class="meta" id="buildinfo"></span>
+    <span class="spacer"></span>
+    <button id="fontBtn" title="調整字級">字級</button>
+    <button id="themeBtn" title="深淺色">深淺色</button>
+  </div>
+  <div class="searchrow">
+    <input id="q" type="search" placeholder="輸入關鍵字，空格分隔表示同時符合（例：司法 員額）" autofocus autocomplete="off">
+    <button id="filterBtn" title="科別與主題篩選">篩選</button>
+    <button id="semBtn" style="display:none" title="以語意比對，找出用詞不同但意思相近的題目">語意搜尋：關</button>
+    <button id="clearBtn">清除</button>
+  </div>
+  <div class="filters">
+    <div class="chips" id="deptChips"></div>
+    <div class="chips" id="topicChips"></div>
+  </div>
+  <div class="expand" id="expandInfo"></div>
+</header>
+<main>
+  <section id="list"></section>
+  <section id="detail"><div class="empty">左側選擇題目，或輸入關鍵字搜尋。</div></section>
+</main>
+<footer>離線單檔版・資料僅存於本檔案，不連網</footer>
+
+<script id="data" type="application/json">/*__DATA__*/</script>
+<script>
+(function(){
+const DATA = JSON.parse(document.getElementById('data').textContent);
+const items = DATA.items;
+const topics = DATA.topics || {};
+const $ = s => document.querySelector(s);
+const state = { q:'', dept:null, topic:null, cur:null, terms:[] };
+const sem = { active:false, engine:null, result:null, seq:0, loading:false };   // 語意搜尋狀態（僅語意版使用）
+
+// ---------- 偏好（僅存於此瀏覽器，失敗也不影響使用）
+const pref = {
+  get(k,d){ try{ const v=localStorage.getItem('qa_'+k); return v===null?d:JSON.parse(v);}catch(e){return d;} },
+  set(k,v){ try{ localStorage.setItem('qa_'+k, JSON.stringify(v)); }catch(e){} }
+};
+const fontSizes=[16,18,20,23];
+let fi = pref.get('font',0);
+function applyFont(){ document.documentElement.style.setProperty('--fs', fontSizes[fi]+'px'); }
+applyFont();
+$('#fontBtn').onclick=()=>{ fi=(fi+1)%fontSizes.length; pref.set('font',fi); applyFont(); fixHeight(); };
+const theme = pref.get('theme',null); if(theme) document.documentElement.dataset.theme=theme;
+$('#themeBtn').onclick=()=>{
+  const cur=document.documentElement.dataset.theme || (matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');
+  const next = cur==='dark'?'light':'dark';
+  document.documentElement.dataset.theme=next; pref.set('theme',next);
+};
+
+$('#buildinfo').textContent = `建檔 ${DATA.built}・${items.length} 題・${DATA.docs.length} 份來源${DATA.semantic?'・含語意關聯':''}`;
+
+// ---------- 篩選 chips
+const depts=[...new Set(items.map(i=>i.dept))];
+// 各科名稱若有共同前綴（例如都以處名開頭），顯示時去掉，省空間；完整名稱仍在詳細頁的「來源」顯示
+const deptPrefix=(()=>{ if(depts.length<2) return ''; let p=depts[0]; for(const d of depts){ let i=0; while(i<p.length && p[i]===d[i]) i++; p=p.slice(0,i);} p=p.replace(/[\s\u3000]+$/,''); return p.length>=2 && depts.every(d=>d.length>p.length) ? p : ''; })();
+const shortDept=d=>d.startsWith(deptPrefix)? d.slice(deptPrefix.length).trim()||d : d;
+const isMobile=()=>matchMedia('(max-width:900px)').matches;
+function renderChips(){
+  const dc=$('#deptChips'); dc.innerHTML='<span class="lbl">科別</span>';
+  depts.forEach(d=>{
+    const b=document.createElement('button'); b.className='chip'+(state.dept===d?' on':''); b.textContent=shortDept(d); b.title=d;
+    b.onclick=()=>{ state.dept = state.dept===d?null:d; renderChips(); search(); }; dc.appendChild(b);
+  });
+  const tc=$('#topicChips'); tc.innerHTML='<span class="lbl">主題</span>';
+  Object.keys(topics).forEach(t=>{
+    const n=items.filter(i=>i.topics.includes(t)).length; if(!n) return;
+    const b=document.createElement('button'); b.className='chip'+(state.topic===t?' on':''); b.textContent=`${t} ${n}`;
+    b.onclick=()=>{ state.topic = state.topic===t?null:t; renderChips(); search(); }; tc.appendChild(b);
+  });
+  const n=(state.dept?1:0)+(state.topic?1:0); const fb=$('#filterBtn'); fb.textContent=n?`篩選 ${n}`:'篩選'; fb.classList.toggle('on',n>0);
+  fixHeight();
+}
+function fixHeight(){ document.documentElement.style.setProperty('--hh', $('#hdr').offsetHeight+'px'); }
+addEventListener('resize', fixHeight);
+
+// ---------- 同義詞展開：只有「完全等於」字典中某詞時才展開同一行，避免「員額」把所有含員額的主題都拉進來
+function expandTerm(t){
+  const low=t.toLowerCase(); const set=new Set([t]);
+  for(const words of Object.values(topics)){
+    if(words.some(w=>w.toLowerCase()===low)) words.forEach(w=>set.add(w));
+  }
+  return [...set];
+}
+
+// ---------- 搜尋（BM25 排序：考慮詞的稀有程度與題目長度，長篇答復不會永遠排前面）
+const low=items.map(it=>({title:it.title.toLowerCase(), text:it.text.toLowerCase()}));
+const avgLen=items.length? items.reduce((a,it)=>a+it.text.length,0)/items.length : 1;
+const dfCache=new Map();
+function df(w){ if(!dfCache.has(w)) dfCache.set(w, low.filter(x=>x.title.includes(w)||x.text.includes(w)).length); return dfCache.get(w); }
+function bm25(i,w){
+  const tf=countOcc(low[i].text,w)+3*countOcc(low[i].title,w); if(!tf) return 0;
+  const N=items.length, n=df(w), idf=Math.log(1+(N-n+0.5)/(n+0.5));
+  const k1=1.2, b=0.75, len=items[i].text.length/avgLen;
+  return idf*tf*(k1+1)/(tf+k1*(1-b+b*len));
+}
+function search(){
+  const raw=state.q.trim().split(/\s+/).filter(Boolean);
+  const groups=raw.map(expandTerm);
+  state.terms=groups.flat();
+  const info=[]; groups.forEach((g,i)=>{ if(g.length>1) info.push(`「${raw[i]}」同時搜尋：${g.filter(w=>w!==raw[i]).join('、')}`); });
+  $('#expandInfo').textContent=info.join('　');
+
+  const res=[];
+  items.forEach((it,i)=>{
+    if(state.dept && it.dept!==state.dept) return;
+    if(state.topic && !it.topics.includes(state.topic)) return;
+    let score=0, matched=0;
+    for(const g of groups){
+      // 每組取最高分；原詞全分，同義詞 0.6 分
+      let gs=0; g.forEach((w,k)=>{ const v=bm25(i,w.toLowerCase())*(k===0?1:0.6); if(v>gs) gs=v; });
+      if(gs>0){ matched++; score+=gs; }
+    }
+    const ok = raw.length>0 && matched===groups.length;
+    const semInfo = sem.active && sem.result && sem.result.q===state.q.trim() ? sem.result.byItem.get(it.id) : null;
+    if(raw.length && !matched && !(semInfo && semInfo.show)) return;
+    // 全部關鍵字都符合者優先；其次依符合的關鍵字數；同級再比 BM25 分數（有語意時加上語意分數）
+    const final = matched*100 + score + (semInfo ? semInfo.z*2 : 0);
+    res.push({it,score:final,semOnly:!matched,partial:matched>0 && !ok,semInfo});
+  });
+  if(raw.length) res.sort((a,b)=>b.score-a.score || a.it.order-b.it.order);
+  state.semHits=new Map(res.filter(r=>r.semInfo).map(r=>[r.it.id,{semOnly:r.semOnly,off:r.semInfo.off,show:r.semInfo.show}]));
+  state.partial=new Set(res.filter(r=>r.partial).map(r=>r.it.id));
+  state.full=res.filter(r=>!r.partial && !r.semOnly).length;
+  renderList(res.map(r=>r.it), raw.length>0, raw.length>1);
+}
+function countOcc(s,w){ let n=0,i=0; while((i=s.indexOf(w,i))!==-1){n++;i+=w.length; if(n>50)break;} return n; }
+
+function snippets(it, terms, max=3){
+  if(!terms.length) return [];
+  const out=[]; const text=it.text; const low=text.toLowerCase(); const used=[];
+  // 收集每個詞的所有命中位置，依位置排序，跳過已被前一片段涵蓋的命中
+  const pos=[];
+  for(const w of terms){ const lw=w.toLowerCase(); let i=low.indexOf(lw); let n=0;
+    while(i>=0 && n<20){ pos.push([i,w.length]); i=low.indexOf(lw,i+lw.length); n++; } }
+  pos.sort((a,b)=>a[0]-b[0]);
+  for(const [i,len] of pos){
+    if(used.some(([a,b])=>i>=a && i<b)) continue;
+    const a=Math.max(0,i-30), b=Math.min(text.length,i+len+50);
+    used.push([a,b]);
+    out.push((a>0?'…':'')+text.slice(a,b).replace(/\s+/g,' ')+(b<text.length?'…':''));
+    if(out.length>=max) break;
+  }
+  return out;
+}
+function hl(str, terms){
+  let s=escapeHtml(str);
+  if(!terms.length) return s;
+  const re=new RegExp(terms.filter(Boolean).map(escapeRe).sort((a,b)=>b.length-a.length).join('|'),'gi');
+  return s.replace(re, m=>`<mark>${m}</mark>`);
+}
+function escapeHtml(s){ return s.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
+function escapeRe(s){ return s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'); }
+
+function renderList(list, searched, multi){
+  const el=$('#list'); el.innerHTML='';
+  const c=document.createElement('div'); c.className='count';
+  c.textContent = searched ? `找到 ${list.length} 題`+(multi && state.full<list.length?`（全部關鍵字都符合 ${state.full} 題）`:'') : `共 ${list.length} 題${state.dept||state.topic?'（已篩選）':''}`;
+  c.innerHTML += `<span class="mobile-only">建檔 ${DATA.built}</span>`;
+  el.appendChild(c);
+  if(!list.length){ const e=document.createElement('div'); e.className='empty'; e.textContent= items.length ? '沒有符合的題目，試試減少關鍵字或改用同義詞。' : '尚未匯入資料。請將 Word 檔（.docx 或 .doc）放入 input/ 後執行建檔（2_建檔.command）。'; el.appendChild(e); return; }
+  for(const it of list){
+    const d=document.createElement('div'); d.className='card'+(state.cur===it.id?' active':''); d.dataset.id=it.id;
+    let h=`<span class="badge dept">${escapeHtml(shortDept(it.dept))}</span><span class="badge">#${it.order}</span>`;
+    if(it.hasTable) h+='<span class="badge">表格</span>';
+    if(it.hasImage) h+='<span class="badge">圖</span>';
+    if(it.pages>1) h+=`<span class="badge">${it.pages}頁</span>`;
+    const sh=state.semHits && state.semHits.get(it.id);
+    if(sh && sh.show) h+='<span class="badge sem">語意相近</span>';
+    if(state.partial && state.partial.has(it.id)) h+='<span class="badge">部分符合</span>';
+    h+=`<div class="t">${hl(it.title,state.terms)}</div>`;
+    const sn=snippets(it,state.terms);
+    if(!sn.length && sh && sh.off>=0) sn.push(it.text.slice(sh.off,sh.off+90).replace(/\s+/g,' ')+'…');
+    for(const s of sn) h+=`<div class="snip">${hl(s,state.terms)}</div>`;
+    d.innerHTML=h; d.onclick=()=>show(it.id);
+    el.appendChild(d);
+  }
+}
+
+// ---------- 詳細
+let hits=[], hitIdx=-1;
+function show(id){
+  const it=items.find(i=>i.id===id); if(!it) return;
+  state.cur=id;
+  document.querySelectorAll('.card').forEach(c=>c.classList.toggle('active',c.dataset.id===id));
+  // 相關題目：有語意資料時以語意相近為主，再補上同主題（字典）的題目
+  const byId=id=>items.find(i=>i.id===id);
+  const sem=(it.related||[]).map(r=>byId(r.id)).filter(Boolean);
+  const semIds=new Set(sem.map(o=>o.id));
+  const topicRel=items.filter(o=>o.id!==it.id && !semIds.has(o.id) && o.topics.some(t=>it.topics.includes(t)));
+  const rel=[...sem.map(o=>({o,why:DATA.semantic?'語意相近':'內容相近'})), ...topicRel.map(o=>({o,why:'同主題'}))].slice(0,10);
+  const el=$('#detail');
+  el.innerHTML=`
+    <div class="dbar"><button id="backBtn">← 回列表</button><span class="spacer"></span><button id="copyBtn2">複製全文</button></div>
+    <h2 class="dtitle">${hl(it.title,state.terms)}</h2>
+    <div class="dmeta">
+      <span class="badge dept">${escapeHtml(it.dept)}</span><span>第 ${it.order} 題</span>
+      ${it.pre?`<span>${escapeHtml(it.pre)}</span>`:''}
+      <span>來源：${escapeHtml(it.file)}</span>
+      ${it.topics.length?`<span>主題：${it.topics.map(escapeHtml).join('、')}</span>`:''}
+      <span class="spacer"></span>
+      <button id="copyBtn">複製全文</button>
+    </div>
+    ${it.numbers.length?`<div class="box"><h3>數字速查<span class="spacer"></span><button id="numToggle">收合</button></h3><ul class="nums" id="nums">${it.numbers.map(n=>`<li>${hl(n,state.terms)}</li>`).join('')}</ul></div>`:''}
+    <div class="box"><h3>說明全文</h3><div class="body" id="body"></div></div>
+    ${rel.length?`<div class="box related"><h3>相關題目</h3>${rel.map(({o,why})=>`<a href="#" data-id="${o.id}"><span class="badge">${why}</span><span class="badge dept">${escapeHtml(shortDept(o.dept))}</span>${escapeHtml(o.title)}</a>`).join('')}</div>`:''}
+    <div class="hitnav" id="hitnav" style="display:none"><button id="prevHit">▲</button><span id="hitInfo"></span><button id="nextHit">▼</button></div>`;
+  const body=$('#body'); body.innerHTML=it.html;
+  body.querySelectorAll('td').forEach(td=>{ if(td.textContent.trim().length<=8) [td,...td.querySelectorAll('p')].forEach(e=>e.style.whiteSpace='nowrap'); });   // 短儲存格（年度、數字）不要被擠成直排
+  highlightDom(body, state.terms);
+  hits=[...body.querySelectorAll('mark')]; hitIdx=-1;
+  if(hits.length){ $('#hitnav').style.display='flex'; gotoHit(0); }
+  $('#prevHit').onclick=()=>gotoHit(hitIdx-1); $('#nextHit').onclick=()=>gotoHit(hitIdx+1);
+  $('#backBtn').onclick=()=>{ if(history.state && history.state.detail) history.back(); else closeDetail(); };
+  const doCopy=btn=>()=>{ navigator.clipboard?.writeText(it.title+'\n\n'+it.text).then(()=>{ const t=btn.textContent; btn.textContent='已複製'; setTimeout(()=>btn.textContent=t,1500); }); };
+  $('#copyBtn').onclick=doCopy($('#copyBtn')); $('#copyBtn2').onclick=doCopy($('#copyBtn2'));
+  const nt=$('#numToggle'); if(nt) nt.onclick=()=>{ const n=$('#nums'); const off=n.style.display==='none'; n.style.display=off?'':'none'; nt.textContent=off?'收合':'展開'; };
+  el.querySelectorAll('.related a').forEach(a=>a.onclick=e=>{e.preventDefault(); show(a.dataset.id);});
+  el.scrollTop=0;
+  if(isMobile() && !document.body.classList.contains('showdetail')) history.pushState({detail:1},'');   // 手機返回鍵可回列表
+  document.body.classList.add('showdetail'); window.scrollTo(0,0);
+  const recent=pref.get('recent',[]).filter(x=>x!==id); recent.unshift(id); pref.set('recent',recent.slice(0,10));
+}
+function closeDetail(){ document.body.classList.remove('showdetail'); }
+addEventListener('popstate',()=>{ if(document.body.classList.contains('showdetail')) closeDetail(); });
+function gotoHit(i){
+  if(!hits.length) return;
+  hitIdx=(i+hits.length)%hits.length;
+  hits.forEach(h=>h.classList.remove('cur')); hits[hitIdx].classList.add('cur');
+  hits[hitIdx].scrollIntoView({block:'center',behavior:'smooth'});
+  $('#hitInfo').textContent=`${hitIdx+1}/${hits.length}`;
+}
+function highlightDom(root, terms){
+  if(!terms.length) return;
+  const re=new RegExp(terms.map(escapeRe).sort((a,b)=>b.length-a.length).join('|'),'gi');
+  const walker=document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  const nodes=[]; let n; while((n=walker.nextNode())) if(re.test(n.nodeValue)) nodes.push(n);
+  for(const node of nodes){
+    const frag=document.createDocumentFragment(); let last=0; const s=node.nodeValue; re.lastIndex=0; let m;
+    while((m=re.exec(s))){
+      frag.appendChild(document.createTextNode(s.slice(last,m.index)));
+      const mk=document.createElement('mark'); mk.textContent=m[0]; frag.appendChild(mk); last=m.index+m[0].length;
+    }
+    frag.appendChild(document.createTextNode(s.slice(last)));
+    node.parentNode.replaceChild(frag,node);
+  }
+}
+
+// ---------- 事件
+let timer;
+$('#q').addEventListener('input', e=>{ state.q=e.target.value; clearTimeout(timer); timer=setTimeout(search,120); });
+$('#q').addEventListener('keydown', e=>{ if(e.key==='Enter'){ const f=document.querySelector('.card'); if(f) show(f.dataset.id);} if(e.key==='Escape'){ e.target.value=''; state.q=''; search(); } });
+$('#filterBtn').onclick=()=>{ document.body.classList.toggle('filters-open'); fixHeight(); };
+$('#clearBtn').onclick=()=>{ $('#q').value=''; state.q=''; state.dept=null; state.topic=null; renderChips(); search(); $('#q').focus(); };
+
+renderChips(); search();
+
+// ---------- 語意搜尋（僅「語意版」檔案具備；模型在本機瀏覽器內執行，不連網）
+function b64ToBytes(id){
+  const el=document.getElementById(id); const s=el.textContent; el.remove();
+  if(Uint8Array.fromBase64) return Uint8Array.fromBase64(s);
+  const out=new Uint8Array(Math.floor(s.length*3/4)); let o=0; const STEP=1<<22;   // 分段解碼，避免一次占用過多記憶體
+  for(let i=0;i<s.length;i+=STEP){ const bin=atob(s.slice(i,i+STEP)); for(let j=0;j<bin.length;j++) out[o++]=bin.charCodeAt(j); }
+  return out.subarray(0,o);
+}
+async function semLoad(){
+  const btn=$('#semBtn'), info=$('#expandInfo');
+  const say=t=>{ info.textContent=t; };
+  say('語意模型載入中（第一次約需 10～30 秒，請稍候）…');
+  await new Promise(r=>setTimeout(r,50));
+  const meta=JSON.parse(document.getElementById('sem-meta').textContent);
+  const vecs=new Int8Array(b64ToBytes2(meta.vecs).buffer);
+  const pieces=new TextDecoder().decode(b64ToBytes('sem-pieces')).split('\n');
+  const sb=b64ToBytes('sem-scores'); const scores=new Float32Array(sb.buffer.slice(sb.byteOffset,sb.byteOffset+sb.byteLength));
+  const encode=makeUnigram(pieces,scores);
+  for(let i=0;i<100 && !window.__ort;i++) await new Promise(r=>setTimeout(r,100));
+  if(!window.__ort) throw new Error('執行引擎未載入');
+  const ort=window.__ort;
+  ort.env.wasm.numThreads=1; ort.env.wasm.proxy=false;
+  ort.env.wasm.wasmBinary=b64ToBytes('sem-wasm');
+  say('語意模型載入中：建立模型…');
+  await new Promise(r=>setTimeout(r,50));
+  const session=await ort.InferenceSession.create(b64ToBytes('sem-model'),{executionProviders:['wasm'],graphOptimizationLevel:'all'});
+  sem.engine={meta,vecs,encode,session,ort};
+}
+function b64ToBytes2(s){ if(Uint8Array.fromBase64) return Uint8Array.fromBase64(s); const bin=atob(s); const o=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++) o[i]=bin.charCodeAt(i); return o; }
+async function semEmbed(text){
+  const {encode,session,ort}=sem.engine;
+  const ids=encode('query: '+text); const n=ids.length;
+  const feeds={ input_ids:new ort.Tensor('int64',BigInt64Array.from(ids,BigInt),[1,n]), attention_mask:new ort.Tensor('int64',new BigInt64Array(n).fill(1n),[1,n]) };
+  if(session.inputNames.includes('token_type_ids')) feeds.token_type_ids=new ort.Tensor('int64',new BigInt64Array(n),[1,n]);
+  const out=await session.run(feeds); const h=out[session.outputNames[0]]; const d=h.dims[2]; const v=new Float32Array(d);
+  for(let t=0;t<n;t++) for(let k=0;k<d;k++) v[k]+=h.data[t*d+k];
+  let norm=0; for(let k=0;k<d;k++) norm+=v[k]*v[k]; norm=Math.sqrt(norm)||1; for(let k=0;k<d;k++) v[k]/=norm;
+  return v;
+}
+async function semQuery(){
+  const q=state.q.trim(); if(!sem.active || !sem.engine || !q) { search(); return; }
+  if(sem.result && sem.result.q===q){ search(); return; }
+  const my=++sem.seq;
+  const qv=await semEmbed(q); if(my!==sem.seq) return;
+  const {meta,vecs}=sem.engine; const d=meta.dim;
+  const best=new Array(items.length).fill(-2), bestOff=new Array(items.length).fill(-1);
+  for(let c=0;c<meta.n;c++){ let s=0; const base=c*d; for(let k=0;k<d;k++) s+=vecs[base+k]*qv[k]; s/=127;
+    const o=meta.owner[c]; if(s>best[o]){ best[o]=s; bestOff[o]=meta.offs[c]; } }
+  const mean=best.reduce((a,b)=>a+b,0)/best.length; const sd=Math.sqrt(best.reduce((a,b)=>a+(b-mean)**2,0)/best.length)||1;
+  const order=best.map((s,i)=>i).sort((a,b)=>best[b]-best[a]);
+  const byItem=new Map();
+  order.forEach((i,rank)=>{ const z=(best[i]-mean)/sd; byItem.set(items[i].id,{z,score:best[i],off:bestOff[i],show: rank<3 || (rank<12 && z>=1)}); });
+  sem.result={q,byItem}; search();
+}
+function initSem(){
+  if(!document.getElementById('sem-meta')) return;
+  const btn=$('#semBtn'); btn.style.display='';
+  $('#buildinfo').textContent+='・語意版';
+  btn.onclick=async()=>{
+    if(sem.loading) return;
+    if(!sem.engine){
+      sem.loading=true; btn.textContent='語意搜尋：載入中';
+      try{ await semLoad(); }catch(e){ console.error(e); $('#expandInfo').textContent='語意模型載入失敗（'+e.message+'）。仍可使用關鍵字搜尋。'; btn.textContent='語意搜尋：無法使用'; sem.loading=false; return; }
+      sem.loading=false; sem.active=false;
+    }
+    sem.active=!sem.active; btn.classList.toggle('on',sem.active); btn.textContent='語意搜尋：'+(sem.active?'開':'關');
+    if(sem.active) semQuery(); else search();
+  };
+  let st; $('#q').addEventListener('input',()=>{ if(!sem.active) return; clearTimeout(st); st=setTimeout(semQuery,450); });
+}
+if(document.readyState==='loading') addEventListener('DOMContentLoaded',initSem); else initSem();
+})();
+</script>
+<!--__SEM_ASSETS__-->
+</body>
+</html>
