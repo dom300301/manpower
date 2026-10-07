@@ -50,6 +50,7 @@ MAX_NUMBER_SENTENCES = 10
 # 附表／附件頁：開頭 8 字內出現「附表、附件、附錄、參考資料」（如「附表一」「參、附表」「（附表）」），
 # 或以「表1」「表一」開頭
 APPENDIX_RE = re.compile(r"^(?:.{0,8}?(?:附表|附件|附錄|參考資料)|表[0-9０-９一二三四五六七八九十]+)")
+ENUM_RE = re.compile(r"^(?:[一二三四五六七八九十]+[、.．]|[（(][一二三四五六七八九十0-9０-９]+[）)]|[0-9０-９]+[、.．)）])")
 SECTION_MAX_CHARS = 40         # 主題分頁標題頁的字數上限
 SECTION_RE = re.compile(r"^(?:[壹貳參肆伍陸柒捌玖拾]+[、.．]|第[一二三四五六七八九十百0-9０-９]+[章篇部節類]|專區)")
 
@@ -398,6 +399,9 @@ def parse_docx(path: Path, images: ImageStore) -> dict:
         if b and b["heading"] and not SECTION_RE.match(b["text"]) and not is_toc(page):
             heading_titles += 1
     heading_mode = heading_titles >= 2
+    # 最後一個題目所在的頁（標題樣式模式才用得到）：其後以粗體短標題開頭、含表格或圖片的頁面視為附錄
+    last_title_page = max((i for i, pg in enumerate(pages)
+                           if any(b["kind"] == "p" and b["heading"] for b in pg)), default=-1)
 
     cover = ""
     section = ""
@@ -421,8 +425,14 @@ def parse_docx(path: Path, images: ImageStore) -> dict:
             section = next(b for b in page if b["text"].strip())["text"].strip()
             continue
 
-        # 附表／附件：頁首以「附表、附件、附錄」開頭者自成一筆（跨頁表格的續頁會併入），不併入最後一題
-        if APPENDIX_RE.match(first_text(page)):
+        # 附表／附件：頁首以「附表、附件、附錄」開頭者自成一筆（跨頁表格的續頁會併入），不併入最後一題；
+        # 或（標題樣式模式）位在最後一題之後、第一行是粗體短標題且該頁有表格／圖片（如「組改前後中央二、三級機關（構）清單」）
+        head = next((b for b in page if b["text"].strip()), None)
+        trailing_caption = (heading_mode and idx > last_title_page and has_rich and head is not None
+                            and head["kind"] == "p" and head["bold"] and len(first_text(page)) <= 40
+                            and not first_text(page).endswith(("：", ":"))
+                            and not ENUM_RE.match(first_text(page)))
+        if APPENDIX_RE.match(first_text(page)) or trailing_caption:
             first = next(b for b in page if b["text"].strip())
             body_blocks = [b for b in page if b is not first]
             items.append(dict(
@@ -467,6 +477,8 @@ def parse_docx(path: Path, images: ImageStore) -> dict:
                 items[-1]["text"] += "\n" + "\n".join(b["text"] for b in page)
                 items[-1]["para_text"] += "\n" + "\n".join(b["text"] for b in page if b["kind"] == "p")
                 items[-1]["pages"] += 1
+                items[-1]["hasTable"] = items[-1]["hasTable"] or any(b["kind"] == "tbl" for b in page)
+                items[-1]["hasImage"] = items[-1]["hasImage"] or any("<img" in b["html"] for b in page)
                 continue
             title = f"（未偵測到題目）第 {idx + 1} 頁"
         else:
