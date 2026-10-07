@@ -9,3 +9,5 @@ __pycache__/
 qa-search/vendor/
 qa-search/models/
 qa-search/.cache/
+qa-search/public/
+qa-search/.firebase/
