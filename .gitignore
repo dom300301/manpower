@@ -12,3 +12,11 @@ qa-search/.cache/
 qa-search/public/
 qa-search/.firebase/
 qa-search/report.txt
+# 數位課程：教材、中間檔與影片成品不進版控
+course/input/
+course/work/
+course/output/
+*.pptx
+*.pdf
+*.mp4
+*.mp3
