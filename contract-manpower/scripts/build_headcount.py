@@ -404,11 +404,12 @@ def parse_mocs_99():
         if yr >= 95:
             continue  # 95年以後以概況統計 PDF 為準
         vals = [num(c) for c in r[2:]]
-        tot, cen, loc = vals[0], vals[2], vals[3]
+        tot, cen = vals[0], vals[2]
+        loc = tot - cen  # 99年報表1無「地方合計」欄，以總計減中央計算（=臺灣各縣市+臺北市+高雄市+金門連江）
         years.append(yr)
         for scope, agency, v in [('全國', '全體', tot), ('中央', '中央各機關', cen), ('地方', '地方各機關合計', loc)]:
             add(yr, scope, agency, '公務人員(銓敘部定義,含公營事業)', '實際人數', v, src, url,
-                '年底人數；銓敘部定義公務人員；地方各機關=臺灣各縣市+臺北市+高雄市+金門連江')
+                '年底人數；銓敘部定義公務人員；地方各機關合計=總計-中央各機關（年報無合計欄）')
     reg_source(os.path.basename(path), src, url, page, f'{min(years)}-{max(years)}', '自製 ODS 讀取器(content.xml)')
 
 
