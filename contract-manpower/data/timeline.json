@@ -1,1459 +1,1674 @@
 [
-  {
-    "date": "1969-04-28",
-    "roc_year": "58",
-    "event": "總統令制定公布《聘用人員聘用條例》全文10條",
-    "actor": "立法院",
-    "category": "法制定",
-    "personnel_types": [
-      "聘用"
-    ],
-    "summary": "依公務人員任用法第21條（現第36條）授權制定，規定各機關得以契約定期聘用專業或技術人員，職稱、員額、期限、報酬列入預算並送銓敘部登記備查；不適用俸給、退休、撫卹法；不得兼任有職等之職務、不得充任法定主管。施行細則於58年8月12日由考試院訂定。",
-    "significance": "關鍵節點：契約用人首次取得法律位階，但條文僅10條且定位為「輔助性、臨時性」，權利義務大量留白；此後半世紀所有補充均以行政命令層疊其上，形成「法律空殼＋命令實體」的路徑起點。",
-    "sources": [
-      {
-        "title": "聘用人員聘用條例（全國法規資料庫）",
-        "url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=S0020014",
-        "accessible": true
-      },
-      {
-        "title": "聘用人員聘用條例 沿革（全國法規資料庫）",
-        "url": "https://law.moj.gov.tw/LawClass/LawHistory.aspx?pcode=S0020014",
-        "accessible": true
-      },
-      {
-        "title": "聘用人員聘用條例（考試院主管法規共用系統）",
-        "url": "https://law.exam.gov.tw/LawContent.aspx?id=FL016991",
-        "accessible": true
-      },
-      {
-        "title": "聘用人員聘用條例施行細則 沿革",
-        "url": "https://law.moj.gov.tw/LawClass/LawHistory.aspx?pcode=S0020015",
-        "accessible": true
-      }
-    ]
-  },
-  {
-    "date": "1972-02-03",
-    "roc_year": "61",
-    "event": "《聘用人員聘用條例》修正第6條（唯一一次修法）",
-    "actor": "立法院",
-    "category": "修正",
-    "personnel_types": [
-      "聘用"
-    ],
-    "summary": "將原不適用「俸給法、退休法、撫卹法及考績法」改為不適用「俸給法、退休法及撫卹法」，病故或因公死亡得酌給撫慰金。此後條例再無修正，施行細則則於60、71、96、108年修正。",
-    "significance": "路徑依賴：本法53年未再修正，顯示立法成本高而行政命令修補成本低，制度維持靠「細則與要點」而非母法。",
-    "sources": [
-      {
-        "title": "聘用人員聘用條例 沿革（全國法規資料庫）",
-        "url": "https://law.moj.gov.tw/LawClass/LawHistory.aspx?pcode=S0020014",
-        "accessible": true
-      },
-      {
-        "title": "聘用人員聘用條例（考試院主管法規共用系統）",
-        "url": "https://law.exam.gov.tw/LawContent.aspx?id=FL016991",
-        "accessible": true
-      }
-    ]
-  },
-  {
-    "date": "1972-12-27",
-    "roc_year": "61",
-    "event": "行政院訂定發布《行政院暨所屬機關約僱人員僱用辦法》",
-    "actor": "行政院",
-    "category": "法制定",
-    "personnel_types": [
-      "約僱"
-    ],
-    "summary": "以行政命令建立「約僱」制度，僱用對象為相當分類職位公務人員第五職等以下之臨時性工作，無法律授權依據；68年、71年小幅修正後直到108年才全文修正。",
-    "significance": "層疊（layering）：在考試院主管的「聘用」軌道之外，行政院自建「約僱」軌道，形成兩院分管、法律與命令並存的雙軌結構，是日後整合立法屢遭「考試權／行政權」爭議的制度根源。",
-    "sources": [
-      {
-        "title": "行政院與所屬中央及地方各機關約僱人員僱用辦法 沿革",
-        "url": "https://law.moj.gov.tw/LawClass/LawHistory.aspx?pcode=S0110014",
-        "accessible": true
-      },
-      {
-        "title": "行政院暨所屬機關約僱人員僱用辦法修正總說明（108年，行政院公報）",
-        "url": "https://gazette.nat.gov.tw/EG_FileManager/eguploadpub/eg025185/ch01/type1/gov01/num1/images/AA.pdf",
-        "accessible": true
-      },
-      {
-        "title": "政府機關用人體制之研究－從公法契約用人法制論析（人事總處，103.5.15）",
-        "url": "https://www.dgpa.gov.tw/Uploads/public/Attachment/51161738378.pdf",
-        "accessible": true
-      }
-    ]
-  },
-  {
-    "date": "1987-01-16",
-    "roc_year": "76",
-    "event": "《分類職位公務人員任用法》廢止失效",
-    "actor": "考試院",
-    "category": "修正",
-    "personnel_types": [
-      "約僱"
-    ],
-    "summary": "約僱辦法以「相當分類職位公務人員第五職等以下」界定約僱工作，於分類職位制廢止後失去參照對象，卻仍沿用32年至108年才修正。",
-    "significance": "漂移（drift）：外部制度變動使規範文字與實務脫節，約僱人員實際工作性質逐漸擴張，但規範未隨之更新。",
-    "sources": [
-      {
-        "title": "行政院暨所屬機關約僱人員僱用辦法修正總說明（108年，行政院公報）",
-        "url": "https://gazette.nat.gov.tw/EG_FileManager/eguploadpub/eg025185/ch01/type1/gov01/num1/images/AA.pdf",
-        "accessible": true
-      }
-    ]
-  },
-  {
-    "date": "1990-03-27",
-    "roc_year": "79",
-    "event": "行政院訂定「中央各機關學校事務勞力替代措施推動方案」",
-    "actor": "行政院",
-    "category": "政策",
-    "personnel_types": [
-      "承攬",
-      "公務人員"
-    ],
-    "summary": "透過工友設置基準、員額凍結不補、鼓勵退離，並以機具現代化、資訊化、委外、志工、替代役等替代事務性工友人力；92年7月31日修正。",
-    "significance": "關鍵節點：政府首次以「替代」而非「補充」思維處理事務性人力，開啟事務性工作委外化的路徑，日後承攬派駐人力大增的遠因。",
-    "sources": [
-      {
-        "title": "張毓珊〈工友員額控管做法及展望〉（人事月刊第328期，2012.12）",
-        "url": "https://www.dgpa.gov.tw/Uploads/public/Attachment/4813956097.pdf",
-        "accessible": true
-      },
-      {
-        "title": "行政院所屬機關學校事務勞力替代措施推動方案（92.7.31修正；中興大學人事室轉載）",
-        "url": "https://person.nchu.edu.tw/admin/upload/行政院所屬機關學校事務勞力替代措施推動方案.pdf",
-        "accessible": false
-      }
-    ]
-  },
-  {
-    "date": "1998-07-01",
-    "roc_year": "87",
-    "event": "公務機關工友（含技工、駕駛）適用勞動基準法",
-    "actor": "勞動部",
-    "category": "政策",
-    "personnel_types": [
-      "公務人員"
-    ],
-    "summary": "工友自87年7月1日起（技工駕駛87年12月31日）適用勞基法，解僱須符合勞基法要件；人事行政局於94年7月1日訂定「工友管理要點」。",
-    "significance": "轉換（conversion）：工友由公務體系管理轉入勞動法制，成為後來臨時人員適用勞基法的前例。",
-    "sources": [
-      {
-        "title": "林延增、賴思涵〈工友管理措施之探討與展望〉（人事月刊第333期，2013.5）",
-        "url": "https://www.dgpa.gov.tw/Uploads/public/Attachment/366174295.pdf",
-        "accessible": true
-      },
-      {
-        "title": "張毓珊〈工友員額控管做法及展望〉（人事月刊第328期，2012.12）",
-        "url": "https://www.dgpa.gov.tw/Uploads/public/Attachment/4813956097.pdf",
-        "accessible": true
-      }
-    ]
-  },
-  {
-    "date": "2000-04-24",
-    "roc_year": "89",
-    "event": "考試院會銜行政院首次函送《公務人員基準法》草案至立法院",
-    "actor": "考試院",
-    "category": "草案提出",
-    "personnel_types": [
-      "公務人員",
-      "聘用"
-    ],
-    "summary": "基準法草案（六章60條）擬統攝公務人員身分與契約用人定位，此後於91年10月30日、95年6月16日、101年3月27日四度送審，均因屆期不續審而未完成立法。",
-    "significance": "路徑依賴：契約用人之上位定位（政務／常務／契約三元）繫於基準法，基準法屢挫，使契約人力專法失去法源錨點。",
-    "sources": [
-      {
-        "title": "考試院新聞稿：考試院審議通過公務人員基準法草案 近期將函請行政院同意會銜",
-        "url": "https://www.exam.gov.tw/News_Content.aspx?n=1&s=19485",
-        "accessible": false
-      },
-      {
-        "title": "考試院新聞稿：銓敘部函陳「公務人員基準法」草案及其總說明",
-        "url": "https://www.exam.gov.tw/News_Content.aspx?n=3438&s=18275",
-        "accessible": false
-      }
-    ]
-  },
-  {
-    "date": "2002-07-01",
-    "roc_year": "91",
-    "event": "行政院函：所屬機關學校工友員額自即日起一律凍結不補",
-    "actor": "行政院",
-    "category": "政策",
-    "personnel_types": [
-      "公務人員",
-      "承攬"
-    ],
-    "summary": "配合91年2月19日「超額工友處理原則」與員額裁減1.5%政策，全面凍結工友進用，缺額只能移撥，不得新僱。",
-    "significance": "路徑依賴：工友出缺不補持續20餘年，事務性工作改由承攬派駐人力承接，人事總處日後承認承攬人數增加多因「工友退離不補」。",
-    "sources": [
-      {
-        "title": "行政院91.7.1函：工友員額一律凍結不補（人事總處法規公告）",
-        "url": "https://www.dgpa.gov.tw/information?uid=84&pid=2069",
-        "accessible": true
-      },
-      {
-        "title": "張毓珊〈工友員額控管做法及展望〉（人事月刊第328期，2012.12）",
-        "url": "https://www.dgpa.gov.tw/Uploads/public/Attachment/4813956097.pdf",
-        "accessible": true
-      }
-    ]
-  },
-  {
-    "date": "2002-09-15",
-    "roc_year": "91",
-    "event": "總統府政府改造委員會通過「政府人力運用彈性化計畫方案」",
-    "actor": "行政院",
-    "category": "政策",
-    "personnel_types": [
-      "聘用",
-      "約僱",
-      "公務人員"
-    ],
-    "summary": "含政務職位、高級行政主管職位、契約性職位三子方案；考試院隨之研修《聘用人員聘用條例》修正草案，擬明定公法上職務關係、不適用勞基法、聘用人員不逾職員預算員額15%、公開甄選。",
-    "significance": "關鍵節點：新公共管理思潮下的「彈性用人」首次成為兩院共同政策議程，但考試院將之導向「法制化、規範化」而非「彈性化」，是蘇偉業所指台灣改革取向與英美不同之起點。",
-    "sources": [
-      {
-        "title": "考試院新聞稿：院會就政府改造委員會「政府人力運用彈性化計畫方案」作成決定",
-        "url": "https://www.exam.gov.tw/News_Content.aspx?n=3438&s=18288",
-        "accessible": false
-      },
-      {
-        "title": "考試院新聞稿：考試院積極研修「聘用人員聘用條例」修正草案",
-        "url": "https://www.exam.gov.tw/News_Content.aspx?n=3438&s=18497",
-        "accessible": false
-      },
-      {
-        "title": "考試院新聞稿：院會審議聘用人員聘用條例修正草案暨配合修正（或廢止）任用法等相關法規草案",
-        "url": "https://www.exam.gov.tw/News_Content.aspx?n=3438&s=18556",
-        "accessible": false
-      },
-      {
-        "title": "蘇偉業（2007）〈管理主義下的政府機關人力彈性化：台灣與香港政府契約人力制度之比較分析〉公共行政學報23：29-66",
-        "url": "https://www.airitilibrary.com/",
-        "accessible": false
-      }
-    ]
-  },
-  {
-    "date": "2003",
-    "roc_year": "約90-92",
-    "event": "考試院院會通過「暫緩研訂約聘人員人事條例草案」",
-    "actor": "考試院",
-    "category": "草案審議",
-    "personnel_types": [
-      "聘用",
-      "約僱"
-    ],
-    "summary": "銓敘部原擬以「約聘人員人事條例」統一各類非常任臨時人員管理，院會以現行規定執行無窒礙、宜俟「聘任人員人事條例」施行後再評估為由暫緩，權益不足處改循修正離職儲金、給假等規定處理（新聞稿未標年份，依內容推定約民國90年代初）。",
-    "significance": "否決點（veto point）：考試院內部即先行擱置整合立法，顯示「以小修補代替大改」的制度偏好。",
-    "sources": [
-      {
-        "title": "考試院新聞稿：審查銓敘部函陳「約聘人員人事條例」草案一案（暫緩研訂）",
-        "url": "https://www.exam.gov.tw/News_Content.aspx?n=3438&s=18010",
-        "accessible": false
-      }
-    ]
-  },
-  {
-    "date": "2005-02-05",
-    "roc_year": "94",
-    "event": "立法院通過94年度總預算審查總報告，決議臨時人員應訂管控規定、不得長僱化",
-    "actor": "立法院",
-    "category": "政策",
-    "personnel_types": [
-      "約用"
-    ],
-    "summary": "通案決議要求人事行政局就中央各機關業務費項下雇員及臨時人員專案研處訂定管控規定；人事局94年8月調查發現各機關臨時人員管理分散。",
-    "significance": "關鍵節點：臨時人員問題由立法院預算權驅動進入議程，開啟「以預算決議取代立法」的管制模式。",
-    "sources": [
-      {
-        "title": "臨時人員進用及運用要點問答集（人事總處，109.3.2配合通函版）",
-        "url": "https://www.dgpa.gov.tw/FileConversion?filename=dgpa%2Ffiles%2F202108%2F3515d795-6c20-4a64-9cb2-fd626fd6d22f.doc&nfix=pdf&name=臨時人員要點QA.doc",
-        "accessible": true
-      },
-      {
-        "title": "政府機關多元人力運用及管理（人事總處簡報，110年6月）",
-        "url": "https://www.dgpa.gov.tw/FileConversion?filename=dgpa%2Ffiles%2F202106%2Fa5dc4cdd-59a4-495a-b1d9-1dab0ee1b34a.pdf&name=政府機關多元人力運用及管理.pdf",
-        "accessible": true
-      },
-      {
-        "title": "約用人員管理規定（人事總處組編人力處簡報，113.4.18）",
-        "url": "https://www.dgpa.gov.tw/FileConversion?filename=dgpa/files/202404/308f2535-a6e0-4dd1-bbca-5d4a6c82fb80.pdf&nfix=&name=約用人員管理規定.pdf",
-        "accessible": true
-      }
-    ]
-  },
-  {
-    "date": "2005-03-08",
-    "roc_year": "94",
-    "event": "行政院、考試院會銜函送《中央政府機關總員額法》草案（14條）",
-    "actor": "行政院",
-    "category": "草案提出",
-    "personnel_types": [
-      "公務人員",
-      "聘用",
-      "約僱"
-    ],
-    "summary": "草案總說明：參考日本總定員法，訂員額總數上限20萬人（6年後降至18.5萬），員額分六類，第二類為聘僱人員、駐衛警、工友；要求機關推動委外化、法人化等「四化」。行政院自87年至97年五度送審均未完成。",
-    "significance": "總量管制的設計一開始即將聘僱納入員額、臨時人員排除在外，形成日後「員額內／員額外」的制度縫隙。",
-    "sources": [
-      {
-        "title": "「中央政府機關總員額法」草案總說明（94.3.8，人事總處）",
-        "url": "https://www.dgpa.gov.tw/FileConversion?filename=dgpa%2Ffiles%2F201612%2F452f2037-e69f-4544-bbfe-6ca114f36b05.doc&nfix=pdf&name=總員額法草案總說明.doc",
-        "accessible": true
-      }
-    ]
-  },
-  {
-    "date": "2005-07-28",
-    "roc_year": "94",
-    "event": "考試院第10屆第144次會議通過《聘用人員人事條例》草案，8月15日函送立法院",
-    "actor": "考試院",
-    "category": "草案提出",
-    "personnel_types": [
-      "聘用",
-      "約僱"
-    ],
-    "summary": "整合聘用、派用、機要、聘任、約僱五類人員，7章62條；明定行政契約、公法契約關係、公開甄選、考核淘汰、退撫比照勞退條例機制；同時擬廢止聘用條例與派用條例。列為第6屆第6會期優先法案。",
-    "significance": "關鍵節點（未成）：第一次完整的契約人力專法；因五類人員制度差異過大、「違背考試用人」質疑而受阻。",
-    "sources": [
-      {
-        "title": "考試院新聞稿：考試院通過聘用人員人事條例草案",
-        "url": "https://www.exam.gov.tw/News_Content.aspx?n=1&s=18713",
-        "accessible": false
-      },
-      {
-        "title": "考試院新聞稿：加速推動「聘用人員人事條例草案」完成立法程序",
-        "url": "https://www.exam.gov.tw/News_Content.aspx?n=1&s=18963",
-        "accessible": false
-      },
-      {
-        "title": "考試院新聞稿：繼續推動聘用人員人事條例草案完成立法，合理保障聘僱人員權益",
-        "url": "https://www.exam.gov.tw/News_Content.aspx?n=1&s=19011",
-        "accessible": false
-      },
-      {
-        "title": "立法院法制局法案評估：聘用人員人事條例草案（何善為，95年12月，B00493）",
-        "url": "https://www.ly.gov.tw/Pages/Detail.aspx?nodeid=6588&pid=83610",
-        "accessible": false
-      }
-    ]
-  },
-  {
-    "date": "2006-12",
-    "roc_year": "95",
-    "event": "立法院法制局提出《聘用人員人事條例草案》法案評估報告（何善為，B00493）",
-    "actor": "立法院",
-    "category": "草案審議",
-    "personnel_types": [
-      "聘用",
-      "約僱"
-    ],
-    "summary": "評估認為新制違背國家考試用人精神、影響文官體制健全、恐生政治分贓，質疑制定必要；另指草案排除以業務費進用之臨時人員，恐引發不平。立法院另於95年要求銓敘部座談、96年12月召開公聽會。",
-    "significance": "否決點：立法院幕僚機構以「考試用人」規範性論述反對，彰顯憲法考試權作為否決點的制度力量。",
-    "sources": [
-      {
-        "title": "立法院法制局法案評估：聘用人員人事條例草案（何善為，95年12月，B00493）",
-        "url": "https://www.ly.gov.tw/Pages/Detail.aspx?nodeid=6588&pid=83610",
-        "accessible": false
-      },
-      {
-        "title": "考試院新聞稿：繼續推動聘用人員人事條例草案完成立法，合理保障聘僱人員權益",
-        "url": "https://www.exam.gov.tw/News_Content.aspx?n=1&s=19011",
-        "accessible": false
-      }
-    ]
-  },
-  {
-    "date": "2006",
-    "roc_year": "95",
-    "event": "立委王幸男等39人提案：約僱人員勞動條件不得低於勞基法最低標準",
-    "actor": "立法院",
-    "category": "草案提出",
-    "personnel_types": [
-      "約僱"
-    ],
-    "summary": "就約僱人員勞動條件、年資計算及離職退休撫卹提出修法主張，法制局就此研析。",
-    "significance": "顯示立法院內部存在「勞動法制化」與「公法契約化」兩種路徑競爭。",
-    "sources": [
-      {
-        "title": "立法院法制局：約聘僱人員之相關條文不得低於勞動基準法之最低標準（王幸男等39人提案研析）",
-        "url": "https://www.ly.gov.tw/Pages/Detail.aspx?nodeid=5641&pid=48267",
-        "accessible": false
-      }
-    ]
-  },
-  {
-    "date": "2007-02-06",
-    "roc_year": "96",
-    "event": "行政院「研商臨時人員適用勞基法」會議政策指示",
-    "actor": "行政院",
-    "category": "政策",
-    "personnel_types": [
-      "約用"
-    ],
-    "summary": "指出部分機關以臨時人員長期擔任核心公務，責成人事局研擬禁止不當使用機制，使臨時人員回歸臨時性本質。",
-    "significance": "政策論述確立「臨時人員＝非核心、非公權力」的切割原則，成為日後要點第3點的來源。",
-    "sources": [
-      {
-        "title": "臨時人員進用及運用管理（人事總處104年非典型人力巡迴說明會簡報）",
-        "url": "https://www.dgpa.gov.tw/FileConversion?filename=dgpa%2Ffiles%2F201612%2Fa08b9898-aaa6-4789-992e-aee93d1edea3.pdf&nfix=&name=臨時人員進用及運用管理.pdf",
-        "accessible": true
-      },
-      {
-        "title": "臨時人員進用及運用要點問答集（人事總處，109.3.2配合通函版）",
-        "url": "https://www.dgpa.gov.tw/FileConversion?filename=dgpa%2Ffiles%2F202108%2F3515d795-6c20-4a64-9cb2-fd626fd6d22f.doc&nfix=pdf&name=臨時人員要點QA.doc",
-        "accessible": true
-      }
-    ]
-  },
-  {
-    "date": "2007-05",
-    "roc_year": "96",
-    "event": "立法院法制局專題研究：聘僱人員適用勞動基準法爭議問題之研析（李淑娟，A00500）",
-    "actor": "立法院",
-    "category": "調查報告",
-    "personnel_types": [
-      "聘用",
-      "約僱"
-    ],
-    "summary": "回顧勞委會86年起研議聘僱人員適用勞基法，整理公法／私法契約、管理權限、財政負擔等爭點，比較英、德、紐、日契約人力，提出管理面及制度面建議。",
-    "significance": "顯示「適用勞基法」路徑早在86年即被提出並持續被行政、考試兩院排除。",
-    "sources": [
-      {
-        "title": "立法院法制局專題研究：聘僱人員適用勞動基準法爭議問題之研析（李淑娟，96年5月，A00500）",
-        "url": "https://www.ly.gov.tw/Pages/Detail.aspx?nodeid=6586&pid=83653",
-        "accessible": false
-      }
-    ]
-  },
-  {
-    "date": "2007-11-30",
-    "roc_year": "96",
-    "event": "勞委會公告：公部門各業臨時人員自97年1月1日起適用勞基法",
-    "actor": "勞動部",
-    "category": "政策",
-    "personnel_types": [
-      "約用"
-    ],
-    "summary": "勞動1字第0960130914號公告，將非依公務人員法規、以人事費以外經費進用之臨時人員納入勞基法；立法院同時決議97年度臨時人員酬金不得高於96年度。",
-    "significance": "關鍵節點：契約人力正式「雙軌化」—聘僱人員留在公法契約、臨時人員轉入私法勞動契約，兩者身分、保障、救濟從此分流。",
-    "sources": [
-      {
-        "title": "政府機關多元人力運用及管理（人事總處簡報，110年6月）",
-        "url": "https://www.dgpa.gov.tw/FileConversion?filename=dgpa%2Ffiles%2F202106%2Fa5dc4cdd-59a4-495a-b1d9-1dab0ee1b34a.pdf&name=政府機關多元人力運用及管理.pdf",
-        "accessible": true
-      },
-      {
-        "title": "臨時人員進用及運用要點問答集（人事總處，109.3.2配合通函版）",
-        "url": "https://www.dgpa.gov.tw/FileConversion?filename=dgpa%2Ffiles%2F202108%2F3515d795-6c20-4a64-9cb2-fd626fd6d22f.doc&nfix=pdf&name=臨時人員要點QA.doc",
-        "accessible": true
-      },
-      {
-        "title": "多元人力簡介（人事總處委外及多元人力運用專區，113.2.27）",
-        "url": "https://www.dgpa.gov.tw/mp/archive?uid=577&mid=152",
-        "accessible": true
-      }
-    ]
-  },
-  {
-    "date": "2008-01-10",
-    "roc_year": "97",
-    "event": "行政院訂頒「行政院及所屬各機關學校臨時人員進用及運用要點」，溯自97年1月1日實施",
-    "actor": "行政院",
-    "category": "法制定",
-    "personnel_types": [
-      "約用"
-    ],
-    "summary": "定義臨時人員為機關非依公務人員法規、以人事費以外經費自行進用者；限辦非公權力之臨時性、短期性、季節性、特定性定期契約工作；以96年度進用人數為上限；須經委外、簡化、志工檢討後仍不能負荷始得進用；訂定後修正10次。",
-    "significance": "層疊：行政院在「聘用（法律）」「約僱（命令）」之外再疊上「臨時人員（要點）」第三層，以行政規則取代專法；上限以96年度人數凍結，成為往後十餘年總量控管基準。",
-    "sources": [
-      {
-        "title": "臨時人員進用及運用要點問答集（人事總處，109.3.2配合通函版）",
-        "url": "https://www.dgpa.gov.tw/FileConversion?filename=dgpa%2Ffiles%2F202108%2F3515d795-6c20-4a64-9cb2-fd626fd6d22f.doc&nfix=pdf&name=臨時人員要點QA.doc",
-        "accessible": true
-      },
-      {
-        "title": "臨時人員進用及運用管理（人事總處104年非典型人力巡迴說明會簡報）",
-        "url": "https://www.dgpa.gov.tw/FileConversion?filename=dgpa%2Ffiles%2F201612%2Fa08b9898-aaa6-4789-992e-aee93d1edea3.pdf&nfix=&name=臨時人員進用及運用管理.pdf",
-        "accessible": true
-      },
-      {
-        "title": "約用人員管理規定（人事總處組編人力處簡報，113.4.18）",
-        "url": "https://www.dgpa.gov.tw/FileConversion?filename=dgpa/files/202404/308f2535-a6e0-4dd1-bbca-5d4a6c82fb80.pdf&nfix=&name=約用人員管理規定.pdf",
-        "accessible": true
-      }
-    ]
-  },
-  {
-    "date": "2008-01-31",
-    "roc_year": "97",
-    "event": "第6屆立法委員任期屆滿，《聘用人員人事條例》草案屆期不續審",
-    "actor": "立法院",
-    "category": "草案審議",
-    "personnel_types": [
-      "聘用",
-      "約僱"
-    ],
-    "summary": "依立法院職權行使法第13條不予審議；考試院表示將由銓敘部重新研擬。同年考試院委託開南大學柯三吉等研究草案對文官體制之影響，研究認為國家與聘用人員間應為私法契約關係。",
-    "significance": "否決點：屆期不續審機制使專法無聲消失，無須政治表態；學界對公法／私法定性歧見持續。",
-    "sources": [
-      {
-        "title": "考試院新聞稿：繼續推動聘用人員人事條例草案完成立法，合理保障聘僱人員權益",
-        "url": "https://www.exam.gov.tw/News_Content.aspx?n=1&s=19011",
-        "accessible": false
-      },
-      {
-        "title": "柯三吉等（開南大學）：考試院擬定之「聘用人員人事條例」草案對現行公務人員體制影響之研究（考試院委託研究，2008）",
-        "url": "https://ws.exam.gov.tw/Download.ashx?u=LzAwMS9VcGxvYWQvMS9yZWxmaWxlLzEyMDgyLzI4NDE0LzRjODc3ZjI1LTc3YjYtNDEyZi1iZGYxLWI5N2IwOGE2Y2MxYi5wZGY%3D&n=MDEyMjE3MTU1MzYzLnBkZg%3D%3D",
-        "accessible": false
-      },
-      {
-        "title": "政府機關用人體制之研究－從公法契約用人法制論析（人事總處，103.5.15）",
-        "url": "https://www.dgpa.gov.tw/Uploads/public/Attachment/51161738378.pdf",
-        "accessible": true
-      }
-    ]
-  },
-  {
-    "date": "2009-06-18",
-    "roc_year": "98",
-    "event": "考試院第11屆第39次會議通過「文官制度興革規劃方案」，確立政務、常務、契約用人三元體制",
-    "actor": "考試院",
-    "category": "政策",
-    "personnel_types": [
-      "聘用",
-      "約僱",
-      "公務人員"
-    ],
-    "summary": "第二案「統整文官法制、活化管理體系」中程目標「健全政府契約用人制度」交銓敘部規劃，預定2011年中期完成；以現行聘用及約僱人員為適用對象，在常任文官之外建立契約用人完整制度。",
-    "significance": "關鍵節點：考試院正式承認契約用人為文官體系第三支柱，但仍限定在「聘用、約僱」，未納入已轉入勞基法的臨時人員。",
-    "sources": [
-      {
-        "title": "變革中的文官制度：介紹「文官制度興革規劃方案」（考試院）",
-        "url": "https://www.exam.gov.tw/public/data/011317504871.pdf",
-        "accessible": false
-      },
-      {
-        "title": "政府機關用人體制之研究－從公法契約用人法制論析（人事總處，103.5.15）",
-        "url": "https://www.dgpa.gov.tw/Uploads/public/Attachment/51161738378.pdf",
-        "accessible": true
-      },
-      {
-        "title": "蔡良文〈政府契約用人制度變革之研析〉考銓季刊第53期（2008）",
-        "url": "https://lawdata.com.tw/File/DC/Journal/J1549/A08880053_063.pdf",
-        "accessible": false
-      }
-    ]
-  },
-  {
-    "date": "2010-02-03",
-    "roc_year": "99",
-    "event": "總統公布《中央政府機關總員額法》全文11條，4月1日施行；立法院附帶決議5年內員額降至16萬人",
-    "actor": "立法院",
-    "category": "法制定",
-    "personnel_types": [
-      "公務人員",
-      "聘用",
-      "約僱"
-    ],
-    "summary": "99年1月12日三讀（與組織再造四法同時）。員額最高17.3萬人，第二類員額為聘僱人員、駐衛警、工友；第8條建立每2年員額評鑑；人事總處每4年向立法院報告。108年12月31日修正第3、4、11條。",
-    "significance": "關鍵節點：總量管制使正式員額成為硬約束，而業務持續擴張，機關只能向「員額外」人力（臨時人員、派遣、承攬）求解—非典型人力擴張的結構性誘因由此制度化。",
-    "sources": [
-      {
-        "title": "中央政府機關總員額法（全國法規資料庫）",
-        "url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=S0110038",
-        "accessible": true
-      },
-      {
-        "title": "中央政府機關總員額法 沿革",
-        "url": "https://law.moj.gov.tw/LawClass/LawHistory.aspx?pcode=S0110038",
-        "accessible": true
-      },
-      {
-        "title": "彭錦鵬〈中央政府機關總員額法制度之理想與實踐〉",
-        "url": "https://www.ea.sinica.edu.tw/file/Image/total%20member.pdf",
-        "accessible": false
-      },
-      {
-        "title": "立法院預算中心：總員額法施行後，中央政府機關員額總數雖略為精簡，惟近年員額規模漸增（113年度總預算整體評估）",
-        "url": "https://www.ly.gov.tw/Pages/Detail.aspx?nodeid=46405&pid=231928",
-        "accessible": false
-      },
-      {
-        "title": "員額評鑑制度簡介（人事總處員額評鑑服務專區）",
-        "url": "https://www.dgpa.gov.tw/mp/archive?uid=278&mid=277",
-        "accessible": true
-      }
-    ]
-  },
-  {
-    "date": "2010-04",
-    "roc_year": "99",
-    "event": "蘇偉業於《文官制度季刊》發表地方政府約聘僱人員調查研究",
-    "actor": "學界",
-    "category": "調查報告",
-    "personnel_types": [
-      "聘用",
-      "約僱"
-    ],
-    "summary": "以高雄市、臺中市、花蓮縣361份有效問卷與訪談指出：約聘僱人員實為機關基層穩定人力而非臨時補充人力；員額控制下地方以其他名目聘用，正式統計低估實況；批評考試院新版草案改革過於保守。",
-    "significance": "學界揭示「名義臨時、實質常態」的漂移現象，並指出員額替代為主因。",
-    "sources": [
-      {
-        "title": "蘇偉業〈從地方政府運用約聘僱人員之調查剖析我國契約公務人力之改革〉文官制度季刊2(2)，2010",
-        "url": "https://ws.exam.gov.tw/Download.ashx?u=LzAwMS9VcGxvYWQvMS9yZWxmaWxlLzkzMjMvMjE5NDQvOWM5NjcyNzMtMGU0MC00NzJhLThmOWUtYmU2NmQ4MTcwMjA1LnBkZg%3D%3D&n=MDUyODE2MzIyNjcxLnBkZg%3D%3D",
-        "accessible": false
-      }
-    ]
-  },
-  {
-    "date": "2010-08-27",
-    "roc_year": "99",
-    "event": "行政院訂定「行政院運用勞動派遣應行注意事項」，派遣人數以99年1月31日實際人數15,514人為上限",
-    "actor": "行政院",
-    "category": "政策",
-    "personnel_types": [
-      "承攬"
-    ],
-    "summary": "依立法院99年度總預算決議訂定；103年6月4日修正第6、7點，上限因立法院103年度預算決議下調為11,166人；110年2月1日停止適用。",
-    "significance": "層疊：派遣作為第四層非典型人力亦以「凍結上限」方式控管，複製臨時人員要點的治理模式。",
-    "sources": [
-      {
-        "title": "公部門運用派遣人力之研究（人事行政局，100年10月修正本）",
-        "url": "https://www.dgpa.gov.tw/uploads/dgpa/files/202202/60e3e57d-48fc-403a-bd27-255537e85048.pdf",
-        "accessible": true
-      },
-      {
-        "title": "政府機關多元人力運用及管理（人事總處簡報，110年6月）",
-        "url": "https://www.dgpa.gov.tw/FileConversion?filename=dgpa%2Ffiles%2F202106%2Fa5dc4cdd-59a4-495a-b1d9-1dab0ee1b34a.pdf&name=政府機關多元人力運用及管理.pdf",
-        "accessible": true
-      }
-    ]
-  },
-  {
-    "date": "2011-10",
-    "roc_year": "100",
-    "event": "人事行政局出版《公部門運用派遣人力之研究》",
-    "actor": "人事總處",
-    "category": "調查報告",
-    "personnel_types": [
-      "承攬"
-    ],
-    "summary": "檢討注意事項執行情形，指出業務範圍正面表列、總量管制、指定派遣與轉掛派遣禁止等問題；回顧國美館派遣濫用、立法院要求檢討等背景。",
-    "significance": "行政部門自我檢討顯示派遣治理依賴行政規則，拘束力有限。",
-    "sources": [
-      {
-        "title": "公部門運用派遣人力之研究（人事行政局，100年10月修正本）",
-        "url": "https://www.dgpa.gov.tw/uploads/dgpa/files/202202/60e3e57d-48fc-403a-bd27-255537e85048.pdf",
-        "accessible": true
-      }
-    ]
-  },
-  {
-    "date": "2012",
-    "roc_year": "101",
-    "event": "監察院通過「我國中央行政機關勞動派遣問題」調查報告（101財調0132）",
-    "actor": "監察院",
-    "category": "調查報告",
-    "personnel_types": [
-      "承攬"
-    ],
-    "summary": "沈美真、楊美鈴、程仁宏、劉玉山等委員調查；指出中央機關受總員額法限制無法擴充員額，派遣人數曾達1.5萬人，若全面禁用恐致上萬人失業；相關糾正案文編號099財正0034。人事總處網站另列監察院100.11.22至101.10.4就委外業務之調查意見。",
-    "significance": "監察院首度將派遣擴張與總員額法連結，確認「總量管制→非典型替代」的因果。",
-    "sources": [
-      {
-        "title": "監察院調查報告：我國中央行政機關勞動派遣問題（101財調0132；糾正案文099財正0034）—僅見部落格轉載",
-        "url": "https://buildingfocus.blogspot.com/2017/03/",
-        "accessible": false
-      }
-    ]
-  },
-  {
-    "date": "2012-01",
-    "roc_year": "101",
-    "event": "蘇偉業〈政府契約人力之政策定位與現實：政府內部人力市場之啟示〉",
-    "actor": "學界",
-    "category": "調查報告",
-    "personnel_types": [
-      "聘用",
-      "約僱"
-    ],
-    "summary": "指出機關進用約聘僱是因正式人力不足，與制度定位（臨時性）落差；考試院2009年提出三元體制至今未完成任何新立法。",
-    "significance": "學界持續記錄「政策定位／實際運作」的漂移。",
-    "sources": [
-      {
-        "title": "蘇偉業〈政府契約人力之政策定位與現實：政府內部人力市場之啟示〉文官制度季刊4(1)，2012",
-        "url": "https://ws.exam.gov.tw/Download.ashx?u=LzAwMS9VcGxvYWQvMTUvcmVsZmlsZS8xMjAwMS8yNDQ0NC8wY2ZkOTdhNy0wZTk5LTRlOWEtYmM1NC01ODNhNTE0M2NmNWEucGRm&n=NC0xLTIg6JiH5YGJ5qWtLS3mlL%2FlupzlpZHntITkurrlipvkuYvmlL%2FnrZblrprkvY3oiIfnj77lr6YxMDEwMjA5LnBkZg%3D%3D",
-        "accessible": false
-      },
-      {
-        "title": "考試院委託研究：契約進用公務人力之範圍、甄選、權利及義務之研究（2012）",
-        "url": "https://ws.exam.gov.tw/Download.ashx?u=LzAwMS9VcGxvYWQvMS9yZWxmaWxlLzEyMDgyLzI4NDM5L2EwMWVmNDBiLWM4ZmQtNDE4Ni1hMGFkLWI0YjM5NTBkODdlMS5wZGY%3D&n=MDEyNTE2MTUyMDQwLnBkZg%3D%3D",
-        "accessible": false
-      }
-    ]
-  },
-  {
-    "date": "2012-03-27",
-    "roc_year": "101",
-    "event": "考試院、行政院第4度會銜函送《公務人員基準法》草案，第5條將聘任人員納入常務人員",
-    "actor": "考試院",
-    "category": "草案提出",
-    "personnel_types": [
-      "公務人員",
-      "聘用"
-    ],
-    "summary": "5章71條；以基準法第5條為法源，銓敘部另擬「聘任人員人事條例」草案（101.9.28送考試院）定位聘任人員為常務人員，不簽契約、無聘期；聘用及約僱則定位為公法契約用人。",
-    "significance": "轉換：將「聘任」從契約用人切離回常務體系，契約人力範圍縮小為聘用、約僱兩類。",
-    "sources": [
-      {
-        "title": "政府機關用人體制之研究－從公法契約用人法制論析（人事總處，103.5.15）",
-        "url": "https://www.dgpa.gov.tw/Uploads/public/Attachment/51161738378.pdf",
-        "accessible": true
-      },
-      {
-        "title": "考試院新聞稿：考試院審議通過公務人員基準法草案 近期將函請行政院同意會銜",
-        "url": "https://www.exam.gov.tw/News_Content.aspx?n=1&s=19485",
-        "accessible": false
-      }
-    ]
-  },
-  {
-    "date": "2013-05-17",
-    "roc_year": "102",
-    "event": "銓敘部函送考試院新版《聘用人員人事條例》草案（41條，整合聘用及約僱）",
-    "actor": "銓敘部",
-    "category": "草案提出",
-    "personnel_types": [
-      "聘用",
-      "約僱"
-    ],
-    "summary": "研擬原則：維持「聘用人員」名稱、進用比率不逾職員預算總人數10%、不適用勞基法（公法契約）、一等至五等、學經歷資格、公開甄選、主管機關每5年檢討業務計畫以避免久任、年度考核、參加勞保並準用勞退條例。",
-    "significance": "路徑依賴：第二代草案延續「公法契約＋不適用勞基法」路徑，但保障內容改借用勞保勞退，顯示「借用勞動制度填補公法空洞」的折衷。",
-    "sources": [
-      {
-        "title": "政府機關用人體制之研究－從公法契約用人法制論析（人事總處，103.5.15）",
-        "url": "https://www.dgpa.gov.tw/Uploads/public/Attachment/51161738378.pdf",
-        "accessible": true
-      }
-    ]
-  },
-  {
-    "date": "2014-05-15",
-    "roc_year": "103",
-    "event": "人事總處研究報告《政府機關用人體制之研究－從公法契約用人法制論析》",
-    "actor": "人事總處",
-    "category": "調查報告",
-    "personnel_types": [
-      "聘用",
-      "約僱",
-      "約用"
-    ],
-    "summary": "比較聘任、聘用兩草案，分析聘僱改適用勞基法之衝擊，提出「廢除聘僱法制：高度專業者納入聘任制度、例行事務性約僱改進用臨時人員受勞動法制保障」等重組方案。",
-    "significance": "行政院幕僚立場：傾向以勞動法制與聘任制度「兩端吸收」契約人力，與考試院「第三軌公法契約」路線分歧。",
-    "sources": [
-      {
-        "title": "政府機關用人體制之研究－從公法契約用人法制論析（人事總處，103.5.15）",
-        "url": "https://www.dgpa.gov.tw/Uploads/public/Attachment/51161738378.pdf",
-        "accessible": true
-      }
-    ]
-  },
-  {
-    "date": "2015-06-17",
-    "roc_year": "104",
-    "event": "《派用人員派用條例》廢止；公務人員任用法增訂第36條之1設9年過渡期",
-    "actor": "立法院",
-    "category": "法制定",
-    "personnel_types": [
-      "公務人員"
-    ],
-    "summary": "立法院104年6月2日三讀，現職派用人員104.6.19至113.6.18過渡期後留任原職；114年8月1日再修正第36條之1放寬調任。",
-    "significance": "轉換：五類非考試用人中的「派用」軌道正式終結，回歸考試用人，為考試院在契約用人議題上少數成功的「收編」。",
-    "sources": [
-      {
-        "title": "法源法律網：派用人員9年後不升遷 立法院三讀通過公務人員任用法（2015-06-04）",
-        "url": "https://www.lawbank.com.tw/news/NewsContent.aspx?NID=128959",
-        "accessible": false
-      }
-    ]
-  },
-  {
-    "date": "2015-08",
-    "roc_year": "104",
-    "event": "立法院預算中心專題：中央政府各機關運用非典型人力之現況",
-    "actor": "立法院",
-    "category": "調查報告",
-    "personnel_types": [
-      "約用",
-      "承攬"
-    ],
-    "summary": "100至103年度非典型人力由82,461人增至84,805人，臨時人員由33,210人增至39,677人；批評部分機關委外比率偏高「儼然成為發包中心」、超額人力偏高卻運用非典型人力。",
-    "significance": "量化證據顯示總員額法施行後非典型人力不減反增。",
-    "sources": [
-      {
-        "title": "立法院預算中心專題：中央政府各機關運用非典型人力之現況（104年8月）",
-        "url": "https://www.ly.gov.tw/Pages/Detail.aspx?nodeid=10084&pid=139750",
-        "accessible": false
-      }
-    ]
-  },
-  {
-    "date": "2015",
-    "roc_year": "104",
-    "event": "李靜宜臺大政治學博士論文《我國中央機關非典型人力運用政策之分析：歷史制度論觀點》",
-    "actor": "學界",
-    "category": "調查報告",
-    "personnel_types": [
-      "約用",
-      "承攬",
-      "聘用",
-      "約僱"
-    ],
-    "summary": "以路徑依循與斷續均衡理論分析：長期考試用人、人事制度僵化、財政危機與新公共管理使非典型人力運用「實屬必然」；各機關因歷史沿革、預算、民意機關關注與受僱者動員差異而有不同時點與作法。",
-    "significance": "直接以歷史制度論驗證本題核心命題。",
-    "sources": [
-      {
-        "title": "李靜宜（2015）我國中央機關非典型人力運用政策之分析：歷史制度論觀點，臺大政治學研究所博士論文",
-        "url": "https://www.airitilibrary.com/Article/Detail/U0001-1307201516341300",
-        "accessible": false
-      }
-    ]
-  },
-  {
-    "date": "2016-02-04",
-    "roc_year": "105",
-    "event": "勞動部訂定「政府機關（構）運用勞務承攬參考原則」",
-    "actor": "勞動部",
-    "category": "法制定",
-    "personnel_types": [
-      "承攬"
-    ],
-    "summary": "依立法院104年決議由勞動部會同人事總處訂定；要求避免自然人承攬、不得指揮監督派駐勞工、設申訴管道、薪資列固定費用；113年5月1日修正。",
-    "significance": "層疊：承攬人力亦僅以「參考原則」（行政指導）治理，法律位階最低，卻承接最多人力。",
-    "sources": [
-      {
-        "title": "勞動部：政府機關（構）運用勞務承攬參考原則（105.2.4訂定）",
-        "url": "https://www.mol.gov.tw/media/blnol2pf/政府機關-構-運用勞務承攬應行注意事項-核定版-1050204訂定.pdf?mediaDL=true",
-        "accessible": false
-      },
-      {
-        "title": "政府機關（構）運用勞務承攬參考原則（植根法律網，1130501版）",
-        "url": "https://www.rootlaw.com.tw/LawArticle.aspx?LawID=A040290031005900-1130501",
-        "accessible": false
-      },
-      {
-        "title": "勞動部〈勞動權益相關法規及政府機關（構）運用承攬參考原則說明〉（人事總處113年研習簡報）",
-        "url": "https://www.dgpa.gov.tw/FileConversion?filename=dgpa%2Ffiles%2F202404%2Fdcb818dc-f2fe-4f41-b561-f23bff693cca.pdf&nfix=&name=承攬參考原則說明.pdf",
-        "accessible": true
-      }
-    ]
-  },
-  {
-    "date": "2017-04-20",
-    "roc_year": "106",
-    "event": "考試院院會審議銓敘部「契約人員人事條例草案」（聘用六至十三等、約僱一至五等）",
-    "actor": "考試院",
-    "category": "草案審議",
-    "personnel_types": [
-      "聘用",
-      "約僱"
-    ],
-    "summary": "因銓敘部與人事總處對適用範圍看法不同而延宕；同年10月27日立委林岱樺等17人以「契約人員人事條例草案」提案（第9屆第4會期），明定契約人員與國家為公法契約關係，109年1月屆期不續審。",
-    "significance": "否決點：兩院幕僚機關之管轄歧見成為內部否決點；委員提案版亦因缺乏行政部門支持而消失。",
-    "sources": [
-      {
-        "title": "新北市政府人事處108年度自行研究報告：我國聘僱人員人事法制之研究",
-        "url": "https://www.rde.ntpc.gov.tw/userfiles/1160700/files/16我國聘僱人員人事法制之研究.pdf",
-        "accessible": false
-      },
-      {
-        "title": "法源法律網：「契約人員人事條例」草案（林岱樺等17人提案，2017-10-26）",
-        "url": "https://www.lawbank.com.tw/news/NewsContent_print.aspx?NID=147434.00",
-        "accessible": false
-      }
-    ]
-  },
-  {
-    "date": "2018-07-18",
-    "roc_year": "107",
-    "event": "行政院訂定「行政院暨所屬機關（構）檢討運用勞動派遣實施計畫」（派遣歸零）",
-    "actor": "行政院",
-    "category": "政策",
-    "personnel_types": [
-      "承攬",
-      "約用"
-    ],
-    "summary": "目標110年起不再運用派遣；涉核心業務者改以公開遴選自僱（臨時人員），電話總機、清潔、檔案管理、駕駛等8項非核心業務改採勞務承攬。107年底承攬43,622人、派遣7,522人；審計部指派遣歸零可能「遁入承攬」。",
-    "significance": "轉換：以「派遣→承攬／臨時人員」的形式轉換回應勞權批評，實質僱用關係未改，審計部與預算中心均警告「承攬為名、派遣為實」。",
-    "sources": [
-      {
-        "title": "行政院暨所屬機關（構）檢討運用勞動派遣實施計畫（107.7.18；臺中市主計處轉載）",
-        "url": "https://www.dbas.taichung.gov.tw/media/529424/61-1-new-檢討運用勞動派遣實施計畫-107718訂定.pdf",
-        "accessible": false
-      },
-      {
-        "title": "政府機關多元人力運用及管理（人事總處簡報，110年6月）",
-        "url": "https://www.dgpa.gov.tw/FileConversion?filename=dgpa%2Ffiles%2F202106%2Fa5dc4cdd-59a4-495a-b1d9-1dab0ee1b34a.pdf&name=政府機關多元人力運用及管理.pdf",
-        "accessible": true
-      },
-      {
-        "title": "立法院預算中心：派遣歸零政策實施後，允宜儘速訂定細部注意事項並依時程完備派遣專法，以防堵「承攬為名，派遣為實」",
-        "url": "https://www.ly.gov.tw/Pages/Detail.aspx?nodeid=33364&pid=185035",
-        "accessible": false
-      },
-      {
-        "title": "關鍵評論網：行政院7千位派遣兩年內將「歸零」，但勞動條件更差的「承攬」卻有4萬多人",
-        "url": "https://www.thenewslens.com/article/100155",
-        "accessible": false
-      },
-      {
-        "title": "報導者：政府派遣人力下降背後……問題真的改善嗎？",
-        "url": "https://www.twreporter.org/a/temporary-worker-public-sector",
-        "accessible": false
-      }
-    ]
-  },
-  {
-    "date": "2018-12-22",
-    "roc_year": "107",
-    "event": "監察院財經委員會巡察行政院提出「政府對於非典型就業規範及執行情形之探討」通案調查",
-    "actor": "監察院",
-    "category": "調查報告",
-    "personnel_types": [
-      "約用",
-      "承攬"
-    ],
-    "summary": "指地方政府臨時人員管控缺乏明文規定，主管機關應評估正式編制是否不足並考慮規範各級政府臨時人員進用數額。",
-    "significance": "監察院再次指向「編制不足→非典型替代」的結構。",
-    "sources": [
-      {
-        "title": "監察院新聞稿：政府應落實立法保護非典型就業權益，並確實掌握相關資訊（107.12.22巡察行政院）",
-        "url": "https://www.cy.gov.tw/News_Content.aspx?n=124&sms=8912&s=13227",
-        "accessible": false
-      }
-    ]
-  },
-  {
-    "date": "2019-10-01",
-    "roc_year": "108",
-    "event": "行政院全文修正約僱辦法並更名為《行政院與所屬中央及地方各機關約僱人員僱用辦法》；考試院同日修正聘用條例施行細則第6條",
-    "actor": "行政院",
-    "category": "修正",
-    "personnel_types": [
-      "約僱",
-      "聘用"
-    ],
-    "summary": "配合分類職位任用法廢止重新定義約僱人員為「以行政契約定期僱用，辦理事務性、簡易性等行政或技術工作」，明定公開甄選程序、消極資格、65歲終止、提高撫慰金；109年5月增訂第8-1條、111年9月修正第4條。",
-    "significance": "修補式層疊：47年未動的命令終於修正，但仍停留在命令層次；明文「行政契約」是為回應勞基法適用爭議（法制局指出人事總處於108年修正以釐清適用關係）。",
-    "sources": [
-      {
-        "title": "行政院與所屬中央及地方各機關約僱人員僱用辦法 沿革",
-        "url": "https://law.moj.gov.tw/LawClass/LawHistory.aspx?pcode=S0110014",
-        "accessible": true
-      },
-      {
-        "title": "行政院暨所屬機關約僱人員僱用辦法修正總說明（108年，行政院公報）",
-        "url": "https://gazette.nat.gov.tw/EG_FileManager/eguploadpub/eg025185/ch01/type1/gov01/num1/images/AA.pdf",
-        "accessible": true
-      },
-      {
-        "title": "聘用人員聘用條例施行細則 沿革",
-        "url": "https://law.moj.gov.tw/LawClass/LawHistory.aspx?pcode=S0020015",
-        "accessible": true
-      },
-      {
-        "title": "立法院法制局議題研析：公部門聘僱小編人員勞動權益之研析（蔡琮浩，109年9月，R01083）",
-        "url": "https://www.ly.gov.tw/Pages/Detail.aspx?nodeid=6590&pid=199057",
-        "accessible": false
-      }
-    ]
-  },
-  {
-    "date": "2019-11-15",
-    "roc_year": "108",
-    "event": "行政院修正臨時人員要點：不再以定期契約為限、改採主管機關總量控管",
-    "actor": "行政院",
-    "category": "修正",
-    "personnel_types": [
-      "約用"
-    ],
-    "summary": "配合零派遣，派遣改自僱人員多屬繼續性工作，故由機關依勞基法簽訂定期或不定期契約；上限改為「96年度人數＋派遣改臨時人員人數＋97年後新設機關人數」，專案補助與重大政策人力不受限。",
-    "significance": "漂移的正式化：要點放棄「臨時性」要件，承認臨時人員已是常態人力，但仍以要點而非法律處理。",
-    "sources": [
-      {
-        "title": "約用人員管理規定（人事總處組編人力處簡報，113.4.18）",
-        "url": "https://www.dgpa.gov.tw/FileConversion?filename=dgpa/files/202404/308f2535-a6e0-4dd1-bbca-5d4a6c82fb80.pdf&nfix=&name=約用人員管理規定.pdf",
-        "accessible": true
-      },
-      {
-        "title": "政府機關多元人力運用及管理（人事總處簡報，110年6月）",
-        "url": "https://www.dgpa.gov.tw/FileConversion?filename=dgpa%2Ffiles%2F202106%2Fa5dc4cdd-59a4-495a-b1d9-1dab0ee1b34a.pdf&name=政府機關多元人力運用及管理.pdf",
-        "accessible": true
-      },
-      {
-        "title": "多元人力簡介（人事總處委外及多元人力運用專區，113.2.27）",
-        "url": "https://www.dgpa.gov.tw/mp/archive?uid=577&mid=152",
-        "accessible": true
-      }
-    ]
-  },
-  {
-    "date": "2019-12-31",
-    "roc_year": "108",
-    "event": "總統公布《中央政府機關總員額法》修正第3、4、11條",
-    "actor": "立法院",
-    "category": "修正",
-    "personnel_types": [
-      "公務人員",
-      "聘用",
-      "約僱"
-    ],
-    "summary": "將公立醫院職員排除於第一類員額（調降12,100人）；第三類（司法）上限提高至15,000人，第二類（聘僱、駐衛警、工友）由41,200人下調為40,100人。",
-    "significance": "顯示總量上限可因個別部門需求局部調整，但聘僱員額上限反遭壓縮，加深員額外人力的替代誘因。",
-    "sources": [
-      {
-        "title": "中央政府機關總員額法 沿革",
-        "url": "https://law.moj.gov.tw/LawClass/LawHistory.aspx?pcode=S0110038",
-        "accessible": true
-      },
-      {
-        "title": "立法院：中央政府機關總員額法修正第3條、第4條及第11條條文（108年12月）",
-        "url": "https://www.ly.gov.tw/Pages/Detail.aspx?nodeid=33324&pid=190941",
-        "accessible": false
-      }
-    ]
-  },
-  {
-    "date": "2020-02",
-    "roc_year": "109",
-    "event": "立法院預算中心專題研究：臨時人員納入中央政府機關總員額法之探討（賴怡瑩，A01511）",
-    "actor": "立法院",
-    "category": "調查報告",
-    "personnel_types": [
-      "約用"
-    ],
-    "summary": "認為臨時人員與第二類人員定位差異不大，納入總員額法控管「尚屬可行」，法律、財政、行政層面無礙，政治層面可能加劇勞基法適用與權益衡平爭議。",
-    "significance": "提出將「員額外」人力拉回「員額內」的制度選項，迄今未採。",
-    "sources": [
-      {
-        "title": "立法院預算中心專題研究：臨時人員納入中央政府機關總員額法之探討（賴怡瑩，109年2月，A01511）",
-        "url": "https://www.ly.gov.tw/Pages/Detail.aspx?nodeid=6586&pid=191973",
-        "accessible": false
-      }
-    ]
-  },
-  {
-    "date": "2020-06",
-    "roc_year": "109",
-    "event": "人事總處研擬完成《聘約人員人事條例》草案，函請各機關於6月19日前表示意見",
-    "actor": "人事總處",
-    "category": "草案提出",
-    "personnel_types": [
-      "聘用",
-      "約僱"
-    ],
-    "summary": "整合聘用與約僱為「聘約人員」，公法契約關係，列為機關預算員額，一等至五等（五等最高，須博士學位及年資），甄審考核委員會、公開甄選、利益迴避、續約與終止、服務行為規範、參加勞保勞退；第4條：三等以上聘約人員進用滿3年得任特定機關（研究、文化館所、科技專業等非公權力領域）有職稱職務。",
-    "significance": "關鍵節點（未成）：首次由行政院（而非考試院）主導契約人力專法，且突破「不得兼任有職等職務」的58年禁令，立即觸發考試權／文官體制的否決反應。",
-    "sources": [
-      {
-        "title": "【澄清稿】媒體報導「聘約人員人事條例」草案相關議題（人事總處新聞稿，109.7.12）",
-        "url": "https://www.dgpa.gov.tw/information?uid=82&pid=10228",
-        "accessible": true
-      },
-      {
-        "title": "中央社：約聘人員可取得職等 人事行政總處：無公務員身分（2020.7.11）",
-        "url": "https://www.cna.com.tw/news/aipl/202007110190.aspx",
-        "accessible": false
-      },
-      {
-        "title": "立法院法制局議題研析：聘約人員人事條例草案之妥適性研析（方華香，109年8月，R01065）",
-        "url": "https://www.ly.gov.tw/Pages/Detail.aspx?nodeid=6590&pid=198459",
-        "accessible": false
-      }
-    ]
-  },
-  {
-    "date": "2020-07-12",
-    "roc_year": "109",
-    "event": "人事總處發布澄清稿；7月13日行政院長蘇貞昌稱聘約人員與公務人員「完全不相干」",
-    "actor": "行政院",
-    "category": "草案審議",
-    "personnel_types": [
-      "聘用",
-      "約僱"
-    ],
-    "summary": "國民黨團質疑「開後門、破壞文官體制」、第4條「三年條款」；全國公務人員協會、林清汶等批評侵犯考試權、酬庸；社工團體批評仍不適用勞基法。人事總處強調不取得公務員身分、不擴及一般行政機關、無時間表。",
-    "significance": "否決聯盟：在野黨＋公務人員團體＋考試權論述形成跨黨派反對，草案停留在徵詢階段；此後未再送行政院會。",
-    "sources": [
-      {
-        "title": "【澄清稿】媒體報導「聘約人員人事條例」草案相關議題（人事總處新聞稿，109.7.12）",
-        "url": "https://www.dgpa.gov.tw/information?uid=82&pid=10228",
-        "accessible": true
-      },
-      {
-        "title": "工商時報：蘇揆：聘約人員人事條例和公務人員完全不相干（2020.7.13）",
-        "url": "https://www.ctee.com.tw/news/20200713700589-430104",
-        "accessible": false
-      },
-      {
-        "title": "自由時報：約聘人員修法被誤解為排擠公務員 人事總處：提案沒有時間表（2020.9）",
-        "url": "https://news.ltn.com.tw/news/politics/breakingnews/3300840",
-        "accessible": false
-      },
-      {
-        "title": "林清汶觀點：聘約人員人事條例將破壞文官體系（風傳媒）",
-        "url": "https://www.storm.mg/article/2853773",
-        "accessible": false
-      },
-      {
-        "title": "全國公務人員協會：針對令人憂心疑慮的「聘約人員人事條例」",
-        "url": "https://ncsatw.org/news/79",
-        "accessible": false
-      },
-      {
-        "title": "簡評行政院人事行政總處的「聘約人員人事條例」（台灣社會福利總盟/社工專協評論）",
-        "url": "https://www.sunnyswa.org.tw/25001/",
-        "accessible": false
-      }
-    ]
-  },
-  {
-    "date": "2020-07-15",
-    "roc_year": "109",
-    "event": "監察院糾正法務部：矯正署以勞務承攬進用心理師、社工涉「假承攬真僱傭」",
-    "actor": "監察院",
-    "category": "調查報告",
-    "personnel_types": [
-      "承攬"
-    ],
-    "summary": "王幼玲、王美玉調查：各監所108年中起以承攬進用專業人力，契約要求全職8小時、配合上下班、加班受訓出差，實具指揮監督卻規避雇主責任，留任率僅62%、50%；請行政院督導整合部會意見研議常設人力。",
-    "significance": "監察院將「承攬替代」的實質僱傭問題正式定性，是派遣歸零後承攬治理失靈的指標案例。",
-    "sources": [
-      {
-        "title": "監察院新聞稿：監所進用心理及社工人員涉「假承攬真僱傭」，監委王幼玲、王美玉糾正法務部（109.7.15）",
-        "url": "https://www.cy.gov.tw/News_Content.aspx?n=125&s=18071",
-        "accessible": false
-      },
-      {
-        "title": "監察院調查報告：法務部矯正署以勞務承攬方式運用專業人力（社工及心理師）至各監所案",
-        "url": "https://cybsbox.cy.gov.tw/CYBSBoxSSL/edoc/download/61829",
-        "accessible": false
-      }
-    ]
-  },
-  {
-    "date": "2020-08",
-    "roc_year": "109",
-    "event": "立法院法制局議題研析：聘約人員人事條例草案之妥適性研析（方華香，R01065）",
-    "actor": "立法院",
-    "category": "調查報告",
-    "personnel_types": [
-      "聘用",
-      "約僱"
-    ],
-    "summary": "肯定整合方向，但指出聘用人員主管機關為銓敘部、約僱為人事總處，草案通過後與《聘用人員聘用條例》適用界線及是否限縮考試權有疑義，建議先與考試院協商；另指可能排擠考試進用人員。",
-    "significance": "法制局再度扮演否決論述供應者，核心仍是兩院管轄。",
-    "sources": [
-      {
-        "title": "立法院法制局議題研析：聘約人員人事條例草案之妥適性研析（方華香，109年8月，R01065）",
-        "url": "https://www.ly.gov.tw/Pages/Detail.aspx?nodeid=6590&pid=198459",
-        "accessible": false
-      }
-    ]
-  },
-  {
-    "date": "2020-09",
-    "roc_year": "109",
-    "event": "立法院法制局議題研析：公部門聘僱小編人員勞動權益之研析（蔡琮浩，R01083）；監委自動調查金山區公所小編過勞死",
-    "actor": "立法院",
-    "category": "調查報告",
-    "personnel_types": [
-      "約僱",
-      "約用"
-    ],
-    "summary": "金山區公所陳姓僱員猝死（月薪不到3萬、加班逾百小時）；研析指出銓敘部視聘用人員為廣義公務員、人事總處視為公法契約不適用勞基法，主管機關咸認不適用勞基法；聘僱人員亦不得組織工會。監察院110年8月糾正金山區公所。",
-    "significance": "個案暴露公法契約定位下「非勞非公」的保障真空；監委建議考試院與人事總處通盤考量並立法保障。",
-    "sources": [
-      {
-        "title": "立法院法制局議題研析：公部門聘僱小編人員勞動權益之研析（蔡琮浩，109年9月，R01083）",
-        "url": "https://www.ly.gov.tw/Pages/Detail.aspx?nodeid=6590&pid=199057",
-        "accessible": false
-      },
-      {
-        "title": "監察院新聞稿：金山區公所小編過勞猝死，糾正新北市金山區公所（110.8）",
-        "url": "https://www.cy.gov.tw/News_Content.aspx?n=125&sms=8912&s=20668",
-        "accessible": false
-      }
-    ]
-  },
-  {
-    "date": "2021-02-01",
-    "roc_year": "110",
-    "event": "行政院停止適用「運用勞動派遣應行注意事項」，110年起行政院暨所屬不再運用派遣",
-    "actor": "行政院",
-    "category": "政策",
-    "personnel_types": [
-      "承攬",
-      "約用"
-    ],
-    "summary": "多元人力自此僅剩「約用（臨時）人員」與「勞務承攬派駐人力」兩類；人事總處110年6月簡報整理94至108年多元人力運用進程。",
-    "significance": "轉換完成：派遣制度性消失，人力轉入承攬與臨時人員，契約人力版圖重組。",
-    "sources": [
-      {
-        "title": "政府機關多元人力運用及管理（人事總處簡報，110年6月）",
-        "url": "https://www.dgpa.gov.tw/FileConversion?filename=dgpa%2Ffiles%2F202106%2Fa5dc4cdd-59a4-495a-b1d9-1dab0ee1b34a.pdf&name=政府機關多元人力運用及管理.pdf",
-        "accessible": true
-      },
-      {
-        "title": "約用人員管理規定（人事總處組編人力處簡報，113.4.18）",
-        "url": "https://www.dgpa.gov.tw/FileConversion?filename=dgpa/files/202404/308f2535-a6e0-4dd1-bbca-5d4a6c82fb80.pdf&nfix=&name=約用人員管理規定.pdf",
-        "accessible": true
-      }
-    ]
-  },
-  {
-    "date": "2021-07-15",
-    "roc_year": "110",
-    "event": "監察院糾正教育部：大專校院專案教師「非勞非教」、以行政規則空白授權",
-    "actor": "監察院",
-    "category": "調查報告",
-    "personnel_types": [
-      "聘用"
-    ],
-    "summary": "教育部自87年開放編制外專案教師，部分學校比例達八成；糾正指身分「非勞非教」、法位階與授權依據有疑義；教育部111年5月24日訂定「專科以上學校進用編制外專任教學人員實施原則」。",
-    "significance": "教育領域的平行案例：契約人力在教育人員法制中同樣以行政規則層疊、形成保障真空。",
-    "sources": [
-      {
-        "title": "監察院新聞稿：大專校院專案教師權益長期遭受漠視「非勞非教」，監察院通過糾正教育部（110.7.15）",
-        "url": "https://www.cy.gov.tw/News_Content.aspx?n=125&s=20498",
-        "accessible": false
-      },
-      {
-        "title": "監察院糾正案文：教育部自87年起開放大專校院編制外專案教師案",
-        "url": "https://cybsbox.cy.gov.tw/CYBSBoxSSL/edoc/download/72599",
-        "accessible": false
-      },
-      {
-        "title": "監察院公報第3231期（糾正教育部專案教師案文）",
-        "url": "https://www-ws.cy.gov.tw/Download.ashx?u=LzAwMS9VcGxvYWQvMy9yZWxmaWxlLzg5MTYvMjA2NzkvYzJhMmU5YzQtZGUxYy00YWM1LTk1OWUtYzg0YjUxNDA2ODlhLnBkZg%3D%3D&n=MzIzMS5wZGY%3D&icon=..pdf",
-        "accessible": false
-      }
-    ]
-  },
-  {
-    "date": "2022-10-20",
-    "roc_year": "111",
-    "event": "數位發展部約聘比例爭議，銓敘部長周志宏表示《聘用人員聘用條例》過於簡陋將研修、預計112年送立法院",
-    "actor": "銓敘部",
-    "category": "政策",
-    "personnel_types": [
-      "聘用"
-    ],
-    "summary": "數位部組織法允許聘用最多300人（預算員額598人），在野質疑養網軍、破壞文官體制；數位部書面報告稱111年聘用占比14.21%。其後未見銓敘部修正草案送立法院之紀錄。",
-    "significance": "新設機關以高比例聘用突破5%慣例，引發新一輪「契約人力法制化」承諾，但再度停留在宣示。",
-    "sources": [
-      {
-        "title": "中時：數位部約聘僱人力過半 銓敘部研議修法（2022.10.20）",
-        "url": "https://www.chinatimes.com/realtimenews/20221020002405-263101",
-        "accessible": false
-      }
-    ]
-  },
-  {
-    "date": "2024-01-30",
-    "roc_year": "113",
-    "event": "行政院函修正臨時人員要點，更名為「行政院及所屬各機關學校約用人員進用及運用要點」",
-    "actor": "行政院",
-    "category": "修正",
-    "personnel_types": [
-      "約用"
-    ],
-    "summary": "因臨時人員已不限臨時性工作（例如法務部以臨時人員進用檢察官助理辦理打詐常態業務）而「名實不符」，在不變動身分屬性、契約性質、勞動條件之下正名為「約用人員」；控管改由行政院核定各主管機關用人額度上限。114年12月19日再修正。",
-    "significance": "漂移的制度承認：政府以更名方式接受「臨時人員常態化」既成事實，形成聘用／約僱／約用三種名稱並存的契約人力體系。",
-    "sources": [
-      {
-        "title": "修正臨時人員要點並更名為約用人員要點（人事總處最新消息，113.1.30）",
-        "url": "https://www.dgpa.gov.tw/information?uid=2&pid=11786",
-        "accessible": true
-      },
-      {
-        "title": "行政院及所屬各機關學校約用人員進用及運用要點（113.1.30修正）",
-        "url": "https://www.dgpa.gov.tw/FileConversion?filename=dgpa%2Ffiles%2F202402%2F6fe2dab8-4b2c-4275-9112-b5dde436166c.pdf&nfix=&name=約用人員要點-1130130.pdf",
-        "accessible": true
-      },
-      {
-        "title": "約用人員管理規定（人事總處組編人力處簡報，113.4.18）",
-        "url": "https://www.dgpa.gov.tw/FileConversion?filename=dgpa/files/202404/308f2535-a6e0-4dd1-bbca-5d4a6c82fb80.pdf&nfix=&name=約用人員管理規定.pdf",
-        "accessible": true
-      },
-      {
-        "title": "多元人力簡介（人事總處委外及多元人力運用專區，113.2.27）",
-        "url": "https://www.dgpa.gov.tw/mp/archive?uid=577&mid=152",
-        "accessible": true
-      }
-    ]
-  },
-  {
-    "date": "2025-07-09",
-    "roc_year": "114",
-    "event": "總統公布《公務人員保障法》修正，第102條增訂第3項：約僱、約用、工友等依法令從事公務者就職場霸凌申訴準用保障法（115年1月9日施行）",
-    "actor": "立法院",
-    "category": "修正",
-    "personnel_types": [
-      "約僱",
-      "約用",
-      "聘用"
-    ],
-    "summary": "保訓會解釋：依法律或法律授權命令進用者（聘用人員）得準用保障法救濟，依行政命令進用之約僱人員原則不在保障範圍；本次修正僅就霸凌申訴擴及各類契約人力。",
-    "significance": "層疊：保障機制以「準用」方式零碎擴張，仍未處理約僱、約用人員的整體救濟定位。",
-    "sources": [
-      {
-        "title": "保訓會：公務人員保障法第19條至第19條之2、第21條、第102條及第104條修正條文，自115年1月9日施行",
-        "url": "https://www.csptc.gov.tw/News_Content.aspx?n=4555&s=43915",
-        "accessible": false
-      },
-      {
-        "title": "保訓會：各機關聘僱人員可否依公務人員保障法請求保障？",
-        "url": "https://www.csptc.gov.tw/News_Content.aspx?n=3521&s=16277",
-        "accessible": false
-      }
-    ]
-  },
-  {
-    "date": "2025-07",
-    "roc_year": "114",
-    "event": "立法院預算中心專題研究：中央政府聘用及約僱人力運用情形之探討（劉宜姈，114116）",
-    "actor": "立法院",
-    "category": "調查報告",
-    "personnel_types": [
-      "聘用",
-      "約僱"
-    ],
-    "summary": "發現：聘僱預算員額逐年攀升且增幅高於職員，部分機關超逾5%原則；長期以聘僱辦理經常性業務、久任化未改善；總預算未呈現聘僱人力全貌、薪點折合率缺客觀標準；法制基礎不足須待各主管機關凝聚共識。",
-    "significance": "最新官方幕僚診斷：問題與95年評估幾乎相同，證明二十年制度停滯。",
-    "sources": [
-      {
-        "title": "立法院預算中心專題研究：中央政府聘用及約僱人力運用情形之探討（劉宜姈，114年7月，114116）",
-        "url": "https://www.ly.gov.tw/Pages/List.aspx?nodeid=56067",
-        "accessible": false
-      },
-      {
-        "title": "立法院預算中心：近年中央機關聘僱預算員額逐年攀升，部分機關已超逾5%之原則（114年7月）",
-        "url": "https://www.ly.gov.tw/Pages/Detail.aspx?nodeid=56067&pid=252977",
-        "accessible": false
-      }
-    ]
-  },
-  {
-    "date": "2025-10-22",
-    "roc_year": "114",
-    "event": "人事總處澄清「聘僱暴增、政務人員膨脹」報導：115年總預算聘僱16,375人，近10年淨增599人",
-    "actor": "人事總處",
-    "category": "政策",
-    "personnel_types": [
-      "聘用",
-      "約僱"
-    ],
-    "summary": "回應媒體引用預算中心「4萬人」說法，強調聘用、約僱進用比率分別為4.7%與3.8%，整體未超過職員5%；增加多因AI智慧政府、打詐法官助理、新設機關籌備。",
-    "significance": "行政與立法幕僚對「契約人力規模」的統計口徑之爭（員額內聘僱 vs. 含約用、承攬之廣義契約人力）本身即制度縫隙的表徵。",
-    "sources": [
-      {
-        "title": "中央社：人事總處：政府用人均符員額法 無大量增政務人員（2025.10.22）",
-        "url": "https://www.cna.com.tw/news/aipl/202510220259.aspx",
-        "accessible": false
-      }
-    ]
-  },
-  {
-    "date": "2026-01",
-    "roc_year": "115",
-    "event": "立法院法制局連續發布：聘用人員人事規範之淺析（R02983，115年1月）、德國公部門契約人員人事法制簡介（R03012，115年3月）、聘僱人員人事法制相關問題探討（A01848，115年5月）",
-    "actor": "立法院",
-    "category": "調查報告",
-    "personnel_types": [
-      "聘用",
-      "約僱"
-    ],
-    "summary": "賴怡瑩系列研究，顯示第11屆立法院幕僚再度啟動契約人力法制議題（內文本環境無法取得）。",
-    "significance": "議程再開啟的訊號；是否成為新關鍵節點待觀察。",
-    "sources": [
-      {
-        "title": "立法院法制局議題研析：聘用人員人事規範之淺析（賴怡瑩，115年1月，R02983）；德國公部門契約人員人事法制簡介（R03012，115年3月）",
-        "url": "https://www.ly.gov.tw/Pages/List.aspx?nodeid=6590",
-        "accessible": false
-      },
-      {
-        "title": "立法院法制局專題研究：聘僱人員人事法制相關問題探討（賴怡瑩，115年5月，A01848）",
-        "url": "https://www.ly.gov.tw/Pages/List.aspx?nodeid=6586",
-        "accessible": false
-      }
-    ]
-  },
-  {
-    "date": "2026-03-25",
-    "roc_year": "115",
-    "event": "人事總處向立法院司法及法制委員會提出業務及立法計畫報告；基層公務員人力荒成焦點",
-    "actor": "人事總處",
-    "category": "政策",
-    "personnel_types": [
-      "公務人員"
-    ],
-    "summary": "人事長蘇俊榮表示6月底前提專業加給調整方案；行政院於114年4月調增聘用、約僱薪點折合率至139.1元、約用人員調薪3%。",
-    "significance": "基層人力短缺成為新的外生壓力，可能推動從「契約替代」轉向「常任待遇改善」或反向擴大契約進用。",
-    "sources": [
-      {
-        "title": "中時：讓用人機關決定晉升 銓敘部修法刪學歷等限制（2026.7.15）",
-        "url": "https://www.chinatimes.com/realtimenews/20260715002753-260407",
-        "accessible": false
-      }
-    ]
-  },
-  {
-    "date": "2026-07-15",
-    "roc_year": "115",
-    "event": "立法院審查銓敘部《公務人員任用法》部分條文修正草案：機關得自行遴用具任用資格人員、刪除升簡任訓練與碩士學歷門檻",
-    "actor": "銓敘部",
-    "category": "草案審議",
-    "personnel_types": [
-      "公務人員"
-    ],
-    "summary": "銓敘部長施能傑（前人事長，109年聘約人員草案主事者）稱為補充人力缺口與提升用人彈性；學者批評削弱功績原則。",
-    "significance": "行動者跨院流動（施能傑由人事總處轉任銓敘部）可能改變兩院在契約人力議題上的對立結構，值得追蹤。",
-    "sources": [
-      {
-        "title": "中時：讓用人機關決定晉升 銓敘部修法刪學歷等限制（2026.7.15）",
-        "url": "https://www.chinatimes.com/realtimenews/20260715002753-260407",
-        "accessible": false
-      }
-    ]
-  },
-  {
-    "date": "2026-10-15",
-    "roc_year": "115",
-    "event": "考試院會通過「各機關職稱及官等職等員額配置準則」第7條修正草案，刪除委任一至三職等基層職務最低配置標準",
-    "actor": "考試院",
-    "category": "草案提出",
-    "personnel_types": [
-      "公務人員",
-      "承攬",
-      "約用"
-    ],
-    "summary": "理由：基層例行性及事務性工作多已透過業務委外或資訊科技辦理，且基層職務待遇不利攬才；待行政院會銜。",
-    "significance": "路徑依賴的終點之一：正式編制主動退出事務性工作，承認委外／約用已是基層事務性人力的常態供給。",
-    "sources": [
-      {
-        "title": "中央社：考試院通過配置準則修正草案 增加機關用人彈性（2026.10.15）",
-        "url": "https://www.cna.com.tw/news/aipl/202610150291.aspx",
-        "accessible": false
-      }
-    ]
-  }
+ {
+  "date": "1969-04-28",
+  "roc_year": "58",
+  "event": "總統令制定公布《聘用人員聘用條例》全文10條",
+  "actor": "立法院",
+  "category": "法制定",
+  "personnel_types": [
+   "聘用"
+  ],
+  "summary": "依公務人員任用法第21條（現第36條）授權制定，規定各機關得以契約定期聘用專業或技術人員，職稱、員額、期限、報酬列入預算並送銓敘部登記備查；不適用俸給、退休、撫卹法；不得兼任有職等之職務、不得充任法定主管。施行細則於58年8月12日由考試院訂定。",
+  "significance": "關鍵節點：契約用人首次取得法律位階，但條文僅10條且定位為「輔助性、臨時性」，權利義務大量留白；此後半世紀所有補充均以行政命令層疊其上，形成「法律空殼＋命令實體」的路徑起點。",
+  "sources": [
+   {
+    "title": "聘用人員聘用條例（全國法規資料庫）",
+    "url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=S0020014",
+    "accessible": true
+   },
+   {
+    "title": "聘用人員聘用條例 沿革（全國法規資料庫）",
+    "url": "https://law.moj.gov.tw/LawClass/LawHistory.aspx?pcode=S0020014",
+    "accessible": true
+   },
+   {
+    "title": "聘用人員聘用條例（考試院主管法規共用系統）",
+    "url": "https://law.exam.gov.tw/LawContent.aspx?id=FL016991",
+    "accessible": true
+   },
+   {
+    "title": "聘用人員聘用條例施行細則 沿革",
+    "url": "https://law.moj.gov.tw/LawClass/LawHistory.aspx?pcode=S0020015",
+    "accessible": true
+   }
+  ]
+ },
+ {
+  "date": "1972-02-03",
+  "roc_year": "61",
+  "event": "《聘用人員聘用條例》修正第6條（唯一一次修法）",
+  "actor": "立法院",
+  "category": "修正",
+  "personnel_types": [
+   "聘用"
+  ],
+  "summary": "將原不適用「俸給法、退休法、撫卹法及考績法」改為不適用「俸給法、退休法及撫卹法」，病故或因公死亡得酌給撫慰金。此後條例再無修正，施行細則則於60、71、96、108年修正。",
+  "significance": "路徑依賴：本法53年未再修正，顯示立法成本高而行政命令修補成本低，制度維持靠「細則與要點」而非母法。",
+  "sources": [
+   {
+    "title": "聘用人員聘用條例 沿革（全國法規資料庫）",
+    "url": "https://law.moj.gov.tw/LawClass/LawHistory.aspx?pcode=S0020014",
+    "accessible": true
+   },
+   {
+    "title": "聘用人員聘用條例（考試院主管法規共用系統）",
+    "url": "https://law.exam.gov.tw/LawContent.aspx?id=FL016991",
+    "accessible": true
+   }
+  ]
+ },
+ {
+  "date": "1972-12-27",
+  "roc_year": "61",
+  "event": "行政院訂定發布《行政院暨所屬機關約僱人員僱用辦法》",
+  "actor": "行政院",
+  "category": "法制定",
+  "personnel_types": [
+   "約僱"
+  ],
+  "summary": "以行政命令建立「約僱」制度，僱用對象為相當分類職位公務人員第五職等以下之臨時性工作，無法律授權依據；68年、71年小幅修正後直到108年才全文修正。",
+  "significance": "層疊（layering）：在考試院主管的「聘用」軌道之外，行政院自建「約僱」軌道，形成兩院分管、法律與命令並存的雙軌結構，是日後整合立法屢遭「考試權／行政權」爭議的制度根源。",
+  "sources": [
+   {
+    "title": "行政院與所屬中央及地方各機關約僱人員僱用辦法 沿革",
+    "url": "https://law.moj.gov.tw/LawClass/LawHistory.aspx?pcode=S0110014",
+    "accessible": true
+   },
+   {
+    "title": "行政院暨所屬機關約僱人員僱用辦法修正總說明（108年，行政院公報）",
+    "url": "https://gazette.nat.gov.tw/EG_FileManager/eguploadpub/eg025185/ch01/type1/gov01/num1/images/AA.pdf",
+    "accessible": true
+   },
+   {
+    "title": "政府機關用人體制之研究－從公法契約用人法制論析（人事總處，103.5.15）",
+    "url": "https://www.dgpa.gov.tw/Uploads/public/Attachment/51161738378.pdf",
+    "accessible": true
+   }
+  ]
+ },
+ {
+  "date": "1987-01-16",
+  "roc_year": "76",
+  "event": "《分類職位公務人員任用法》廢止失效",
+  "actor": "考試院",
+  "category": "修正",
+  "personnel_types": [
+   "約僱"
+  ],
+  "summary": "約僱辦法以「相當分類職位公務人員第五職等以下」界定約僱工作，於分類職位制廢止後失去參照對象，卻仍沿用32年至108年才修正。",
+  "significance": "漂移（drift）：外部制度變動使規範文字與實務脫節，約僱人員實際工作性質逐漸擴張，但規範未隨之更新。",
+  "sources": [
+   {
+    "title": "行政院暨所屬機關約僱人員僱用辦法修正總說明（108年，行政院公報）",
+    "url": "https://gazette.nat.gov.tw/EG_FileManager/eguploadpub/eg025185/ch01/type1/gov01/num1/images/AA.pdf",
+    "accessible": true
+   }
+  ]
+ },
+ {
+  "date": "1990-03-27",
+  "roc_year": "79",
+  "event": "行政院訂定「中央各機關學校事務勞力替代措施推動方案」",
+  "actor": "行政院",
+  "category": "政策",
+  "personnel_types": [
+   "承攬",
+   "公務人員"
+  ],
+  "summary": "透過工友設置基準、員額凍結不補、鼓勵退離，並以機具現代化、資訊化、委外、志工、替代役等替代事務性工友人力；92年7月31日修正。",
+  "significance": "關鍵節點：政府首次以「替代」而非「補充」思維處理事務性人力，開啟事務性工作委外化的路徑，日後承攬派駐人力大增的遠因。",
+  "sources": [
+   {
+    "title": "張毓珊〈工友員額控管做法及展望〉（人事月刊第328期，2012.12）",
+    "url": "https://www.dgpa.gov.tw/Uploads/public/Attachment/4813956097.pdf",
+    "accessible": true
+   },
+   {
+    "title": "行政院所屬機關學校事務勞力替代措施推動方案（92.7.31修正；中興大學人事室轉載）",
+    "url": "https://person.nchu.edu.tw/admin/upload/行政院所屬機關學校事務勞力替代措施推動方案.pdf",
+    "accessible": false
+   }
+  ]
+ },
+ {
+  "date": "1998-07-01",
+  "roc_year": "87",
+  "event": "公務機關工友（含技工、駕駛）適用勞動基準法",
+  "actor": "勞動部",
+  "category": "政策",
+  "personnel_types": [
+   "公務人員"
+  ],
+  "summary": "勞委會86.9.1公告指定公務機構技工、駕駛人、工友與公務機構清潔隊員（同批含醫療保健服務業〈醫師除外〉工作者、國會助理）自87.7.1適用勞基法；89.1.7再指定藝文業公立單位技工、工友、駕駛。解僱須符合勞基法要件；人事行政局於94年7月1日訂定「工友管理要點」。（原摘要稱「技工駕駛87年12月31日」適用，與勞動部公告不符，已更正。）",
+  "significance": "轉換（conversion）：工友由公務體系管理轉入勞動法制，成為後來臨時人員適用勞基法的前例。",
+  "sources": [
+   {
+    "title": "勞動部：歷次擴大適用公告（第6項：公務機構技工、駕駛人、工友與清潔隊員自87.7.1適用勞基法；86.9.1公告）",
+    "url": "https://www.mol.gov.tw/1607/28162/28166/28168/28174/28992/post",
+    "accessible": true,
+    "local_path": "raw/fetched/mol/post_28992_歷次擴大適用公告.html"
+   },
+   {
+    "title": "林延增、賴思涵〈工友管理措施之探討與展望〉（人事月刊第333期，2013.5）",
+    "url": "https://www.dgpa.gov.tw/Uploads/public/Attachment/366174295.pdf",
+    "accessible": true
+   },
+   {
+    "title": "張毓珊〈工友員額控管做法及展望〉（人事月刊第328期，2012.12）",
+    "url": "https://www.dgpa.gov.tw/Uploads/public/Attachment/4813956097.pdf",
+    "accessible": true
+   }
+  ]
+ },
+ {
+  "date": "2000-04-24",
+  "roc_year": "89",
+  "event": "考試院會銜行政院首次函送《公務人員基準法》草案至立法院",
+  "actor": "考試院",
+  "category": "草案提出",
+  "personnel_types": [
+   "公務人員",
+   "聘用"
+  ],
+  "summary": "基準法草案（89年版據考試院新聞稿為六章60條）擬統攝公務人員身分與契約用人定位，此後於91年10月30日、95年6月16日、100年5月18日、101年3月27日再四度函送（合計五度），均因屆期不續審而未完成立法。100、101年版為5章71條：第2條將聘用人員、派用人員、機要人員排除於公務人員定義之外，第5條將聘任人員納入常務人員並授權另以法律定之，第70條規定聘用人員準用第11至13、15、17、19至26、28至40、42至44條及第68條第2至4項。",
+  "significance": "路徑依賴：契約用人之上位定位（政務／常務／契約三元）繫於基準法，基準法屢挫，使契約人力專法失去法源錨點。",
+  "sources": [
+   {
+    "title": "考試院新聞稿：考試院審議通過公務人員基準法草案 近期將函請行政院同意會銜",
+    "url": "https://www.exam.gov.tw/News_Content.aspx?n=1&s=19485",
+    "accessible": false
+   },
+   {
+    "title": "考試院新聞稿：銓敘部函陳「公務人員基準法」草案及其總說明",
+    "url": "https://www.exam.gov.tw/News_Content.aspx?n=3438&s=18275",
+    "accessible": false
+   },
+   {
+    "title": "立法院議案關係文書：公務人員基準法草案（考試院、行政院，第7屆第7會期，100.5.27，60頁）",
+    "url": "https://ppg.ly.gov.tw/ppg/download/agenda/02/pdf/07/07/15/LCEWA01_070715_00027.pdf",
+    "accessible": true,
+    "local_path": "raw/fetched/ly/bills/100_公務人員基準法草案_考試院行政院_LCEWA01_070715_00027.pdf"
+   },
+   {
+    "title": "立法院議案關係文書：公務人員基準法草案（考試院、行政院，第8屆第1會期，101.4.6，60頁）",
+    "url": "https://ppg.ly.gov.tw/ppg/download/agenda1/02/pdf/08/01/06/LCEWA01_080106_00129.pdf",
+    "accessible": true,
+    "local_path": "raw/fetched/ly/bills/101_公務人員基準法草案_考試院行政院_LCEWA01_080106_00129.pdf"
+   },
+   {
+    "title": "立法院議事暨公報資訊網：公務人員基準法草案案（95.6，第6屆第4會期，無關係文書附件）",
+    "url": "https://ppg.ly.gov.tw/ppg/bills/0950620070100100/details",
+    "accessible": true
+   }
+  ]
+ },
+ {
+  "date": "2002-07-01",
+  "roc_year": "91",
+  "event": "行政院函：所屬機關學校工友員額自即日起一律凍結不補",
+  "actor": "行政院",
+  "category": "政策",
+  "personnel_types": [
+   "公務人員",
+   "承攬"
+  ],
+  "summary": "配合91年2月19日「超額工友處理原則」與員額裁減1.5%政策，全面凍結工友進用，缺額只能移撥，不得新僱。",
+  "significance": "路徑依賴：工友出缺不補持續20餘年，事務性工作改由承攬派駐人力承接，人事總處日後承認承攬人數增加多因「工友退離不補」。",
+  "sources": [
+   {
+    "title": "行政院91.7.1函：工友員額一律凍結不補（人事總處法規公告）",
+    "url": "https://www.dgpa.gov.tw/information?uid=84&pid=2069",
+    "accessible": true
+   },
+   {
+    "title": "張毓珊〈工友員額控管做法及展望〉（人事月刊第328期，2012.12）",
+    "url": "https://www.dgpa.gov.tw/Uploads/public/Attachment/4813956097.pdf",
+    "accessible": true
+   }
+  ]
+ },
+ {
+  "date": "2002-09-15",
+  "roc_year": "91",
+  "event": "總統府政府改造委員會通過「政府人力運用彈性化計畫方案」",
+  "actor": "行政院",
+  "category": "政策",
+  "personnel_types": [
+   "聘用",
+   "約僱",
+   "公務人員"
+  ],
+  "summary": "含政務職位、高級行政主管職位、契約性職位三子方案；考試院隨之研修《聘用人員聘用條例》修正草案，擬明定公法上職務關係、不適用勞基法、聘用人員不逾職員預算員額15%、公開甄選。",
+  "significance": "關鍵節點：新公共管理思潮下的「彈性用人」首次成為兩院共同政策議程，但考試院將之導向「法制化、規範化」而非「彈性化」，是蘇偉業所指台灣改革取向與英美不同之起點。",
+  "sources": [
+   {
+    "title": "考試院新聞稿：院會就政府改造委員會「政府人力運用彈性化計畫方案」作成決定",
+    "url": "https://www.exam.gov.tw/News_Content.aspx?n=3438&s=18288",
+    "accessible": false
+   },
+   {
+    "title": "考試院新聞稿：考試院積極研修「聘用人員聘用條例」修正草案",
+    "url": "https://www.exam.gov.tw/News_Content.aspx?n=3438&s=18497",
+    "accessible": false
+   },
+   {
+    "title": "考試院新聞稿：院會審議聘用人員聘用條例修正草案暨配合修正（或廢止）任用法等相關法規草案",
+    "url": "https://www.exam.gov.tw/News_Content.aspx?n=3438&s=18556",
+    "accessible": false
+   },
+   {
+    "title": "蘇偉業（2007）〈管理主義下的政府機關人力彈性化：台灣與香港政府契約人力制度之比較分析〉公共行政學報23：29-66",
+    "url": "https://www.airitilibrary.com/",
+    "accessible": false
+   }
+  ]
+ },
+ {
+  "date": "2003",
+  "roc_year": "約90-92",
+  "event": "考試院院會通過「暫緩研訂約聘人員人事條例草案」",
+  "actor": "考試院",
+  "category": "草案審議",
+  "personnel_types": [
+   "聘用",
+   "約僱"
+  ],
+  "summary": "銓敘部原擬以「約聘人員人事條例」統一各類非常任臨時人員管理，院會以現行規定執行無窒礙、宜俟「聘任人員人事條例」施行後再評估為由暫緩，權益不足處改循修正離職儲金、給假等規定處理（新聞稿未標年份，依內容推定約民國90年代初）。",
+  "significance": "否決點（veto point）：考試院內部即先行擱置整合立法，顯示「以小修補代替大改」的制度偏好。",
+  "sources": [
+   {
+    "title": "考試院新聞稿：審查銓敘部函陳「約聘人員人事條例」草案一案（暫緩研訂）",
+    "url": "https://www.exam.gov.tw/News_Content.aspx?n=3438&s=18010",
+    "accessible": false
+   }
+  ]
+ },
+ {
+  "date": "2005-02-05",
+  "roc_year": "94",
+  "event": "立法院通過94年度總預算審查總報告，決議臨時人員應訂管控規定、不得長僱化",
+  "actor": "立法院",
+  "category": "政策",
+  "personnel_types": [
+   "約用"
+  ],
+  "summary": "通案決議要求人事行政局就中央各機關業務費項下雇員及臨時人員專案研處訂定管控規定；人事局94年8月調查發現各機關臨時人員管理分散。",
+  "significance": "關鍵節點：臨時人員問題由立法院預算權驅動進入議程，開啟「以預算決議取代立法」的管制模式。",
+  "sources": [
+   {
+    "title": "臨時人員進用及運用要點問答集（人事總處，109.3.2配合通函版）",
+    "url": "https://www.dgpa.gov.tw/FileConversion?filename=dgpa%2Ffiles%2F202108%2F3515d795-6c20-4a64-9cb2-fd626fd6d22f.doc&nfix=pdf&name=臨時人員要點QA.doc",
+    "accessible": true
+   },
+   {
+    "title": "政府機關多元人力運用及管理（人事總處簡報，110年6月）",
+    "url": "https://www.dgpa.gov.tw/FileConversion?filename=dgpa%2Ffiles%2F202106%2Fa5dc4cdd-59a4-495a-b1d9-1dab0ee1b34a.pdf&name=政府機關多元人力運用及管理.pdf",
+    "accessible": true
+   },
+   {
+    "title": "約用人員管理規定（人事總處組編人力處簡報，113.4.18）",
+    "url": "https://www.dgpa.gov.tw/FileConversion?filename=dgpa/files/202404/308f2535-a6e0-4dd1-bbca-5d4a6c82fb80.pdf&nfix=&name=約用人員管理規定.pdf",
+    "accessible": true
+   }
+  ]
+ },
+ {
+  "date": "2005-03-08",
+  "roc_year": "94",
+  "event": "行政院、考試院會銜函送《中央政府機關總員額法》草案（14條）",
+  "actor": "行政院",
+  "category": "草案提出",
+  "personnel_types": [
+   "公務人員",
+   "聘用",
+   "約僱"
+  ],
+  "summary": "草案總說明：參考日本總定員法，訂員額總數上限20萬人（6年後降至18.5萬），員額分六類，第二類為聘僱人員、駐衛警、工友；要求機關推動委外化、法人化等「四化」。行政院自87年至97年五度送審均未完成。",
+  "significance": "總量管制的設計一開始即將聘僱納入員額、臨時人員排除在外，形成日後「員額內／員額外」的制度縫隙。",
+  "sources": [
+   {
+    "title": "「中央政府機關總員額法」草案總說明（94.3.8，人事總處）",
+    "url": "https://www.dgpa.gov.tw/FileConversion?filename=dgpa%2Ffiles%2F201612%2F452f2037-e69f-4544-bbfe-6ca114f36b05.doc&nfix=pdf&name=總員額法草案總說明.doc",
+    "accessible": true
+   }
+  ]
+ },
+ {
+  "date": "2005-07-28",
+  "roc_year": "94",
+  "event": "考試院第10屆第144次會議通過《聘用人員人事條例》草案，8月15日函送立法院",
+  "actor": "考試院",
+  "category": "草案提出",
+  "personnel_types": [
+   "聘用",
+   "約僱"
+  ],
+  "summary": "整合聘用、派用、機要、聘任、約僱五類人員，7章62條；明定行政契約、公法契約關係、公開甄選、考核淘汰、退撫比照勞退條例機制；同時擬廢止聘用條例與派用條例。列為第6屆第6會期優先法案。 立法院第6屆第3會期法制委員會95年4月20日併案審查考試院版、王昱婷等38人版、管碧玲等48人版（僅大體討論，決議先辦座談會）；銓敘部95年5至6月三次座談後擬具修正條文5條；96年12月13日法制委員會公聽會；97年1月第6屆屆滿不續審。管碧玲等17人於第7屆（97.5.9、100.6.10）再提，仍屆期不續審。",
+  "significance": "關鍵節點（未成）：第一次完整的契約人力專法；因五類人員制度差異過大、「違背考試用人」質疑而受阻。",
+  "sources": [
+   {
+    "title": "考試院新聞稿：考試院通過聘用人員人事條例草案",
+    "url": "https://www.exam.gov.tw/News_Content.aspx?n=1&s=18713",
+    "accessible": false
+   },
+   {
+    "title": "考試院新聞稿：加速推動「聘用人員人事條例草案」完成立法程序",
+    "url": "https://www.exam.gov.tw/News_Content.aspx?n=1&s=18963",
+    "accessible": false
+   },
+   {
+    "title": "考試院新聞稿：繼續推動聘用人員人事條例草案完成立法，合理保障聘僱人員權益",
+    "url": "https://www.exam.gov.tw/News_Content.aspx?n=1&s=19011",
+    "accessible": false
+   },
+   {
+    "title": "立法院法制局法案評估：聘用人員人事條例草案（何善為，95年12月，B00493）",
+    "url": "https://www.ly.gov.tw/Pages/Detail.aspx?nodeid=6588&pid=83610",
+    "accessible": true
+   },
+   {
+    "title": "立法院公報第95卷第22期：法制委員會併案審查聘用人員人事條例草案會議紀錄（95.4.20，頁191-220，含銓敘部草案要點報告）",
+    "url": "https://ppg.ly.gov.tw/ppg/PublicationOfficialGazettes/download/communique/final/pdf/95/22/LCIDC01_952201_00006.pdf",
+    "accessible": true,
+    "local_path": "raw/fetched/ly/gazette/公報95卷22期_法制委員會併案審查聘用人員人事條例草案_950508.pdf"
+   },
+   {
+    "title": "立法院公報第96卷第87期：法制委員會聘用人員人事條例草案公聽會紀錄（96.12.13，頁153-180）",
+    "url": "https://ppg.ly.gov.tw/ppg/PublicationOfficialGazettes/download/communique/final/pdf/96/87/LCIDC01_968701_00014.pdf",
+    "accessible": true,
+    "local_path": "raw/fetched/ly/gazette/公報96卷87期_法制委員會聘用人員人事條例草案公聽會_961227.pdf"
+   },
+   {
+    "title": "立法院議事暨公報資訊網：「聘用人員人事條例草案」案暨廢止聘用條例及派用條例案（考試院，第6屆第2會期第1次會議，94.9.13；無關係文書附件）",
+    "url": "https://ppg.ly.gov.tw/ppg/bills/0940822070100400/details",
+    "accessible": true
+   },
+   {
+    "title": "立法院議事暨公報資訊網：聘用人員人事條例草案（管碧玲等17人，第7屆，97.5.9／100.6.10）",
+    "url": "https://ppg.ly.gov.tw/ppg/bills/0970428070200600/details",
+    "accessible": true
+   }
+  ]
+ },
+ {
+  "date": "2006-04",
+  "roc_year": "95",
+  "event": "立委王幸男等提案增訂《聘用人員聘用條例》第六條之一：約聘僱人員勞動條件不得低於勞基法最低標準",
+  "actor": "立法院",
+  "category": "草案提出",
+  "personnel_types": [
+   "約僱"
+  ],
+  "summary": "王幸男、蔡家福、黃偉哲等39人提案（刊載95.4.21），主張約聘僱人員之勞動條件、年資計算及離職、退休、撫卹應回歸公務人員法規授權主管機關訂定辦法，但不得低於勞基法最低標準（引憲法第153條、釋字578號）；案由指出勞委會有意納入勞基法卻遭銓敘部與人事行政局反對。該案（王幸男等32人版）於第6屆第3會期第10次會議（95.4）交付法制委員會審查；94年4月曾提出（31人版）遭程序委員會緩列。屆期不續審。",
+  "significance": "顯示立法院內部存在「勞動法制化」與「公法契約化」兩種路徑競爭。",
+  "sources": [
+   {
+    "title": "立法院法制局：約聘僱人員之相關條文不得低於勞動基準法之最低標準（王幸男等39人提案研析）",
+    "url": "https://www.ly.gov.tw/Pages/Detail.aspx?nodeid=5641&pid=48267",
+    "accessible": true
+   },
+   {
+    "title": "立法院議事暨公報資訊網：聘用人員聘用條例增訂第六條之一條文草案（王幸男等32人，第6屆第3會期第10次會議，交付審查）",
+    "url": "https://ppg.ly.gov.tw/ppg/bills/0950410070200400/details",
+    "accessible": true
+   },
+   {
+    "title": "立法院議事暨公報資訊網：聘用人員聘用條例增訂第六條之一條文草案（王幸男等31人，94.4，程序緩列）",
+    "url": "https://ppg.ly.gov.tw/ppg/bills/0940407070201500/details",
+    "accessible": true
+   }
+  ]
+ },
+ {
+  "date": "2006-12",
+  "roc_year": "95",
+  "event": "立法院法制局提出《聘用人員人事條例草案》法案評估報告（何善為，B00493）",
+  "actor": "立法院",
+  "category": "草案審議",
+  "personnel_types": [
+   "聘用",
+   "約僱"
+  ],
+  "summary": "評估認為新制違背國家考試用人精神、影響文官體制健全、恐生政治分贓，質疑制定必要；指草案排除以業務費或工程管理費進用之臨時人員勢必引發不平與陳情。逐條建議：聘用總人數改以職員預算員額5%為限（草案為15%）並明定各等級比例、契約人員擔任主管應有範圍限制、甄選宜由考選部設甄審委員會統一辦理以免黑箱、薪點折合率與增員從嚴。立法院另於95年要求銓敘部座談、96年12月召開公聽會。",
+  "significance": "否決點：立法院幕僚機構以「考試用人」規範性論述反對，彰顯憲法考試權作為否決點的制度力量。",
+  "sources": [
+   {
+    "title": "立法院法制局法案評估：聘用人員人事條例草案（何善為，95年12月，B00493）",
+    "url": "https://www.ly.gov.tw/Pages/Detail.aspx?nodeid=6588&pid=83610",
+    "accessible": true
+   },
+   {
+    "title": "考試院新聞稿：繼續推動聘用人員人事條例草案完成立法，合理保障聘僱人員權益",
+    "url": "https://www.exam.gov.tw/News_Content.aspx?n=1&s=19011",
+    "accessible": false
+   }
+  ]
+ },
+ {
+  "date": "2007-02-06",
+  "roc_year": "96",
+  "event": "行政院「研商臨時人員適用勞基法」會議政策指示",
+  "actor": "行政院",
+  "category": "政策",
+  "personnel_types": [
+   "約用"
+  ],
+  "summary": "指出部分機關以臨時人員長期擔任核心公務，責成人事局研擬禁止不當使用機制，使臨時人員回歸臨時性本質。",
+  "significance": "政策論述確立「臨時人員＝非核心、非公權力」的切割原則，成為日後要點第3點的來源。",
+  "sources": [
+   {
+    "title": "臨時人員進用及運用管理（人事總處104年非典型人力巡迴說明會簡報）",
+    "url": "https://www.dgpa.gov.tw/FileConversion?filename=dgpa%2Ffiles%2F201612%2Fa08b9898-aaa6-4789-992e-aee93d1edea3.pdf&nfix=&name=臨時人員進用及運用管理.pdf",
+    "accessible": true
+   },
+   {
+    "title": "臨時人員進用及運用要點問答集（人事總處，109.3.2配合通函版）",
+    "url": "https://www.dgpa.gov.tw/FileConversion?filename=dgpa%2Ffiles%2F202108%2F3515d795-6c20-4a64-9cb2-fd626fd6d22f.doc&nfix=pdf&name=臨時人員要點QA.doc",
+    "accessible": true
+   }
+  ]
+ },
+ {
+  "date": "2007-05",
+  "roc_year": "96",
+  "event": "立法院法制局專題研究：聘僱人員適用勞動基準法爭議問題之研析（李淑娟，A00500）",
+  "actor": "立法院",
+  "category": "調查報告",
+  "personnel_types": [
+   "聘用",
+   "約僱"
+  ],
+  "summary": "回顧勞委會86年起研議聘僱人員適用勞基法，整理公法／私法契約、管理權限、財政負擔等爭點，比較英、德、紐、日契約人力，提出管理面及制度面建議。",
+  "significance": "顯示「適用勞基法」路徑早在86年即被提出並持續被行政、考試兩院排除。",
+  "sources": [
+   {
+    "title": "立法院法制局專題研究：聘僱人員適用勞動基準法爭議問題之研析（李淑娟，96年5月，A00500）",
+    "url": "https://www.ly.gov.tw/Pages/Detail.aspx?nodeid=6586&pid=83653",
+    "accessible": true
+   }
+  ]
+ },
+ {
+  "date": "2007-11-30",
+  "roc_year": "96",
+  "event": "勞委會公告：公部門各業臨時人員自97年1月1日起適用勞基法",
+  "actor": "勞動部",
+  "category": "政策",
+  "personnel_types": [
+   "約用"
+  ],
+  "summary": "勞動1字第0960130914號公告（勞動部網頁載明公告內容與生效日，字號見監察院104教調0021糾正案文註1）：指定公部門各業（公務機構、公立教育訓練服務業、公立社會福利機構、公立學術研究服務業、公立藝文業五業）非依公務人員法制進用之臨時人員適用勞基法，排除依聘用條例、約僱辦法進用者及已指定之技工、駕駛、工友、清潔隊員、國會助理；立法院同時決議97年度臨時人員酬金不得高於96年度。",
+  "significance": "關鍵節點：契約人力正式「雙軌化」—聘僱人員留在公法契約、臨時人員轉入私法勞動契約，兩者身分、保障、救濟從此分流。",
+  "sources": [
+   {
+    "title": "勞動部：歷次擴大適用公告（第13項：公部門各業非依公務人員法制進用之臨時人員自97.1.1適用勞基法）",
+    "url": "https://www.mol.gov.tw/1607/28162/28166/28168/28174/28992/post",
+    "accessible": true,
+    "local_path": "raw/fetched/mol/post_28992_歷次擴大適用公告.html"
+   },
+   {
+    "title": "政府機關多元人力運用及管理（人事總處簡報，110年6月）",
+    "url": "https://www.dgpa.gov.tw/FileConversion?filename=dgpa%2Ffiles%2F202106%2Fa5dc4cdd-59a4-495a-b1d9-1dab0ee1b34a.pdf&name=政府機關多元人力運用及管理.pdf",
+    "accessible": true
+   },
+   {
+    "title": "臨時人員進用及運用要點問答集（人事總處，109.3.2配合通函版）",
+    "url": "https://www.dgpa.gov.tw/FileConversion?filename=dgpa%2Ffiles%2F202108%2F3515d795-6c20-4a64-9cb2-fd626fd6d22f.doc&nfix=pdf&name=臨時人員要點QA.doc",
+    "accessible": true
+   },
+   {
+    "title": "多元人力簡介（人事總處委外及多元人力運用專區，113.2.27）",
+    "url": "https://www.dgpa.gov.tw/mp/archive?uid=577&mid=152",
+    "accessible": true
+   }
+  ]
+ },
+ {
+  "date": "2008-01-10",
+  "roc_year": "97",
+  "event": "行政院訂頒「行政院及所屬各機關學校臨時人員進用及運用要點」，溯自97年1月1日實施",
+  "actor": "行政院",
+  "category": "法制定",
+  "personnel_types": [
+   "約用"
+  ],
+  "summary": "定義臨時人員為機關非依公務人員法規、以人事費以外經費自行進用者；限辦非公權力之臨時性、短期性、季節性、特定性定期契約工作；以96年度進用人數為上限；須經委外、簡化、志工檢討後仍不能負荷始得進用；訂定後修正10次。",
+  "significance": "層疊：行政院在「聘用（法律）」「約僱（命令）」之外再疊上「臨時人員（要點）」第三層，以行政規則取代專法；上限以96年度人數凍結，成為往後十餘年總量控管基準。",
+  "sources": [
+   {
+    "title": "臨時人員進用及運用要點問答集（人事總處，109.3.2配合通函版）",
+    "url": "https://www.dgpa.gov.tw/FileConversion?filename=dgpa%2Ffiles%2F202108%2F3515d795-6c20-4a64-9cb2-fd626fd6d22f.doc&nfix=pdf&name=臨時人員要點QA.doc",
+    "accessible": true
+   },
+   {
+    "title": "臨時人員進用及運用管理（人事總處104年非典型人力巡迴說明會簡報）",
+    "url": "https://www.dgpa.gov.tw/FileConversion?filename=dgpa%2Ffiles%2F201612%2Fa08b9898-aaa6-4789-992e-aee93d1edea3.pdf&nfix=&name=臨時人員進用及運用管理.pdf",
+    "accessible": true
+   },
+   {
+    "title": "約用人員管理規定（人事總處組編人力處簡報，113.4.18）",
+    "url": "https://www.dgpa.gov.tw/FileConversion?filename=dgpa/files/202404/308f2535-a6e0-4dd1-bbca-5d4a6c82fb80.pdf&nfix=&name=約用人員管理規定.pdf",
+    "accessible": true
+   }
+  ]
+ },
+ {
+  "date": "2008-01-31",
+  "roc_year": "97",
+  "event": "第6屆立法委員任期屆滿，《聘用人員人事條例》草案屆期不續審",
+  "actor": "立法院",
+  "category": "草案審議",
+  "personnel_types": [
+   "聘用",
+   "約僱"
+  ],
+  "summary": "依立法院職權行使法第13條不予審議；考試院表示將由銓敘部重新研擬。同年考試院委託開南大學柯三吉等研究草案對文官體制之影響，研究認為國家與聘用人員間應為私法契約關係。",
+  "significance": "否決點：屆期不續審機制使專法無聲消失，無須政治表態；學界對公法／私法定性歧見持續。",
+  "sources": [
+   {
+    "title": "考試院新聞稿：繼續推動聘用人員人事條例草案完成立法，合理保障聘僱人員權益",
+    "url": "https://www.exam.gov.tw/News_Content.aspx?n=1&s=19011",
+    "accessible": false
+   },
+   {
+    "title": "柯三吉等（開南大學）：考試院擬定之「聘用人員人事條例」草案對現行公務人員體制影響之研究（考試院委託研究，2008）",
+    "url": "https://ws.exam.gov.tw/Download.ashx?u=LzAwMS9VcGxvYWQvMS9yZWxmaWxlLzEyMDgyLzI4NDE0LzRjODc3ZjI1LTc3YjYtNDEyZi1iZGYxLWI5N2IwOGE2Y2MxYi5wZGY%3D&n=MDEyMjE3MTU1MzYzLnBkZg%3D%3D",
+    "accessible": false
+   },
+   {
+    "title": "政府機關用人體制之研究－從公法契約用人法制論析（人事總處，103.5.15）",
+    "url": "https://www.dgpa.gov.tw/Uploads/public/Attachment/51161738378.pdf",
+    "accessible": true
+   }
+  ]
+ },
+ {
+  "date": "2009-06-18",
+  "roc_year": "98",
+  "event": "考試院第11屆第39次會議通過「文官制度興革規劃方案」，確立政務、常務、契約用人三元體制",
+  "actor": "考試院",
+  "category": "政策",
+  "personnel_types": [
+   "聘用",
+   "約僱",
+   "公務人員"
+  ],
+  "summary": "第二案「統整文官法制、活化管理體系」中程目標「健全政府契約用人制度」交銓敘部規劃，預定2011年中期完成；以現行聘用及約僱人員為適用對象，在常任文官之外建立契約用人完整制度。",
+  "significance": "關鍵節點：考試院正式承認契約用人為文官體系第三支柱，但仍限定在「聘用、約僱」，未納入已轉入勞基法的臨時人員。",
+  "sources": [
+   {
+    "title": "變革中的文官制度：介紹「文官制度興革規劃方案」（考試院）",
+    "url": "https://www.exam.gov.tw/public/data/011317504871.pdf",
+    "accessible": false
+   },
+   {
+    "title": "政府機關用人體制之研究－從公法契約用人法制論析（人事總處，103.5.15）",
+    "url": "https://www.dgpa.gov.tw/Uploads/public/Attachment/51161738378.pdf",
+    "accessible": true
+   },
+   {
+    "title": "蔡良文〈政府契約用人制度變革之研析〉考銓季刊第53期（2008）",
+    "url": "https://lawdata.com.tw/File/DC/Journal/J1549/A08880053_063.pdf",
+    "accessible": false
+   }
+  ]
+ },
+ {
+  "date": "2010-02-03",
+  "roc_year": "99",
+  "event": "總統公布《中央政府機關總員額法》全文11條，4月1日施行；立法院附帶決議5年內員額降至16萬人",
+  "actor": "立法院",
+  "category": "法制定",
+  "personnel_types": [
+   "公務人員",
+   "聘用",
+   "約僱"
+  ],
+  "summary": "99年1月12日三讀（與組織再造四法同時）。員額最高17.3萬人，第二類員額為聘僱人員、駐衛警、工友；第8條建立每2年員額評鑑；人事總處每4年向立法院報告。108年12月31日修正第3、4、11條。",
+  "significance": "關鍵節點：總量管制使正式員額成為硬約束，而業務持續擴張，機關只能向「員額外」人力（臨時人員、派遣、承攬）求解—非典型人力擴張的結構性誘因由此制度化。",
+  "sources": [
+   {
+    "title": "中央政府機關總員額法（全國法規資料庫）",
+    "url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=S0110038",
+    "accessible": true
+   },
+   {
+    "title": "中央政府機關總員額法 沿革",
+    "url": "https://law.moj.gov.tw/LawClass/LawHistory.aspx?pcode=S0110038",
+    "accessible": true
+   },
+   {
+    "title": "彭錦鵬〈中央政府機關總員額法制度之理想與實踐〉",
+    "url": "https://www.ea.sinica.edu.tw/file/Image/total%20member.pdf",
+    "accessible": false
+   },
+   {
+    "title": "立法院預算中心：總員額法施行後，中央政府機關員額總數雖略為精簡，惟近年員額規模漸增（113年度總預算整體評估）",
+    "url": "https://www.ly.gov.tw/Pages/Detail.aspx?nodeid=46405&pid=231928",
+    "accessible": true
+   },
+   {
+    "title": "員額評鑑制度簡介（人事總處員額評鑑服務專區）",
+    "url": "https://www.dgpa.gov.tw/mp/archive?uid=278&mid=277",
+    "accessible": true
+   }
+  ]
+ },
+ {
+  "date": "2010-04",
+  "roc_year": "99",
+  "event": "蘇偉業於《文官制度季刊》發表地方政府約聘僱人員調查研究",
+  "actor": "學界",
+  "category": "調查報告",
+  "personnel_types": [
+   "聘用",
+   "約僱"
+  ],
+  "summary": "以高雄市、臺中市、花蓮縣361份有效問卷與訪談指出：約聘僱人員實為機關基層穩定人力而非臨時補充人力；員額控制下地方以其他名目聘用，正式統計低估實況；批評考試院新版草案改革過於保守。",
+  "significance": "學界揭示「名義臨時、實質常態」的漂移現象，並指出員額替代為主因。",
+  "sources": [
+   {
+    "title": "蘇偉業〈從地方政府運用約聘僱人員之調查剖析我國契約公務人力之改革〉文官制度季刊2(2)，2010",
+    "url": "https://ws.exam.gov.tw/Download.ashx?u=LzAwMS9VcGxvYWQvMS9yZWxmaWxlLzkzMjMvMjE5NDQvOWM5NjcyNzMtMGU0MC00NzJhLThmOWUtYmU2NmQ4MTcwMjA1LnBkZg%3D%3D&n=MDUyODE2MzIyNjcxLnBkZg%3D%3D",
+    "accessible": false
+   }
+  ]
+ },
+ {
+  "date": "2010-08-27",
+  "roc_year": "99",
+  "event": "行政院訂定「行政院運用勞動派遣應行注意事項」，派遣人數以99年1月31日實際人數15,514人為上限",
+  "actor": "行政院",
+  "category": "政策",
+  "personnel_types": [
+   "承攬"
+  ],
+  "summary": "依立法院99年度總預算決議訂定；103年6月4日修正第6、7點，上限因立法院103年度預算決議下調為11,166人；110年2月1日停止適用。",
+  "significance": "層疊：派遣作為第四層非典型人力亦以「凍結上限」方式控管，複製臨時人員要點的治理模式。",
+  "sources": [
+   {
+    "title": "公部門運用派遣人力之研究（人事行政局，100年10月修正本）",
+    "url": "https://www.dgpa.gov.tw/uploads/dgpa/files/202202/60e3e57d-48fc-403a-bd27-255537e85048.pdf",
+    "accessible": true
+   },
+   {
+    "title": "政府機關多元人力運用及管理（人事總處簡報，110年6月）",
+    "url": "https://www.dgpa.gov.tw/FileConversion?filename=dgpa%2Ffiles%2F202106%2Fa5dc4cdd-59a4-495a-b1d9-1dab0ee1b34a.pdf&name=政府機關多元人力運用及管理.pdf",
+    "accessible": true
+   }
+  ]
+ },
+ {
+  "date": "2011-10",
+  "roc_year": "100",
+  "event": "人事行政局出版《公部門運用派遣人力之研究》",
+  "actor": "人事總處",
+  "category": "調查報告",
+  "personnel_types": [
+   "承攬"
+  ],
+  "summary": "檢討注意事項執行情形，指出業務範圍正面表列、總量管制、指定派遣與轉掛派遣禁止等問題；回顧國美館派遣濫用、立法院要求檢討等背景。",
+  "significance": "行政部門自我檢討顯示派遣治理依賴行政規則，拘束力有限。",
+  "sources": [
+   {
+    "title": "公部門運用派遣人力之研究（人事行政局，100年10月修正本）",
+    "url": "https://www.dgpa.gov.tw/uploads/dgpa/files/202202/60e3e57d-48fc-403a-bd27-255537e85048.pdf",
+    "accessible": true
+   }
+  ]
+ },
+ {
+  "date": "2012",
+  "roc_year": "101",
+  "event": "監察院通過「我國中央行政機關勞動派遣問題」調查報告（101財調0132）",
+  "actor": "監察院",
+  "category": "調查報告",
+  "personnel_types": [
+   "承攬"
+  ],
+  "summary": "沈美真、楊美鈴、程仁宏、劉玉山委員專案調查研究（101.12.22）：訪查6機關、清查33件標案，指出機關因業務預算增加而人力未擴增，派遣占職員預算員額比例最高達5至7成；派遣人數由99年15,514人降至100年11,930人主因改以勞務承攬或重新認定；派遣勞工已辦理核心業務並涉公權力；受總員額法管制無法擴充員額，如全面禁用恐致萬餘人失業，公部門派遣仍有正面功能。原文為「專案調查研究報告」，未附糾正案文；研究中所引「099財正0034」於監察成果系統查無。",
+  "significance": "監察院首度將派遣擴張與總員額法連結，確認「總量管制→非典型替代」的因果。",
+  "sources": [
+   {
+    "title": "監察院調查報告：101年度「我國中央行政機關勞動派遣問題」專案調查研究（101財調0132，監察成果查詢系統）",
+    "url": "https://www.cy.gov.tw/CyBsBoxContent.aspx?n=133&s=1939",
+    "accessible": true,
+    "local_path": "raw/fetched/cy/edoc_50299_101財調0132_中央行政機關勞動派遣問題.pdf"
+   },
+   {
+    "title": "監察院調查報告 PDF（200頁）",
+    "url": "https://cybsbox.cy.gov.tw/CYBSBoxSSL/edoc/download/50299",
+    "accessible": true,
+    "local_path": "raw/fetched/cy/edoc_50299_101財調0132_中央行政機關勞動派遣問題.pdf"
+   },
+   {
+    "title": "部落格轉載（原引用，已以原文取代）",
+    "url": "https://buildingfocus.blogspot.com/2017/03/",
+    "accessible": false
+   }
+  ]
+ },
+ {
+  "date": "2012-01",
+  "roc_year": "101",
+  "event": "蘇偉業〈政府契約人力之政策定位與現實：政府內部人力市場之啟示〉",
+  "actor": "學界",
+  "category": "調查報告",
+  "personnel_types": [
+   "聘用",
+   "約僱"
+  ],
+  "summary": "指出機關進用約聘僱是因正式人力不足，與制度定位（臨時性）落差；考試院2009年提出三元體制至今未完成任何新立法。",
+  "significance": "學界持續記錄「政策定位／實際運作」的漂移。",
+  "sources": [
+   {
+    "title": "蘇偉業〈政府契約人力之政策定位與現實：政府內部人力市場之啟示〉文官制度季刊4(1)，2012",
+    "url": "https://ws.exam.gov.tw/Download.ashx?u=LzAwMS9VcGxvYWQvMTUvcmVsZmlsZS8xMjAwMS8yNDQ0NC8wY2ZkOTdhNy0wZTk5LTRlOWEtYmM1NC01ODNhNTE0M2NmNWEucGRm&n=NC0xLTIg6JiH5YGJ5qWtLS3mlL%2FlupzlpZHntITkurrlipvkuYvmlL%2FnrZblrprkvY3oiIfnj77lr6YxMDEwMjA5LnBkZg%3D%3D",
+    "accessible": false
+   },
+   {
+    "title": "考試院委託研究：契約進用公務人力之範圍、甄選、權利及義務之研究（2012）",
+    "url": "https://ws.exam.gov.tw/Download.ashx?u=LzAwMS9VcGxvYWQvMS9yZWxmaWxlLzEyMDgyLzI4NDM5L2EwMWVmNDBiLWM4ZmQtNDE4Ni1hMGFkLWI0YjM5NTBkODdlMS5wZGY%3D&n=MDEyNTE2MTUyMDQwLnBkZg%3D%3D",
+    "accessible": false
+   }
+  ]
+ },
+ {
+  "date": "2012-03-27",
+  "roc_year": "101",
+  "event": "考試院、行政院第5度會銜函送《公務人員基準法》草案（4月6日院會交付審查），第5條將聘任人員納入常務人員",
+  "actor": "考試院",
+  "category": "草案提出",
+  "personnel_types": [
+   "公務人員",
+   "聘用"
+  ],
+  "summary": "5章71條（100年5月18日第7屆第7會期版亦為5章71條，因屆期不續審重送）；第2條公務人員定義排除聘用、派用、機要人員，第5條常務人員包含聘任人員並授權另以法律定之，第70條聘用人員準用本法部分條文。以基準法第5條為法源，銓敘部另擬「聘任人員人事條例」草案（101.9.28送考試院）定位聘任人員為常務人員，不簽契約、無聘期；聘用及約僱則定位為公法契約用人。中華民國博物館學會102年請願反對將聘任人員納入常務人員。",
+  "significance": "轉換：將「聘任」從契約用人切離回常務體系，契約人力範圍縮小為聘用、約僱兩類。",
+  "sources": [
+   {
+    "title": "政府機關用人體制之研究－從公法契約用人法制論析（人事總處，103.5.15）",
+    "url": "https://www.dgpa.gov.tw/Uploads/public/Attachment/51161738378.pdf",
+    "accessible": true
+   },
+   {
+    "title": "考試院新聞稿：考試院審議通過公務人員基準法草案 近期將函請行政院同意會銜",
+    "url": "https://www.exam.gov.tw/News_Content.aspx?n=1&s=19485",
+    "accessible": false
+   },
+   {
+    "title": "立法院議案關係文書：公務人員基準法草案（考試院、行政院，第8屆第1會期第6次會議，101.4.6，60頁）",
+    "url": "https://ppg.ly.gov.tw/ppg/download/agenda1/02/pdf/08/01/06/LCEWA01_080106_00129.pdf",
+    "accessible": true,
+    "local_path": "raw/fetched/ly/bills/101_公務人員基準法草案_考試院行政院_LCEWA01_080106_00129.pdf"
+   },
+   {
+    "title": "立法院議案關係文書：中華民國博物館學會為公務人員基準法草案擬將聘任人員納入常務人員請願案（102.5）",
+    "url": "https://ppg.ly.gov.tw/ppg/download/agenda1/02/pdf/08/03/12/LCEWA01_080312_00271.pdf",
+    "accessible": true,
+    "local_path": "raw/fetched/ly/bills/102_博物館學會基準法請願_LCEWA01_080312_00271.pdf"
+   }
+  ]
+ },
+ {
+  "date": "2013-05-17",
+  "roc_year": "102",
+  "event": "銓敘部函送考試院新版《聘用人員人事條例》草案（41條，整合聘用及約僱）",
+  "actor": "銓敘部",
+  "category": "草案提出",
+  "personnel_types": [
+   "聘用",
+   "約僱"
+  ],
+  "summary": "研擬原則：維持「聘用人員」名稱、進用比率不逾職員預算總人數10%、不適用勞基法（公法契約）、一等至五等、學經歷資格、公開甄選、主管機關每5年檢討業務計畫以避免久任、年度考核、參加勞保並準用勞退條例。",
+  "significance": "路徑依賴：第二代草案延續「公法契約＋不適用勞基法」路徑，但保障內容改借用勞保勞退，顯示「借用勞動制度填補公法空洞」的折衷。",
+  "sources": [
+   {
+    "title": "政府機關用人體制之研究－從公法契約用人法制論析（人事總處，103.5.15）",
+    "url": "https://www.dgpa.gov.tw/Uploads/public/Attachment/51161738378.pdf",
+    "accessible": true
+   }
+  ]
+ },
+ {
+  "date": "2014-05-15",
+  "roc_year": "103",
+  "event": "人事總處研究報告《政府機關用人體制之研究－從公法契約用人法制論析》",
+  "actor": "人事總處",
+  "category": "調查報告",
+  "personnel_types": [
+   "聘用",
+   "約僱",
+   "約用"
+  ],
+  "summary": "比較聘任、聘用兩草案，分析聘僱改適用勞基法之衝擊，提出「廢除聘僱法制：高度專業者納入聘任制度、例行事務性約僱改進用臨時人員受勞動法制保障」等重組方案。",
+  "significance": "行政院幕僚立場：傾向以勞動法制與聘任制度「兩端吸收」契約人力，與考試院「第三軌公法契約」路線分歧。",
+  "sources": [
+   {
+    "title": "政府機關用人體制之研究－從公法契約用人法制論析（人事總處，103.5.15）",
+    "url": "https://www.dgpa.gov.tw/Uploads/public/Attachment/51161738378.pdf",
+    "accessible": true
+   }
+  ]
+ },
+ {
+  "date": "2015",
+  "roc_year": "104",
+  "event": "李靜宜臺大政治學博士論文《我國中央機關非典型人力運用政策之分析：歷史制度論觀點》",
+  "actor": "學界",
+  "category": "調查報告",
+  "personnel_types": [
+   "約用",
+   "承攬",
+   "聘用",
+   "約僱"
+  ],
+  "summary": "以路徑依循與斷續均衡理論分析：長期考試用人、人事制度僵化、財政危機與新公共管理使非典型人力運用「實屬必然」；各機關因歷史沿革、預算、民意機關關注與受僱者動員差異而有不同時點與作法。",
+  "significance": "直接以歷史制度論驗證本題核心命題。",
+  "sources": [
+   {
+    "title": "李靜宜（2015）我國中央機關非典型人力運用政策之分析：歷史制度論觀點，臺大政治學研究所博士論文",
+    "url": "https://www.airitilibrary.com/Article/Detail/U0001-1307201516341300",
+    "accessible": false
+   }
+  ]
+ },
+ {
+  "date": "2015-06-17",
+  "roc_year": "104",
+  "event": "《派用人員派用條例》廢止；公務人員任用法增訂第36條之1設9年過渡期",
+  "actor": "立法院",
+  "category": "法制定",
+  "personnel_types": [
+   "公務人員"
+  ],
+  "summary": "立法院104年6月2日三讀，現職派用人員104.6.19至113.6.18過渡期後留任原職；114年8月1日再修正第36條之1放寬調任。",
+  "significance": "轉換：五類非考試用人中的「派用」軌道正式終結，回歸考試用人，為考試院在契約用人議題上少數成功的「收編」。",
+  "sources": [
+   {
+    "title": "法源法律網：派用人員9年後不升遷 立法院三讀通過公務人員任用法（2015-06-04）",
+    "url": "https://www.lawbank.com.tw/news/NewsContent.aspx?NID=128959",
+    "accessible": false
+   }
+  ]
+ },
+ {
+  "date": "2015-08",
+  "roc_year": "104",
+  "event": "立法院預算中心專題：中央政府各機關運用非典型人力之現況",
+  "actor": "立法院",
+  "category": "調查報告",
+  "personnel_types": [
+   "約用",
+   "承攬"
+  ],
+  "summary": "100至103年度非典型人力由82,461人增至84,805人，臨時人員由33,210人增至39,677人；批評部分機關委外比率偏高「儼然成為發包中心」、超額人力偏高卻運用非典型人力。",
+  "significance": "量化證據顯示總員額法施行後非典型人力不減反增。",
+  "sources": [
+   {
+    "title": "立法院預算中心專題：中央政府各機關運用非典型人力之現況（104年8月）",
+    "url": "https://www.ly.gov.tw/Pages/Detail.aspx?nodeid=10084&pid=139750",
+    "accessible": true
+   }
+  ]
+ },
+ {
+  "date": "2016-02-04",
+  "roc_year": "105",
+  "event": "勞動部訂定「政府機關（構）運用勞務承攬參考原則」",
+  "actor": "勞動部",
+  "category": "法制定",
+  "personnel_types": [
+   "承攬"
+  ],
+  "summary": "依立法院104年決議由勞動部會同人事總處訂定（105.2.4勞動關2字第1050125217號函）；要求避免自然人承攬、不得指揮監督派駐勞工、設申訴管道、薪資列固定費用、不得自行招募再轉由承攬人僱用；112.7.20修正（機關付款前確認已付薪資、每年稽核承攬人勞動法遵、自然人承攬人應參加職災保險）、113.5.1再修正（育嬰留停年資從優併計、確保年終獎金、職場不法侵害處理、機關留存服務年資資料）。",
+  "significance": "層疊：承攬人力亦僅以「參考原則」（行政指導）治理，法律位階最低，卻承接最多人力。",
+  "sources": [
+   {
+    "title": "勞動部：政府機關（構）運用勞務承攬參考原則（105.2.4訂定）",
+    "url": "https://www.mol.gov.tw/media/blnol2pf/政府機關-構-運用勞務承攬應行注意事項-核定版-1050204訂定.pdf?mediaDL=true",
+    "accessible": true,
+    "local_path": "raw/fetched/mol/承攬參考原則1050204.pdf"
+   },
+   {
+    "title": "政府機關（構）運用勞務承攬參考原則（植根法律網，1130501版）",
+    "url": "https://www.rootlaw.com.tw/LawArticle.aspx?LawID=A040290031005900-1130501",
+    "accessible": false
+   },
+   {
+    "title": "勞動部〈勞動權益相關法規及政府機關（構）運用承攬參考原則說明〉（人事總處113年研習簡報）",
+    "url": "https://www.dgpa.gov.tw/FileConversion?filename=dgpa%2Ffiles%2F202404%2Fdcb818dc-f2fe-4f41-b561-f23bff693cca.pdf&nfix=&name=承攬參考原則說明.pdf",
+    "accessible": true
+   },
+   {
+    "title": "勞動部：政府機關（構）運用勞務承攬參考原則（113.5.1勞動關2字第1130141630號函修正版）",
+    "url": "https://www.mol.gov.tw/media/mlcf11iv/附件_政府機關-構-運用勞務承攬參考原則.pdf?mediaDL=true",
+    "accessible": true,
+    "local_path": "raw/fetched/mol/承攬參考原則1130501.pdf"
+   },
+   {
+    "title": "勞動部新聞稿：公部門承攬勞工勞動權益保障再升級（113.5.1修正四大重點）",
+    "url": "https://www.mol.gov.tw/1607/1632/1640/68729/post",
+    "accessible": true,
+    "local_path": "raw/fetched/mol/news_68729_承攬原則113修正.html"
+   },
+   {
+    "title": "勞動部新聞稿：強化保障各機關勞務承攬勞工勞動權益（112.7.20修正）",
+    "url": "https://www.mol.gov.tw/1607/1632/1640/61946/post",
+    "accessible": true,
+    "local_path": "raw/fetched/mol/news_61946.html"
+   }
+  ]
+ },
+ {
+  "date": "2017-04-20",
+  "roc_year": "106",
+  "event": "考試院院會審議銓敘部「契約人員人事條例草案」（新北市人事處研究轉述：聘用六至十三等、約僱一至五等）；立委林岱樺等17人提出「契約人員人事條例草案」（38條）",
+  "actor": "考試院",
+  "category": "草案審議",
+  "personnel_types": [
+   "聘用",
+   "約僱"
+  ],
+  "summary": "考試院版因銓敘部與人事總處對適用範圍看法不同而延宕。立委林岱樺等17人106年10月27日提案（第9屆第4會期第6次會議，院總第1225號委員提案第21193號，交司法及法制委員會）：全文38條，依任用法第36條制定；契約人員為預算員額內以契約定期聘用之人員，與機關為公法上契約關係、不適用勞基法（§3）；主管機關及所屬契約人員不超過職員預算總人數10%（§4）；聘用一等至五等、一等最高（§7）；公開甄選（§16）；聘期一年、逾5年檢討計畫存廢（§18）；考核甲乙丙丁（§29）；參加勞保（§32）、退休依勞退條例（§33）。109年1月屆期不續審。",
+  "significance": "否決點：兩院幕僚機關之管轄歧見成為內部否決點；委員提案版亦因缺乏行政部門支持而消失。",
+  "sources": [
+   {
+    "title": "新北市政府人事處108年度自行研究報告：我國聘僱人員人事法制之研究",
+    "url": "https://www.rde.ntpc.gov.tw/userfiles/1160700/files/16我國聘僱人員人事法制之研究.pdf",
+    "accessible": false
+   },
+   {
+    "title": "法源法律網：「契約人員人事條例」草案（林岱樺等17人提案，2017-10-26）",
+    "url": "https://www.lawbank.com.tw/news/NewsContent_print.aspx?NID=147434.00",
+    "accessible": false
+   },
+   {
+    "title": "立法院議案關係文書：契約人員人事條例草案（林岱樺等17人，第9屆第4會期第6次會議，106.10.25印發，48頁）",
+    "url": "https://ppg.ly.gov.tw/ppg/download/agenda1/02/pdf/09/04/06/LCEWA01_090406_00019.pdf",
+    "accessible": true,
+    "local_path": "raw/fetched/ly/bills/106_契約人員人事條例草案_林岱樺等17人_LCEWA01_090406_00019.pdf"
+   },
+   {
+    "title": "立法院議事暨公報資訊網：契約人員人事條例草案議案進度（1061019070200300，交付審查）",
+    "url": "https://ppg.ly.gov.tw/ppg/bills/1061019070200300/details",
+    "accessible": true
+   }
+  ]
+ },
+ {
+  "date": "2018-07-18",
+  "roc_year": "107",
+  "event": "行政院訂定「行政院暨所屬機關（構）檢討運用勞動派遣實施計畫」（派遣歸零）",
+  "actor": "行政院",
+  "category": "政策",
+  "personnel_types": [
+   "承攬",
+   "約用"
+  ],
+  "summary": "107.7.18院授人組字第10700467611號函核定：目標110年起不再運用派遣；需指揮監督之業務改以自僱臨時人員，電話總機、清潔、檔案管理、駕駛等8項業務改採勞務承攬。107年底承攬43,622人、派遣7,522人；審計部106年度審核意見即指派遣由100年11,930人降至106年8,126人、承攬同期由35,680人增至40,969人，有「遁入承攬」之虞。行政院107.8.2院會院長提示：九成以上將改為政府自僱。監察院110教調0016：執行結果5,659人改自僱，內政部以經費不足將派遣全改承攬。",
+  "significance": "轉換：以「派遣→承攬／臨時人員」的形式轉換回應勞權批評，實質僱用關係未改，審計部與預算中心均警告「承攬為名、派遣為實」。",
+  "sources": [
+   {
+    "title": "行政院暨所屬機關（構）檢討運用勞動派遣實施計畫（107.7.18；臺中市主計處轉載）",
+    "url": "https://www.dbas.taichung.gov.tw/media/529424/61-1-new-檢討運用勞動派遣實施計畫-107718訂定.pdf",
+    "accessible": false
+   },
+   {
+    "title": "政府機關多元人力運用及管理（人事總處簡報，110年6月）",
+    "url": "https://www.dgpa.gov.tw/FileConversion?filename=dgpa%2Ffiles%2F202106%2Fa5dc4cdd-59a4-495a-b1d9-1dab0ee1b34a.pdf&name=政府機關多元人力運用及管理.pdf",
+    "accessible": true
+   },
+   {
+    "title": "立法院預算中心：派遣歸零政策實施後，允宜儘速訂定細部注意事項並依時程完備派遣專法，以防堵「承攬為名，派遣為實」",
+    "url": "https://www.ly.gov.tw/Pages/Detail.aspx?nodeid=33364&pid=185035",
+    "accessible": true
+   },
+   {
+    "title": "關鍵評論網：行政院7千位派遣兩年內將「歸零」，但勞動條件更差的「承攬」卻有4萬多人",
+    "url": "https://www.thenewslens.com/article/100155",
+    "accessible": false
+   },
+   {
+    "title": "報導者：政府派遣人力下降背後……問題真的改善嗎？",
+    "url": "https://www.twreporter.org/a/temporary-worker-public-sector",
+    "accessible": false
+   },
+   {
+    "title": "行政院第3611次院會決議（107.8.2）院長提示：零派遣計畫超過九成改為政府自僱人力，少數事務性操作性業務始得承攬，不會造成承攬人力大量增加",
+    "url": "https://www.ey.gov.tw/Page/4EC2394BE4EE9DD0/f6dd4f6e-d5d3-4ed4-8e73-e9bc4d08c588",
+    "accessible": true,
+    "local_path": "raw/fetched/ey/院會_107-08-02.html"
+   },
+   {
+    "title": "行政院新聞：賴揆：勞動派遣九成將轉為政府自雇人力（107.8.2）",
+    "url": "https://www.ey.gov.tw/Page/9277F759E41CCD91/f9ed2a96-4587-4e6a-9e8c-85c90aada39d",
+    "accessible": true,
+    "local_path": "raw/fetched/ey/page_f9ed2a96_院會派遣.html"
+   },
+   {
+    "title": "審計部107年政府審計年報：各級政府勞動派遣及勞務承攬人力運用情形（106年度總決算審核意見摘要）",
+    "url": "https://www.audit.gov.tw/p/405-1000-5458,c105.php?Lang=zh-tw",
+    "accessible": true,
+    "local_path": "raw/fetched/audit/政府審計年報_107_p304-307_派遣承攬.txt"
+   },
+   {
+    "title": "監察院110教調0016調查報告：派遣歸零後5,659人改為自僱，內政部261人全改承攬",
+    "url": "https://www.cy.gov.tw/CyBsBoxContent.aspx?n=133&s=17616",
+    "accessible": true,
+    "local_path": "raw/fetched/cy/edoc_59425_110教調0016_總員額法調查報告.pdf"
+   }
+  ]
+ },
+ {
+  "date": "2018-12-22",
+  "roc_year": "107",
+  "event": "監察院財經委員會巡察行政院提出「政府對於非典型就業規範及執行情形之探討」通案調查",
+  "actor": "監察院",
+  "category": "調查報告",
+  "personnel_types": [
+   "約用",
+   "承攬"
+  ],
+  "summary": "章仁香委員巡察行政院發言（通案報告108.2.12通過，案號108財調0008）：中央員額上限17.3萬人外，行政院及所屬臨時人員由102年34,196人增至106年39,606人、30,168人任職逾1年且有辦理核心業務者，常態性業務應依聘用條例進用並納入員額控管；地方臨時人員43,638人、占正式員額近1成2，離島逾4成、金門連江逾5成，控管缺乏明文規定；派遣歸零應避免假承攬真派遣。",
+  "significance": "監察院再次指向「編制不足→非典型替代」的結構。",
+  "sources": [
+   {
+    "title": "監察院新聞稿：政府應落實立法保護非典型就業權益，並確實掌握相關資訊（107.12.22巡察行政院）",
+    "url": "https://www.cy.gov.tw/News_Content.aspx?n=124&sms=8912&s=13227",
+    "accessible": true,
+    "local_path": "raw/fetched/cy/news_13227_非典型就業.html"
+   },
+   {
+    "title": "監察院「政府對於非典型就業規範及執行情形之探討」通案性案件調查研究報告（108財調0008，108.2.12）",
+    "url": "https://www.cy.gov.tw/CyBsBoxContent.aspx?n=133&s=16980",
+    "accessible": true,
+    "local_path": "raw/fetched/cy/edoc_51080_108財調0008_非典型就業通案調查研究報告.pdf"
+   }
+  ]
+ },
+ {
+  "date": "2019-01-06",
+  "roc_year": "108",
+  "event": "行政院核定「公部門主動解決低薪方案」：中央臨時及派遣人員、中央與地方約僱人員月薪低於3萬元者調薪，溯自108年1月1日",
+  "actor": "行政院",
+  "category": "行政措施",
+  "personnel_types": [
+   "臨時人員",
+   "派遣",
+   "約僱"
+  ],
+  "summary": "中央各機關（含公立學校、醫療機構）平均每月總薪資低於3萬元之臨時及派遣人員每月經常性薪資加1,100元、上限3萬元，估8,241人受惠、經費約1億8,172萬元由人事總處統籌科目支應；中央及地方以1等僱用之約僱人員全面改僱2等，2等符合高中畢業者得改3等，估最多440人受惠；地方臨時及派遣人員不納入強制規範。",
+  "significance": "層疊修補：以薪資補貼回應非典型人力低薪，而非改變進用制度；同時顯示臨時、派遣、約僱三類人力之待遇由行政院個案決定。",
+  "sources": [
+   {
+    "title": "行政院新聞：對抗低薪 政院：臨時、派遣、約僱人力加薪（108.1.6）",
+    "url": "https://www.ey.gov.tw/Page/9277F759E41CCD91/27315b4a-dddc-4b87-a197-d2e4004eeb6f",
+    "accessible": true,
+    "local_path": "raw/fetched/ey/page_27315b4a.html"
+   }
+  ]
+ },
+ {
+  "date": "2019-10-01",
+  "roc_year": "108",
+  "event": "行政院全文修正約僱辦法並更名為《行政院與所屬中央及地方各機關約僱人員僱用辦法》；考試院同日修正聘用條例施行細則第6條",
+  "actor": "行政院",
+  "category": "修正",
+  "personnel_types": [
+   "約僱",
+   "聘用"
+  ],
+  "summary": "配合分類職位任用法廢止重新定義約僱人員為「以行政契約定期僱用，辦理事務性、簡易性等行政或技術工作」，明定公開甄選程序、消極資格、65歲終止、提高撫慰金；109年5月增訂第8-1條、111年9月修正第4條。",
+  "significance": "修補式層疊：47年未動的命令終於修正，但仍停留在命令層次；明文「行政契約」是為回應勞基法適用爭議（法制局指出人事總處於108年修正以釐清適用關係）。",
+  "sources": [
+   {
+    "title": "行政院與所屬中央及地方各機關約僱人員僱用辦法 沿革",
+    "url": "https://law.moj.gov.tw/LawClass/LawHistory.aspx?pcode=S0110014",
+    "accessible": true
+   },
+   {
+    "title": "行政院暨所屬機關約僱人員僱用辦法修正總說明（108年，行政院公報）",
+    "url": "https://gazette.nat.gov.tw/EG_FileManager/eguploadpub/eg025185/ch01/type1/gov01/num1/images/AA.pdf",
+    "accessible": true
+   },
+   {
+    "title": "聘用人員聘用條例施行細則 沿革",
+    "url": "https://law.moj.gov.tw/LawClass/LawHistory.aspx?pcode=S0020015",
+    "accessible": true
+   },
+   {
+    "title": "立法院法制局議題研析：公部門聘僱小編人員勞動權益之研析（蔡琮浩，109年9月，R01083）",
+    "url": "https://www.ly.gov.tw/Pages/Detail.aspx?nodeid=6590&pid=199057",
+    "accessible": true
+   }
+  ]
+ },
+ {
+  "date": "2019-11-15",
+  "roc_year": "108",
+  "event": "行政院修正臨時人員要點：不再以定期契約為限、改採主管機關總量控管",
+  "actor": "行政院",
+  "category": "修正",
+  "personnel_types": [
+   "約用"
+  ],
+  "summary": "配合零派遣，派遣改自僱人員多屬繼續性工作，故由機關依勞基法簽訂定期或不定期契約；上限改為「96年度人數＋派遣改臨時人員人數＋97年後新設機關人數」，專案補助與重大政策人力不受限。",
+  "significance": "漂移的正式化：要點放棄「臨時性」要件，承認臨時人員已是常態人力，但仍以要點而非法律處理。",
+  "sources": [
+   {
+    "title": "約用人員管理規定（人事總處組編人力處簡報，113.4.18）",
+    "url": "https://www.dgpa.gov.tw/FileConversion?filename=dgpa/files/202404/308f2535-a6e0-4dd1-bbca-5d4a6c82fb80.pdf&nfix=&name=約用人員管理規定.pdf",
+    "accessible": true
+   },
+   {
+    "title": "政府機關多元人力運用及管理（人事總處簡報，110年6月）",
+    "url": "https://www.dgpa.gov.tw/FileConversion?filename=dgpa%2Ffiles%2F202106%2Fa5dc4cdd-59a4-495a-b1d9-1dab0ee1b34a.pdf&name=政府機關多元人力運用及管理.pdf",
+    "accessible": true
+   },
+   {
+    "title": "多元人力簡介（人事總處委外及多元人力運用專區，113.2.27）",
+    "url": "https://www.dgpa.gov.tw/mp/archive?uid=577&mid=152",
+    "accessible": true
+   }
+  ]
+ },
+ {
+  "date": "2019-12-31",
+  "roc_year": "108",
+  "event": "總統公布《中央政府機關總員額法》修正第3、4、11條",
+  "actor": "立法院",
+  "category": "修正",
+  "personnel_types": [
+   "公務人員",
+   "聘用",
+   "約僱"
+  ],
+  "summary": "將公立醫院職員排除於第一類員額（調降12,100人）；第三類（司法）上限提高至15,000人，第二類（聘僱、駐衛警、工友）由41,200人下調為40,100人。",
+  "significance": "顯示總量上限可因個別部門需求局部調整，但聘僱員額上限反遭壓縮，加深員額外人力的替代誘因。",
+  "sources": [
+   {
+    "title": "中央政府機關總員額法 沿革",
+    "url": "https://law.moj.gov.tw/LawClass/LawHistory.aspx?pcode=S0110038",
+    "accessible": true
+   },
+   {
+    "title": "立法院：中央政府機關總員額法修正第3條、第4條及第11條條文（108年12月）",
+    "url": "https://www.ly.gov.tw/Pages/Detail.aspx?nodeid=33324&pid=190941",
+    "accessible": true
+   }
+  ]
+ },
+ {
+  "date": "2020-02",
+  "roc_year": "109",
+  "event": "立法院法制局專題研究：臨時人員納入中央政府機關總員額法之探討（賴怡瑩，A01511）",
+  "actor": "立法院",
+  "category": "調查報告",
+  "personnel_types": [
+   "約用"
+  ],
+  "summary": "（撰寫單位為法制局，非預算中心。）從政治、法律、行政、財政、人力資源五面向分析：臨時人員與總員額法第二類人員定位差異不大，納入第二類控管「尚屬可行」；法律、行政、財政層面無礙，政治層面可能加劇勞基法適用與權益衡平爭議。報告並指出第二類員額每年退離逾千人、政府瘦身成果多歸功於第二類控管，但缺口轉以派遣、承攬填補；108年第3季臨時、派遣、承攬派駐合計57,159人未納入員額管理與人事費估算。",
+  "significance": "提出將「員額外」人力拉回「員額內」的制度選項，迄今未採。",
+  "sources": [
+   {
+    "title": "立法院法制局專題研究：臨時人員納入中央政府機關總員額法之探討（賴怡瑩，109年2月，A01511）",
+    "url": "https://www.ly.gov.tw/Pages/Detail.aspx?nodeid=6586&pid=191973",
+    "accessible": true
+   },
+   {
+    "title": "法制局A01511全文PDF（第10屆議題研析及專題研究公開區，47頁）",
+    "url": "https://www.ly.gov.tw/Pages/Detail.aspx?nodeid=43801&pid=193786",
+    "accessible": true,
+    "local_path": "raw/fetched/ly/法制局A01511_臨時人員納入總員額法_109.pdf"
+   }
+  ]
+ },
+ {
+  "date": "2020-06",
+  "roc_year": "109",
+  "event": "人事總處研擬完成《聘約人員人事條例》草案，函請各機關於6月19日前表示意見",
+  "actor": "人事總處",
+  "category": "草案提出",
+  "personnel_types": [
+   "聘用",
+   "約僱"
+  ],
+  "summary": "整合聘用與約僱為「聘約人員」，公法契約關係，列為機關預算員額，一等至五等（五等最高，須博士學位及年資），甄審考核委員會、公開甄選、利益迴避、續約與終止、服務行為規範、參加勞保勞退；第4條：三等以上聘約人員進用滿3年得任特定機關（研究、文化館所、科技專業等非公權力領域）有職稱職務。",
+  "significance": "關鍵節點（未成）：首次由行政院（而非考試院）主導契約人力專法，且突破「不得兼任有職等職務」的58年禁令，立即觸發考試權／文官體制的否決反應。",
+  "sources": [
+   {
+    "title": "【澄清稿】媒體報導「聘約人員人事條例」草案相關議題（人事總處新聞稿，109.7.12）",
+    "url": "https://www.dgpa.gov.tw/information?uid=82&pid=10228",
+    "accessible": true
+   },
+   {
+    "title": "中央社：約聘人員可取得職等 人事行政總處：無公務員身分（2020.7.11）",
+    "url": "https://www.cna.com.tw/news/aipl/202007110190.aspx",
+    "accessible": false
+   },
+   {
+    "title": "立法院法制局議題研析：聘約人員人事條例草案之妥適性研析（方華香，109年8月，R01065）",
+    "url": "https://www.ly.gov.tw/Pages/Detail.aspx?nodeid=6590&pid=198459",
+    "accessible": true
+   }
+  ]
+ },
+ {
+  "date": "2020-07-12",
+  "roc_year": "109",
+  "event": "人事總處發布澄清稿；7月13日行政院長蘇貞昌稱聘約人員與公務人員「完全不相干」",
+  "actor": "行政院",
+  "category": "草案審議",
+  "personnel_types": [
+   "聘用",
+   "約僱"
+  ],
+  "summary": "國民黨團質疑「開後門、破壞文官體制」、第4條「三年條款」；全國公務人員協會、林清汶等批評侵犯考試權、酬庸；社工團體批評仍不適用勞基法。人事總處強調不取得公務員身分、不擴及一般行政機關、無時間表。",
+  "significance": "否決聯盟：在野黨＋公務人員團體＋考試權論述形成跨黨派反對，草案停留在徵詢階段；此後未再送行政院會。",
+  "sources": [
+   {
+    "title": "【澄清稿】媒體報導「聘約人員人事條例」草案相關議題（人事總處新聞稿，109.7.12）",
+    "url": "https://www.dgpa.gov.tw/information?uid=82&pid=10228",
+    "accessible": true
+   },
+   {
+    "title": "工商時報：蘇揆：聘約人員人事條例和公務人員完全不相干（2020.7.13）",
+    "url": "https://www.ctee.com.tw/news/20200713700589-430104",
+    "accessible": false
+   },
+   {
+    "title": "自由時報：約聘人員修法被誤解為排擠公務員 人事總處：提案沒有時間表（2020.9）",
+    "url": "https://news.ltn.com.tw/news/politics/breakingnews/3300840",
+    "accessible": false
+   },
+   {
+    "title": "林清汶觀點：聘約人員人事條例將破壞文官體系（風傳媒）",
+    "url": "https://www.storm.mg/article/2853773",
+    "accessible": false
+   },
+   {
+    "title": "全國公務人員協會：針對令人憂心疑慮的「聘約人員人事條例」",
+    "url": "https://ncsatw.org/news/79",
+    "accessible": false
+   },
+   {
+    "title": "簡評行政院人事行政總處的「聘約人員人事條例」（台灣社會福利總盟/社工專協評論）",
+    "url": "https://www.sunnyswa.org.tw/25001/",
+    "accessible": false
+   }
+  ]
+ },
+ {
+  "date": "2020-07-15",
+  "roc_year": "109",
+  "event": "監察院糾正法務部：矯正署以勞務承攬進用心理師、社工涉「假承攬真僱傭」",
+  "actor": "監察院",
+  "category": "調查報告",
+  "personnel_types": [
+   "承攬"
+  ],
+  "summary": "王幼玲、王美玉調查（109司調0046）：法務部104年擬增補心理師、社工員額355人遭人事總處建議緩議，106年行政院議決研議聘用，矯正署擬聘用199人，108年「因國家財政及人力控管」奉核改以委外辦理；各監所108年中起以承攬進用，契約要求全職8小時、配合上下班、加班受訓，實具指揮監督卻規避雇主責任，留任率僅62%、50%；糾正矯正署，請行政院督導整合部會意見研議常設人力。",
+  "significance": "監察院將「承攬替代」的實質僱傭問題正式定性，是派遣歸零後承攬治理失靈的指標案例。",
+  "sources": [
+   {
+    "title": "監察院新聞稿：監所進用心理及社工人員涉「假承攬真僱傭」，監委王幼玲、王美玉糾正法務部（109.7.15）",
+    "url": "https://www.cy.gov.tw/News_Content.aspx?n=125&s=18071",
+    "accessible": true,
+    "local_path": "raw/fetched/cy/news_18071_矯正署假承攬.html"
+   },
+   {
+    "title": "監察院調查報告：法務部矯正署以勞務承攬方式運用專業人力（社工及心理師）至各監所案",
+    "url": "https://cybsbox.cy.gov.tw/CYBSBoxSSL/edoc/download/61829",
+    "accessible": true,
+    "local_path": "raw/fetched/cy/edoc_61829_矯正署調查報告.pdf"
+   },
+   {
+    "title": "監察院糾正案文（109司調0046）",
+    "url": "https://cybsbox.cy.gov.tw/CYBSBoxSSL/edoc/download/62054",
+    "accessible": true,
+    "local_path": "raw/fetched/cy/edoc_62054_109司調0046_矯正署糾正案文.pdf"
+   }
+  ]
+ },
+ {
+  "date": "2020-08",
+  "roc_year": "109",
+  "event": "立法院法制局議題研析：聘約人員人事條例草案之妥適性研析（方華香，R01065）",
+  "actor": "立法院",
+  "category": "調查報告",
+  "personnel_types": [
+   "聘用",
+   "約僱"
+  ],
+  "summary": "肯定整合方向，但指出聘用人員主管機關為銓敘部、約僱為人事總處，草案通過後與《聘用人員聘用條例》適用界線及是否限縮考試權有疑義，建議先與考試院協商；另指可能排擠考試進用人員。",
+  "significance": "法制局再度扮演否決論述供應者，核心仍是兩院管轄。",
+  "sources": [
+   {
+    "title": "立法院法制局議題研析：聘約人員人事條例草案之妥適性研析（方華香，109年8月，R01065）",
+    "url": "https://www.ly.gov.tw/Pages/Detail.aspx?nodeid=6590&pid=198459",
+    "accessible": true
+   }
+  ]
+ },
+ {
+  "date": "2020-09",
+  "roc_year": "109",
+  "event": "立法院法制局議題研析：公部門聘僱小編人員勞動權益之研析（蔡琮浩，R01083）；監委自動調查金山區公所小編過勞死",
+  "actor": "立法院",
+  "category": "調查報告",
+  "personnel_types": [
+   "約僱",
+   "約用"
+  ],
+  "summary": "金山區公所陳姓僱員猝死（月薪不到3萬；法制局研析引媒體報導每月加班70至80小時，監察院調查認定過世前1月加班逾100小時）；研析指出銓敘部視聘用人員為廣義公務員、人事總處視為公法契約不適用勞基法，主管機關咸認不適用勞基法卻又納入勞退，定位矛盾；建議朝適用勞基法方向並以專法區隔契約人力與常任文官。監察院110年8月糾正金山區公所。 監察院110.8.18通過調查報告（110社調0002）糾正金山區公所：以職務代理人名義反覆進用約僱人員辦理主管職掌業務，名實不符、權小責大；過世前1月加班逾100小時經認定職業病；調查意見四指約聘僱準用公務員法令有加班費上限卻無加班時數上限，請考試院與人事總處通盤考量工時規範並入法保障。",
+  "significance": "個案暴露公法契約定位下「非勞非公」的保障真空；監委建議考試院與人事總處通盤考量並立法保障。",
+  "sources": [
+   {
+    "title": "立法院法制局議題研析：公部門聘僱小編人員勞動權益之研析（蔡琮浩，109年9月，R01083）",
+    "url": "https://www.ly.gov.tw/Pages/Detail.aspx?nodeid=6590&pid=199057",
+    "accessible": true
+   },
+   {
+    "title": "監察院新聞稿：金山區公所小編過勞猝死，糾正新北市金山區公所（110.8）",
+    "url": "https://www.cy.gov.tw/News_Content.aspx?n=125&sms=8912&s=20668",
+    "accessible": true,
+    "local_path": "raw/fetched/cy/news_20668_金山區公所.html"
+   },
+   {
+    "title": "監察院調查報告：金山區公所小編猝死案（110社調0002，110.8.18）",
+    "url": "https://www.cy.gov.tw/CyBsBoxContent.aspx?n=133&s=17590",
+    "accessible": true,
+    "local_path": "raw/fetched/cy/edoc_71779_110社調0002_金山小編調查報告.pdf"
+   },
+   {
+    "title": "監察院糾正案文：新北市金山區公所",
+    "url": "https://cybsbox.cy.gov.tw/CYBSBoxSSL/edoc/download/59523",
+    "accessible": true,
+    "local_path": "raw/fetched/cy/edoc_59523_110社調0002_金山區公所糾正案文.pdf"
+   }
+  ]
+ },
+ {
+  "date": "2021-02-01",
+  "roc_year": "110",
+  "event": "行政院停止適用「運用勞動派遣應行注意事項」，110年起行政院暨所屬不再運用派遣",
+  "actor": "行政院",
+  "category": "政策",
+  "personnel_types": [
+   "承攬",
+   "約用"
+  ],
+  "summary": "多元人力自此僅剩「約用（臨時）人員」與「勞務承攬派駐人力」兩類；人事總處110年6月簡報整理94至108年多元人力運用進程。 監察院110教調0016（110.9.16）調查7部會：總員額法高限未經合理檢視、正式人力核給偏低致部分機關非正式人力逾正式人力3倍；臨時人員以承辦人身分於核發審查案件簽章涉行使公權力；派遣歸零後5,659人改自僱、內政部派遣全改承攬；建議員額管理由「量」轉「質」。",
+  "significance": "轉換完成：派遣制度性消失，人力轉入承攬與臨時人員，契約人力版圖重組。",
+  "sources": [
+   {
+    "title": "政府機關多元人力運用及管理（人事總處簡報，110年6月）",
+    "url": "https://www.dgpa.gov.tw/FileConversion?filename=dgpa%2Ffiles%2F202106%2Fa5dc4cdd-59a4-495a-b1d9-1dab0ee1b34a.pdf&name=政府機關多元人力運用及管理.pdf",
+    "accessible": true
+   },
+   {
+    "title": "約用人員管理規定（人事總處組編人力處簡報，113.4.18）",
+    "url": "https://www.dgpa.gov.tw/FileConversion?filename=dgpa/files/202404/308f2535-a6e0-4dd1-bbca-5d4a6c82fb80.pdf&nfix=&name=約用人員管理規定.pdf",
+    "accessible": true
+   },
+   {
+    "title": "監察院調查報告：總員額法施行後編制外人力比率過高案（110教調0016，110.9.16）",
+    "url": "https://www.cy.gov.tw/CyBsBoxContent.aspx?n=133&s=17616",
+    "accessible": true,
+    "local_path": "raw/fetched/cy/edoc_59425_110教調0016_總員額法調查報告.pdf"
+   }
+  ]
+ },
+ {
+  "date": "2021-07-15",
+  "roc_year": "110",
+  "event": "監察院糾正教育部：大專校院專案教師「非勞非教」、以行政規則空白授權",
+  "actor": "監察院",
+  "category": "調查報告",
+  "personnel_types": [
+   "聘用"
+  ],
+  "summary": "教育部自87年開放編制外專案教師，106至109學年度由2,705人增至3,747人、占專任教師5.91%→8.45%，部分學校達八成；糾正指身分「非勞非教」（不適用教師法，103年又遭排除勞基法）、公校僅依行政規則、私校無授權依據，違反法律保留；生師比採計變相鼓勵不補編制內。教育部111年5月24日訂定「專科以上學校進用編制外專任教學人員實施原則」。",
+  "significance": "教育領域的平行案例：契約人力在教育人員法制中同樣以行政規則層疊、形成保障真空。",
+  "sources": [
+   {
+    "title": "監察院新聞稿：大專校院專案教師權益長期遭受漠視「非勞非教」，監察院通過糾正教育部（110.7.15）",
+    "url": "https://www.cy.gov.tw/News_Content.aspx?n=125&s=20498",
+    "accessible": true,
+    "local_path": "raw/fetched/cy/news_20498_專案教師.html"
+   },
+   {
+    "title": "監察院糾正案文：教育部自87年起開放大專校院編制外專案教師案",
+    "url": "https://cybsbox.cy.gov.tw/CYBSBoxSSL/edoc/download/72599",
+    "accessible": true,
+    "local_path": "raw/fetched/cy/edoc_72599_專案教師糾正案文.pdf"
+   },
+   {
+    "title": "監察院公報第3231期（糾正教育部專案教師案文）",
+    "url": "https://www-ws.cy.gov.tw/Download.ashx?u=LzAwMS9VcGxvYWQvMy9yZWxmaWxlLzg5MTYvMjA2NzkvYzJhMmU5YzQtZGUxYy00YWM1LTk1OWUtYzg0YjUxNDA2ODlhLnBkZg%3D%3D&n=MzIzMS5wZGY%3D&icon=..pdf",
+    "accessible": false
+   },
+   {
+    "title": "監察院調查報告：專案教師案（110教調0008）",
+    "url": "https://www.cy.gov.tw/CyBsBoxContent.aspx?n=133&s=17551",
+    "accessible": true,
+    "local_path": "raw/fetched/cy/edoc_72598_110教調0008_專案教師調查報告.pdf"
+   }
+  ]
+ },
+ {
+  "date": "2022-10-20",
+  "roc_year": "111",
+  "event": "數位發展部約聘比例爭議，銓敘部長周志宏表示《聘用人員聘用條例》過於簡陋將研修、預計112年送立法院",
+  "actor": "銓敘部",
+  "category": "政策",
+  "personnel_types": [
+   "聘用"
+  ],
+  "summary": "數位部組織法允許聘用最多300人（預算員額598人），在野質疑養網軍、破壞文官體制；數位部書面報告稱111年聘用占比14.21%。其後未見銓敘部修正草案送立法院之紀錄。",
+  "significance": "新設機關以高比例聘用突破5%慣例，引發新一輪「契約人力法制化」承諾，但再度停留在宣示。",
+  "sources": [
+   {
+    "title": "中時：數位部約聘僱人力過半 銓敘部研議修法（2022.10.20）",
+    "url": "https://www.chinatimes.com/realtimenews/20221020002405-263101",
+    "accessible": false
+   }
+  ]
+ },
+ {
+  "date": "2024-01-30",
+  "roc_year": "113",
+  "event": "行政院函修正臨時人員要點，更名為「行政院及所屬各機關學校約用人員進用及運用要點」",
+  "actor": "行政院",
+  "category": "修正",
+  "personnel_types": [
+   "約用"
+  ],
+  "summary": "因臨時人員已不限臨時性工作（例如法務部以臨時人員進用檢察官助理辦理打詐常態業務）而「名實不符」，在不變動身分屬性、契約性質、勞動條件之下正名為「約用人員」；控管改由行政院核定各主管機關用人額度上限。114年12月19日再修正。",
+  "significance": "漂移的制度承認：政府以更名方式接受「臨時人員常態化」既成事實，形成聘用／約僱／約用三種名稱並存的契約人力體系。",
+  "sources": [
+   {
+    "title": "修正臨時人員要點並更名為約用人員要點（人事總處最新消息，113.1.30）",
+    "url": "https://www.dgpa.gov.tw/information?uid=2&pid=11786",
+    "accessible": true
+   },
+   {
+    "title": "行政院及所屬各機關學校約用人員進用及運用要點（113.1.30修正）",
+    "url": "https://www.dgpa.gov.tw/FileConversion?filename=dgpa%2Ffiles%2F202402%2F6fe2dab8-4b2c-4275-9112-b5dde436166c.pdf&nfix=&name=約用人員要點-1130130.pdf",
+    "accessible": true
+   },
+   {
+    "title": "約用人員管理規定（人事總處組編人力處簡報，113.4.18）",
+    "url": "https://www.dgpa.gov.tw/FileConversion?filename=dgpa/files/202404/308f2535-a6e0-4dd1-bbca-5d4a6c82fb80.pdf&nfix=&name=約用人員管理規定.pdf",
+    "accessible": true
+   },
+   {
+    "title": "多元人力簡介（人事總處委外及多元人力運用專區，113.2.27）",
+    "url": "https://www.dgpa.gov.tw/mp/archive?uid=577&mid=152",
+    "accessible": true
+   }
+  ]
+ },
+ {
+  "date": "2025-07",
+  "roc_year": "114",
+  "event": "立法院預算中心專題研究：中央政府聘用及約僱人力運用情形之探討（劉宜姈，114116）",
+  "actor": "立法院",
+  "category": "調查報告",
+  "personnel_types": [
+   "聘用",
+   "約僱"
+  ],
+  "summary": "發現：聘僱預算員額逐年攀升且增幅高於職員，部分機關超逾5%原則；長期以聘僱辦理經常性業務、久任化未改善；總預算未呈現聘僱人力全貌、薪點折合率缺客觀標準；法制基礎不足須待各主管機關凝聚共識。",
+  "significance": "最新官方幕僚診斷：問題與95年評估幾乎相同，證明二十年制度停滯。",
+  "sources": [
+   {
+    "title": "立法院預算中心專題研究：中央政府聘用及約僱人力運用情形之探討（劉宜姈，114年7月，114116）",
+    "url": "https://www.ly.gov.tw/Pages/List.aspx?nodeid=56067",
+    "accessible": true
+   },
+   {
+    "title": "立法院預算中心：近年中央機關聘僱預算員額逐年攀升，部分機關已超逾5%之原則（114年7月）",
+    "url": "https://www.ly.gov.tw/Pages/Detail.aspx?nodeid=56067&pid=252977",
+    "accessible": true
+   }
+  ]
+ },
+ {
+  "date": "2025-07-09",
+  "roc_year": "114",
+  "event": "總統公布《公務人員保障法》修正，第102條增訂第3項：約僱、約用、工友等依法令從事公務者就職場霸凌申訴準用保障法（115年1月9日施行）",
+  "actor": "立法院",
+  "category": "修正",
+  "personnel_types": [
+   "約僱",
+   "約用",
+   "聘用"
+  ],
+  "summary": "保訓會解釋：依法律或法律授權命令進用者（聘用人員）得準用保障法救濟，依行政命令進用之約僱人員原則不在保障範圍；本次修正僅就霸凌申訴擴及各類契約人力。",
+  "significance": "層疊：保障機制以「準用」方式零碎擴張，仍未處理約僱、約用人員的整體救濟定位。",
+  "sources": [
+   {
+    "title": "保訓會：公務人員保障法第19條至第19條之2、第21條、第102條及第104條修正條文，自115年1月9日施行",
+    "url": "https://www.csptc.gov.tw/News_Content.aspx?n=4555&s=43915",
+    "accessible": false
+   },
+   {
+    "title": "保訓會：各機關聘僱人員可否依公務人員保障法請求保障？",
+    "url": "https://www.csptc.gov.tw/News_Content.aspx?n=3521&s=16277",
+    "accessible": false
+   }
+  ]
+ },
+ {
+  "date": "2025-10-22",
+  "roc_year": "114",
+  "event": "人事總處澄清「聘僱暴增、政務人員膨脹」報導：115年總預算聘僱16,375人，近10年淨增599人",
+  "actor": "人事總處",
+  "category": "政策",
+  "personnel_types": [
+   "聘用",
+   "約僱"
+  ],
+  "summary": "回應媒體引用預算中心「4萬人」說法，強調聘用、約僱進用比率分別為4.7%與3.8%，整體未超過職員5%；增加多因AI智慧政府、打詐法官助理、新設機關籌備。",
+  "significance": "行政與立法幕僚對「契約人力規模」的統計口徑之爭（員額內聘僱 vs. 含約用、承攬之廣義契約人力）本身即制度縫隙的表徵。",
+  "sources": [
+   {
+    "title": "中央社：人事總處：政府用人均符員額法 無大量增政務人員（2025.10.22）",
+    "url": "https://www.cna.com.tw/news/aipl/202510220259.aspx",
+    "accessible": false
+   }
+  ]
+ },
+ {
+  "date": "2026-01",
+  "roc_year": "115",
+  "event": "立法院法制局連續發布：聘用人員人事規範之淺析（R02983，115年1月）、德國公部門契約人員人事法制簡介（R03012，115年3月）、聘僱人員人事法制相關問題探討（A01848，115年5月）",
+  "actor": "立法院",
+  "category": "調查報告",
+  "personnel_types": [
+   "聘用",
+   "約僱"
+  ],
+  "summary": "賴怡瑩系列研究：R02983以高雄衛生局聘用執行秘書涉性侵案指出聘用條例僅10條久未修正，建議聘用人員任具主管職能職務應公開甄選、研議違約解聘者之課責機制；R03012介紹德國契約人員為私法僱傭＋集體協約（TVöD），非輔助性角色、可任主管、長期僱用；A01848提出六項建議：聘僱人員尚非不能適用勞基法、聘用約僱應整併單一法制（約僱應有法律授權）、保留聘期彈性、約僱應準用保障法、研議專屬協會、依定位研議訓練激勵。顯示第11屆立法院幕僚再度啟動契約人力法制議題。",
+  "significance": "議程再開啟的訊號；是否成為新關鍵節點待觀察。",
+  "sources": [
+   {
+    "title": "立法院法制局議題研析：聘用人員人事規範之淺析（賴怡瑩，115年1月，R02983）；德國公部門契約人員人事法制簡介（R03012，115年3月）",
+    "url": "https://www.ly.gov.tw/Pages/List.aspx?nodeid=6590",
+    "accessible": true
+   },
+   {
+    "title": "立法院法制局專題研究：聘僱人員人事法制相關問題探討（賴怡瑩，115年5月，A01848）",
+    "url": "https://www.ly.gov.tw/Pages/List.aspx?nodeid=6586",
+    "accessible": true
+   },
+   {
+    "title": "立法院法制局議題研析：德國公部門契約人員人事法制簡介（賴怡瑩，115年3月，R03012）",
+    "url": "https://www.ly.gov.tw/Pages/Detail.aspx?nodeid=6590&pid=261313",
+    "accessible": true,
+    "local_path": "raw/fetched/ly/法制局R03012_德國公部門契約人員人事法制_115.pdf"
+   }
+  ]
+ },
+ {
+  "date": "2026-03-25",
+  "roc_year": "115",
+  "event": "人事總處向立法院司法及法制委員會提出業務及立法計畫報告；基層公務員人力荒成焦點",
+  "actor": "人事總處",
+  "category": "政策",
+  "personnel_types": [
+   "公務人員"
+  ],
+  "summary": "人事長蘇俊榮表示6月底前提專業加給調整方案；行政院於114年4月調增聘用、約僱薪點折合率至139.1元、約用人員調薪3%。",
+  "significance": "基層人力短缺成為新的外生壓力，可能推動從「契約替代」轉向「常任待遇改善」或反向擴大契約進用。",
+  "sources": [
+   {
+    "title": "中時：讓用人機關決定晉升 銓敘部修法刪學歷等限制（2026.7.15）",
+    "url": "https://www.chinatimes.com/realtimenews/20260715002753-260407",
+    "accessible": false
+   }
+  ]
+ },
+ {
+  "date": "2026-07-15",
+  "roc_year": "115",
+  "event": "立法院審查銓敘部《公務人員任用法》部分條文修正草案：機關得自行遴用具任用資格人員、刪除升簡任訓練與碩士學歷門檻",
+  "actor": "銓敘部",
+  "category": "草案審議",
+  "personnel_types": [
+   "公務人員"
+  ],
+  "summary": "銓敘部長施能傑（前人事長，109年聘約人員草案主事者）稱為補充人力缺口與提升用人彈性；學者批評削弱功績原則。",
+  "significance": "行動者跨院流動（施能傑由人事總處轉任銓敘部）可能改變兩院在契約人力議題上的對立結構，值得追蹤。",
+  "sources": [
+   {
+    "title": "中時：讓用人機關決定晉升 銓敘部修法刪學歷等限制（2026.7.15）",
+    "url": "https://www.chinatimes.com/realtimenews/20260715002753-260407",
+    "accessible": false
+   }
+  ]
+ },
+ {
+  "date": "2026-10-15",
+  "roc_year": "115",
+  "event": "考試院會通過「各機關職稱及官等職等員額配置準則」第7條修正草案，刪除委任一至三職等基層職務最低配置標準",
+  "actor": "考試院",
+  "category": "草案提出",
+  "personnel_types": [
+   "公務人員",
+   "承攬",
+   "約用"
+  ],
+  "summary": "理由：基層例行性及事務性工作多已透過業務委外或資訊科技辦理，且基層職務待遇不利攬才；待行政院會銜。",
+  "significance": "路徑依賴的終點之一：正式編制主動退出事務性工作，承認委外／約用已是基層事務性人力的常態供給。",
+  "sources": [
+   {
+    "title": "中央社：考試院通過配置準則修正草案 增加機關用人彈性（2026.10.15）",
+    "url": "https://www.cna.com.tw/news/aipl/202610150291.aspx",
+    "accessible": false
+   }
+  ]
+ }
 ]
