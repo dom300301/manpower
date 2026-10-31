@@ -12,3 +12,7 @@ qa-search/.cache/
 qa-search/public/
 qa-search/.firebase/
 qa-search/report.txt
+# 組織法規查詢系統：下載快取與暫存
+org-compare/moj_cache/
+org-compare/pending_updates.json
+org-compare/更新偵測報告.md

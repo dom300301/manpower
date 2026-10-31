@@ -20,8 +20,8 @@ def cn_num(s):
     s = re.sub(r'\s', '', s or '')
     if not s or s.startswith('（') or s.startswith('('):
         return None
-    s = re.sub(r'[（(][○〇零一二三四五六七八九十百千0-9]+[）)]$', '', s)  # 「一七九（十）」→ 一七九
-    s = re.split(r'[－—-]', s)[0]  # 「七－九」範圍取下限
+    s = re.sub(r'[（(][^（）()]*[）)]$', '', s)  # 「一七九（十）」→ 一七九
+    s = re.split(r'[－—～~-]', s)[0]  # 「七－九」範圍取下限
     s = s.replace('之', '')
     if re.fullmatch(r'[0-9]+', s):
         return int(s)
@@ -44,7 +44,7 @@ def cn_num(s):
     return total + num
 
 HEADER_SET = {'職稱', '官等', '職等', '員額', '備考', '備註', '單位', '員額備考', '職稱官等', '官等職等'}
-NUM_RE = re.compile(r'^[（(]?(?:[○〇零一二三四五六七八九十百千]+|[0-9]{1,4})(?:[－—-](?:[○〇零一二三四五六七八九十百千]+|[0-9]{1,4}))?[）)]?(?:[（(][○〇零一二三四五六七八九十百千0-9]+[）)])?$')
+NUM_RE = re.compile(r'^[（(]?(?:[○〇零一二三四五六七八九十百千]+|[0-9]{1,4})(?:[－—-](?:[○〇零一二三四五六七八九十百千]+|[0-9]{1,4}))?[）)]?(?:[（(][○〇零一二三四五六七八九十百千0-9～－—-]+[）)])?$')
 
 def parse_pdf(path):
     """回傳 (rows, total)；rows = [(單位, 職稱, 官等, 職等, 員額int|None, 員額原文)]
@@ -63,7 +63,7 @@ def parse_pdf(path):
                     if all(c in HEADER_SET for c in nonempty):
                         continue  # 表頭列
                     if nonempty[0].startswith('合計'):
-                        nums = [cn_num(c) for c in cells[1:] if NUM_RE.match(c) and cn_num(c) is not None]
+                        nums = [cn_num(c) for c in cells[1:] if re.match(r'^[○〇零一二三四五六七八九十百千0-9]', c) and cn_num(c) is not None]
                         if nums: total = nums[-1]
                         continue
                     n_idx = None
@@ -79,6 +79,11 @@ def parse_pdf(path):
                         unit = cells[n_idx - 4]
                     elif n_idx < 4:
                         unit = ''
+                    # 修補 pdfplumber 把「職稱 官」「等 職等」切錯欄的情形（例：院長簡 / 任第十三職等）
+                    if not rank and re.search(r'[簡薦委聘派]$', title) and grade.startswith('任'):
+                        rank, title, grade = title[-1] + '任', title[:-1], grade[1:]
+                    elif rank and re.search(r'[簡薦委聘派]$', rank) and grade.startswith('任') and re.search(r'(室|組|處|中心|科|課)$', title):
+                        unit, title, rank, grade = title, rank[:-1], rank[-1] + '任', grade[1:]
                     if not title or title in HEADER_SET:
                         continue
                     rows.append((unit, title, rank, grade, cn_num(cells[n_idx]), cells[n_idx]))

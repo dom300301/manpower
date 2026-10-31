@@ -33,11 +33,34 @@ DEPUTY_RE = re.compile(r'^(副署長|副局長|副處長|副所長|副館長|副
 MGR_RE = re.compile(r'(?:主任秘書|署長|局長|處長|所長|館長|院長|場長|校長|主任|秘書長|組長|科長|課長|股長|隊長|總隊長|分隊長|中隊長|大隊長|典獄長|分署長|分局長|司長|主計長|人事長|委員長|中心主任|室主任|站長|廠長|園長|所長|主席|行長|總裁|執行長)$')
 STAFF_UNIT_RE = re.compile(r'(?:人事|主計|會計|政風|秘書室|秘書處|總務|資訊室)')
 
-def build(master, out):
+def apply_fixes(ov, det, fixes_path):
+    if not fixes_path or not os.path.exists(fixes_path):
+        return ov, det
+    fixes = json.load(open(fixes_path, encoding='utf-8'))['fixes']
+    add = []
+    for f in fixes:
+        if f['動作'] == '新增列':
+            sub = det[det['機關名稱'] == f['機關']]
+            base = sub.iloc[0].to_dict() if len(sub) else {c: None for c in det.columns}
+            row = dict(base); row.update({'序': str(int(pd.to_numeric(sub['序'], errors='coerce').max() or 0) + 1 + len(add)), '單位': f.get('單位'), '職稱': f['職稱'],
+                       '官等': f.get('官等'), '職等': f.get('職等'), '員額': str(f['員額']), '員額原文': None, '括號員額_兼任': None, '備註': '人工補登：' + f.get('來源', '')})
+            add.append(row)
+        elif f['動作'] == '刪除列':
+            det = det[~((det['機關名稱'] == f['機關']) & (det['職稱'] == f['職稱']) & (det['單位'].fillna('') == (f.get('單位') or '')))]
+        elif f['動作'] == '改合計':
+            i = ov.index[ov['機關'] == f['機關']]
+            ov.loc[i, '編制員額合計'] = str(f['編制員額合計']); ov.loc[i, '驗算狀態'] = f.get('驗算狀態', ov.loc[i, '驗算狀態'])
+    if add:
+        det = pd.concat([det, pd.DataFrame(add)], ignore_index=True)
+    print(f'套用人工修正 {len(fixes)} 筆')
+    return ov, det
+
+def build(master, out, fixes_path=None):
     ov = pd.read_excel(master, '機關總覽', dtype=str)
     det = pd.read_excel(master, '編制表明細', dtype=str)
     art = pd.read_excel(master, '條文', dtype=str)
     info = pd.read_excel(master, '說明', header=None, dtype=str).iloc[0, 0]
+    ov, det = apply_fixes(ov, det, fixes_path)
     det['n'] = pd.to_numeric(det['員額'], errors='coerce')
     det['bracket'] = pd.to_numeric(det['括號員額_兼任'], errors='coerce')
     det['序'] = pd.to_numeric(det['序'], errors='coerce').fillna(9999)
@@ -84,12 +107,15 @@ def build(master, out):
             '單位數': int(g['單位'].dropna().nunique()),
             '主管員額': int(n[g['主管']].sum()),
             '明細列數': int(len(g)), '員額空白列數': int(g['n'].isna().sum()),
+            '暫列職稱數': int(g['備註'].fillna('').str.contains('暫列').sum()),
+            '得列人數': int(sum(cn2n(x) or 0 for x in re.findall(r'內([一二三四五六七八九十]+)人得列', ' '.join(g['備註'].fillna(''))))),
         }
         m['簡任非主管比'] = round(m['簡任非主管'] / tot, 4) if tot else None
         m['簡任比'] = round(m['簡任員額'] / tot, 4) if tot else None
         m['主管比'] = round(m['主管員額'] / tot, 4) if tot else None
         m['幕僚比'] = round(m['幕僚單位員額'] / tot, 4) if tot else None
         name = o['機關']
+        duties = art[(art['機關'] == name) & (art['法規類別'] == '組織法規') & (art['條文內容'].fillna('').str.contains('掌理'))]['條文內容']
         kind = next((k for k in ['分署', '分局', '分院', '分所', '分處', '署', '局', '處', '所', '館', '院', '中心', '園', '場', '隊', '監獄', '學校', '會', '部', '行'] if name.endswith(k)), '其他')
         agencies.append({
             '機關': name, '機關代碼': o['機關代碼'], '部會': o['部會'], '層級': int(o['層級']), '隸屬': o['隸屬'], '類型': kind,
@@ -97,9 +123,16 @@ def build(master, out):
             '編制員額合計_總表': None if pd.isna(o['編制員額合計']) else int(float(o['編制員額合計'])),
             '驗算狀態': o['驗算狀態'], '分表說明': o['分表說明'] if pd.notna(o['分表說明']) else None,
             '組織法規最新異動日': (art[(art['機關'] == name) & (art['法規類別'] == '組織法規')]['最新異動日'].iloc[0] if ((art['機關'] == name) & (art['法規類別'] == '組織法規')).any() else None),
+            '掌理事項': duties.iloc[0] if len(duties) else None,
             '指標': m,
         })
     articles = [{'機關': r['機關'], '法規名稱': r['法規名稱'], '法規類別': r['法規類別'], '條號': r['條號'], '條文內容': r['條文內容'], '最新異動日': r['最新異動日'], '連結': r['連結']} for _, r in art.iterrows()]
+    def clean(x):  # pandas 的 NaN → null
+        if isinstance(x, dict): return {k: clean(v) for k, v in x.items()}
+        if isinstance(x, list): return [clean(v) for v in x]
+        if isinstance(x, float) and x != x: return None
+        return x
+    agencies, positions, articles = clean(agencies), clean(positions), clean(articles)
     os.makedirs(out, exist_ok=True)
     json.dump({'metric_definitions': {
         '員額合計': '編制表明細「員額」加總（括號兼任不計）',
@@ -109,6 +142,8 @@ def build(master, out):
         '主管員額': '職稱以長、主任、股長等結尾者',
         '幕僚單位員額': '單位名稱含人事、主計、會計、政風、秘書室、總務、資訊室者',
         '單位數': '明細「單位」欄不同值的數目（編制表未列單位者為 0）',
+        '暫列職稱數': '備註含「暫列」（官等職等暫列）的職稱列數',
+            '得列人數': int(sum(cn2n(x) or 0 for x in re.findall(r'內([一二三四五六七八九十]+)人得列', ' '.join(g['備註'].fillna(''))))),
     }, 'agencies': agencies}, open(os.path.join(out, 'agencies.json'), 'w', encoding='utf-8'), ensure_ascii=False)
     json.dump(positions, open(os.path.join(out, 'positions.json'), 'w', encoding='utf-8'), ensure_ascii=False)
     json.dump(articles, open(os.path.join(out, 'articles.json'), 'w', encoding='utf-8'), ensure_ascii=False)
@@ -117,5 +152,5 @@ def build(master, out):
     print(f'機關 {len(agencies)}、明細 {len(positions)}、條文 {len(articles)} → {out}')
 
 if __name__ == '__main__':
-    ap = argparse.ArgumentParser(); ap.add_argument('--master', required=True); ap.add_argument('--out', default='data')
-    a = ap.parse_args(); build(a.master, a.out)
+    ap = argparse.ArgumentParser(); ap.add_argument('--master', required=True); ap.add_argument('--out', default='data'); ap.add_argument('--fixes', default=None)
+    a = ap.parse_args(); build(a.master, a.out, a.fixes)

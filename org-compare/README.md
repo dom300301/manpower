@@ -1,11 +1,19 @@
-# 組織層級比對查詢系統（籌建中）
+# 組織法規與編制表查詢系統
+
+行政院所屬機關的組織法規、處務規程、編制表彙整與同層級比對工具。資料來源：全國法規資料庫。
 
 | 檔案 | 用途 |
 |---|---|
-| `01_資料驗證報告.md` | 雲端硬碟「組織法和編制表」資料的驗證結果（第一階段：內部一致性） |
-| `02_系統規劃與待決事項.md` | 系統形式、比對指標、更新機制的規劃，以及需要決定的事項 |
-| `poc/compare_poc.py` | 概念驗證：直接從總表算出同層級機關的結構指標 |
-| `poc/三級署比對_PoC.csv` | 上列程式的輸出（46 個三級署） |
+| `output/index.html` | **查詢網頁**（離線單檔；上傳主機即線上版） |
+| `data/組織法編制表_總表_日期.xlsx` | 總表（原始資料，585 機關） |
+| `操作手冊.md` | 使用與更新說明（請先讀這份） |
+| `0_首次安裝.command`～`3_建檔.command` | Mac 雙擊：安裝、檢查更新、更新資料、建檔 |
+| `check_updates.py` / `add_agencies.py` / `reparse_pdfs.py` | 更新偵測、下載解析、PDF 解析 |
+| `build_dataset.py` / `build_org_search.py` / `org_template.html` | 資料整備、建檔、網頁樣板 |
+| `new_agencies.json` / `manual_fixes.json` | 要新增的機關、人工補登 |
+| `verify_tables_online.py`、`verification/` | 驗證程式與結果 |
+| `01_資料驗證報告.md`、`03_第二階段驗證報告.md` | 驗證報告 |
+| `02_系統規劃與待決事項.md` | 規劃與決策紀錄 |
+| `poc/` | 早期概念驗證 |
 
-資料來源：Google 雲端硬碟資料夾「組織法和編制表」→ `組織法編制表_總表.xlsx`
-（https://drive.google.com/drive/folders/1blFuKALjYpYwQ4XPonoYTA7dgdekmxlv ）
+雲端硬碟原始資料夾：https://drive.google.com/drive/folders/1blFuKALjYpYwQ4XPonoYTA7dgdekmxlv

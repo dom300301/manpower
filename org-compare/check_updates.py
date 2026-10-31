@@ -108,6 +108,24 @@ def main():
     lines += ['| 主管機關 | 法規 | 異動日 |', '|---|---|---|'] + \
              [f'| {x[0]} | [{x[1]}](https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode={x[2]}) | {x[3]} |' for x in new] if new else ['（無）']
     open(a.out, 'w', encoding='utf-8').write('\n'.join(lines))
+
+    # 產生 pending_updates.json：有異動的既有機關，供 add_agencies.py --replace 重新下載解析
+    pend, seen = [], set()
+    src = pd.read_excel(a.master, '機關總覽', dtype=str).set_index('機關')
+    art_pc = {}
+    for _, r in art.iterrows():
+        d = art_pc.setdefault(r['機關'], {}); d['組織法規' if r['法規類別'] == '組織法規' else '處務規程'] = r['pcode']
+    changed_agencies = {x[0] for x in changed} | {x[0] for x in tbl}
+    for name in changed_agencies:
+        if name not in src.index or name in seen: continue
+        seen.add(name); o = src.loc[name]
+        m = re.search(r'FileId=(\d+)', str(o['編制表來源']))
+        pend.append({'機關': name, '機關代碼': o['機關代碼'], '層級': int(o['層級']), '隸屬': o['隸屬'] if pd.notna(o['隸屬']) else '', '部會': o['部會'],
+                     '組織法規': art_pc.get(name, {}).get('組織法規', ''), '處務規程': art_pc.get(name, {}).get('處務規程', ''),
+                     '編制表': fid2pcode.get(m.group(1), '') if m else ''})
+    pj = os.path.join(os.path.dirname(os.path.abspath(a.out)) or '.', 'pending_updates.json')
+    json.dump({'_說明': '由 check_updates.py 產生：有異動的機關。執行 add_agencies.py --config pending_updates.json --replace 重新解析。', 'agencies': pend}, open(pj, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+    print(f'待更新機關 {len(pend)} → {pj}')
     print(f'異動法規 {len(changed)}、廢止 {len(abolished)}、編制表異動 {len(tbl)}、未收錄 {len(new)} → {a.out}')
 
 if __name__ == '__main__':
