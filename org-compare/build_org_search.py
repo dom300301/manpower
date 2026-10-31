@@ -22,7 +22,7 @@ def main():
     ap.add_argument('--template', default=os.path.join(HERE, 'org_template.html'))
     a = ap.parse_args()
     tmp = tempfile.mkdtemp()
-    build(a.master, tmp, a.fixes)
+    build(a.master, tmp, a.fixes, os.path.join(HERE, 'units_from_attachments.json'))
     data = {k: json.load(open(os.path.join(tmp, f'{k}.json'), encoding='utf-8')) for k in ['agencies', 'positions', 'articles', 'meta']}
     data['built'] = dt.datetime.now().strftime('%Y-%m-%d %H:%M')
     raw = json.dumps(data, ensure_ascii=False, separators=(',', ':')).encode('utf-8')

@@ -64,9 +64,16 @@ def deputy_titles(head):
 STAFF_UNIT_NAME_RE = re.compile(r'(秘書室|秘書處|人事|主計|會計|政風|資訊室|資訊處|法制|法規|統計室|總務|文書|公共關係|公關|國會|研考|企劃室|綜合規劃室|訴願)')
 UNIT_ART_RE = re.compile(r'設下列[^：:。]{0,25}[：:]')
 ITEM_RE = re.compile(r'(?:^|[。：:；\s])([一二三四五六七八九十]{1,3})、([^。；]{1,40})')
+ATTACH_UNITS = {}
 def unit_structure(art, name):
-    """從處務規程／辦事細則「本署設下列組、室：一、…」條文計算內部單位數。"""
+    """從處務規程／辦事細則「本署設下列組、室：一、…」條文計算內部單位數；條文以附表列單位者改用 ATTACH_UNITS（parse_unit_attachments.py 產出）。"""
     out = {'業務單位數': None, '幕僚單位數': None, '單位數': None, '科數': None, '清單': None, '依據': None}
+    if name in ATTACH_UNITS:
+        names = ATTACH_UNITS[name]['單位']
+        staff = [u for u in names if STAFF_UNIT_NAME_RE.search(u) or re.search(r'(人事|主計|政風|會計)(管理)?員$', u)]
+        biz = [u for u in names if u not in staff]
+        out.update({'業務單位數': len(biz), '幕僚單位數': len(staff), '單位數': len(names), '清單': '；'.join(names), '依據': ATTACH_UNITS[name]['依據']})
+        return out
     sub = art[(art['機關'] == name) & (art['法規類別'] != '組織法規')]
     for _, r in sub.iterrows():
         txt = str(r['條文內容'])
@@ -90,7 +97,10 @@ def unit_structure(art, name):
         break
     return out
 
-def build(master, out, fixes_path=None):
+def build(master, out, fixes_path=None, attach_units_path=None):
+    global ATTACH_UNITS
+    if attach_units_path and os.path.exists(attach_units_path):
+        ATTACH_UNITS = json.load(open(attach_units_path, encoding='utf-8')); print(f'附表單位資料 {len(ATTACH_UNITS)} 個機關')
     ov = pd.read_excel(master, '機關總覽', dtype=str)
     det = pd.read_excel(master, '編制表明細', dtype=str)
     art = pd.read_excel(master, '條文', dtype=str)
@@ -105,6 +115,16 @@ def build(master, out, fixes_path=None):
     det['簡任'] = det['官等'].str.contains('簡任') | (det['職等上限'].fillna(0) >= 10)
     det['薦任'] = ~det['簡任'] & det['官等'].str.contains('薦任')
     det['委任'] = det['官等'].str.fullmatch('委任')
+    # 備註「內 N 人得列簡任／薦任…」：以上限計算，N 人移到較高官等
+    def deli(row, band):
+        n = 0
+        for k in re.findall(r'(?:內|其中)([一二三四五六七八九十○〇百]+)人得列' + band, str(row['備註'] or '')):
+            v = cn2n(k.replace('○', '〇')) if k not in ('〇', '○') else 0
+            n += v or 0
+        cap = row['n'] if pd.notna(row['n']) else 0
+        return int(min(n, cap))
+    det['得列簡任'] = det.apply(lambda r: 0 if r['簡任'] else deli(r, '簡任'), axis=1)
+    det['得列薦任'] = det.apply(lambda r: deli(r, '薦任') if r['委任'] else 0, axis=1)
     det['主管'] = det['職稱'].str.contains(MGR_RE)
     # 首長＝編制表第一列（序最小）且職稱為首長型（…長／主任／主任委員／總裁／主席／司令／關務長／臺長…）
     first_idx = det.sort_values('序').groupby('機關名稱').head(1).index
@@ -118,7 +138,7 @@ def build(master, out, fixes_path=None):
             '機關': r['機關名稱'], '分表': r['分表'], '序': int(r['序']) if r['序'] != 9999 else None, '單位': r['單位'], '職稱': r['職稱'],
             '官等': r['官等'] or None, '職等': r['職等'], '員額': None if pd.isna(r['n']) else int(r['n']),
             '兼任': None if pd.isna(r['bracket']) else int(r['bracket']), '員額原文': r['員額原文'], '備註': r['備註'],
-            '職等下限': r['職等下限'], '職等上限': r['職等上限'], '簡任': bool(r['簡任']), '主管': bool(r['主管']), 'PDF頁': r['PDF頁']}.items()})
+            '職等下限': r['職等下限'], '職等上限': r['職等上限'], '簡任': bool(r['簡任']), '主管': bool(r['主管']), '得列簡任': int(r['得列簡任']), '得列薦任': int(r['得列薦任']), 'PDF頁': r['PDF頁']}.items()})
 
     agencies = []
     for _, o in ov.iterrows():
@@ -143,8 +163,11 @@ def build(master, out, fixes_path=None):
             '處長數': int(n[g['職稱'] == '處長'].sum()), '副處長數': int(n[g['職稱'] == '副處長'].sum()),
             '科長數': int(n[g['職稱'] == '科長'].sum()), '股長數': int(n[g['職稱'] == '股長'].sum()),
             '專門委員': int(n[g['職稱'] == '專門委員'].sum()),
-            '簡任員額': int(n[g['簡任']].sum()), '簡任主管': int(n[g['簡任'] & g['主管']].sum()), '簡任非主管': int(n[g['簡任'] & ~g['主管']].sum()),
-            '薦任員額': int(n[g['薦任']].sum()), '委任員額': int(n[g['委任']].sum()),
+            '簡任員額': int(n[g['簡任']].sum() + g['得列簡任'].sum()), '簡任主管': int(n[g['簡任'] & g['主管']].sum() + g.loc[g['主管'], '得列簡任'].sum()),
+            '簡任非主管': int(n[g['簡任'] & ~g['主管']].sum() + g.loc[~g['主管'], '得列簡任'].sum()),
+            '簡任員額_法定': int(n[g['簡任']].sum()), '簡任非主管_法定': int(n[g['簡任'] & ~g['主管']].sum()),
+            '得列簡任人數': int(g['得列簡任'].sum()), '得列薦任人數': int(g['得列薦任'].sum()),
+            '薦任員額': int(n[g['薦任']].sum() - g['得列簡任'].sum() + g['得列薦任'].sum()), '委任員額': int(n[g['委任']].sum() - g['得列薦任'].sum()),
             '其他官等員額': int(n[~g['簡任'] & ~g['薦任'] & ~g['委任']].sum()),
             '幕僚單位員額': int(n[g['幕僚單位']].sum()),
             '業務單位數': units['業務單位數'], '幕僚單位數': units['幕僚單位數'], '單位數': units['單位數'], '科數': units['科數'],
@@ -181,8 +204,12 @@ def build(master, out, fixes_path=None):
     json.dump({'metric_definitions': {
         '員額合計': '編制表明細「員額」加總（括號兼任不計）',
         '副首長數': '副署長／副局長／副處長等副首長職稱且不屬內部單位者之員額',
-        '簡任員額': '官等含「簡任」或職等上限達第十職等以上之員額',
-        '簡任非主管': '簡任員額中職稱非主管者（專門委員、簡任技正、簡任秘書、參事、研究委員等）',
+        '簡任員額': '官等含「簡任」（含薦任至簡任）或職等上限達第十職等以上之員額，加上備註「內 N 人得列簡任」之 N（以上限計算）；不含得列者見「簡任員額_法定」',
+        '簡任非主管': '簡任員額中職稱非主管者（專門委員、簡任技正、簡任秘書、參事、研究委員等），含得列簡任之非主管職稱',
+        '得列簡任人數': '備註「內 N 人得列簡任…」之 N 加總（僅計官等非簡任之列）',
+        '得列薦任人數': '委任職稱備註「內 N 人得列薦任…」之 N 加總',
+        '薦任員額': '官等含薦任（含委任或薦任）者，扣除得列簡任、加上委任得列薦任',
+        '委任員額': '官等為委任者，扣除得列薦任',
         '主管員額': '職稱以長、主任、股長等結尾者',
         '幕僚單位員額': '單位名稱含人事、主計、會計、政風、秘書室、總務、資訊室者',
         '副首長數': '本機關首長之副手（署長→副署長、部長→政務次長與常務次長…）且不屬內部單位者之員額；內部單位的副處長、副主任不計',
@@ -201,4 +228,5 @@ def build(master, out, fixes_path=None):
 
 if __name__ == '__main__':
     ap = argparse.ArgumentParser(); ap.add_argument('--master', required=True); ap.add_argument('--out', default='data'); ap.add_argument('--fixes', default=None)
-    a = ap.parse_args(); build(a.master, a.out, a.fixes)
+    ap.add_argument('--attach-units', default=os.path.join(os.path.dirname(os.path.abspath(__file__)), 'units_from_attachments.json'))
+    a = ap.parse_args(); build(a.master, a.out, a.fixes, a.attach_units)
