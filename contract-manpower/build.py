@@ -64,7 +64,38 @@ def load_headcount():
                 r['year_ad'] = r['year'] + 1911
             rows.append(r)
     print(f'  [讀] headcount.csv：{len(rows)} 筆')
+    rows += derived_rows(rows)
     return rows
+
+
+def derived_rows(rows):
+    """為「目的二對照」合成可並列的序列（來源列不動，合成列 note 標示「build.py 合成」）：
+    1. 約用人員各年第 4 季底人數 → 併入「中央／行政院所屬／實有人數」群組，方便與聘僱、事務性人力同圖。
+    2. 第二類員額近似值 = 聘用 + 約僱 + 事務性人力（行政院所屬與地方政府合計）。
+    """
+    out = []
+    q4 = {}
+    for r in rows:
+        if r['category'] == '臨時人員(約用)' and r['agency_group'].startswith('行政院所屬') and '第4季' in (r.get('note') or ''):
+            q4[(r['agency_group'], r['year'])] = r
+    names = {'行政院所屬合計': '約用人員(合計,Q4)', '行政院所屬-行政機關': '約用人員(行政機關,Q4)',
+             '行政院所屬-公立學校': '約用人員(公立學校,Q4)', '行政院所屬-公立衛生醫療機構': '約用人員(醫療機構,Q4)'}
+    for (g, y), r in q4.items():
+        if g in names:
+            out.append({**r, 'agency_group': '行政院所屬', 'measure': '實有人數', 'category': names[g],
+                        'note': 'build.py 合成：取年報附表 6 第 4 季底全日工時人數；' + (r.get('note') or '')})
+    for scope, group in (('中央', '行政院所屬'), ('地方', '地方政府合計')):
+        by_year = {}
+        for r in rows:
+            if r['scope'] == scope and r['agency_group'] == group and r['measure'] == '實有人數' and r['category'] in ('聘用', '約僱', '技工工友駐衛警(事務性人力)'):
+                by_year.setdefault(r['year'], {})[r['category']] = r
+        for y, d in by_year.items():
+            if len(d) == 3:
+                base = d['聘用']
+                out.append({**base, 'category': '第二類員額近似(聘用+約僱+事務性)', 'value': sum(x['value'] for x in d.values()),
+                            'note': 'build.py 合成：聘用＋約僱＋技工工友駐衛警；總員額法第二類定義為聘僱人員、駐衛警察及工友，此為實有人數近似值'})
+    print(f'  [合成] 目的二對照序列：{len(out)} 筆')
+    return out
 
 
 def main():

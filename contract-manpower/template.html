@@ -129,6 +129,7 @@ svg.chart{width:100%;height:340px;display:block}
     <select id="hcscope"></select>
     <select id="hcgroup"></select>
     <select id="hcmeasure"></select>
+    <button class="chip" id="hcpreset" title="疊合聘用、約僱、事務性人力、第二類近似值與約用人員">目的二對照</button>
     <span id="hccats"></span>
   </div>
   <div class="chartcard">
@@ -139,7 +140,7 @@ svg.chart{width:100%;height:340px;display:block}
     <div class="tip" id="hctip"></div>
   </div>
   <details><summary>資料表（含來源）</summary><div class="tablewrap"><table id="hctable"></table></div></details>
-  <p class="note">提示：先選「中央」「總員額法第二類」與「臨時人員」兩條線並列，即可檢視目的二的「第二類員額消退 vs 約用人員增加」對照。</p>
+  <p class="note">提示：按「目的二對照」可一鍵疊合第二類員額（聘用＋約僱＋事務性人力）與約用人員；分析結論見 research/06_人力消長分析.md。類別名稱含「Q4」或「近似」者為建檔時合成之序列，來源與計算方式見資料表備註。</p>
 </section>
 <section id="tab-local" hidden>
   <div class="toolbar">
@@ -270,11 +271,13 @@ const hcCatSel=new Set();
 function hcOptions(){
   const scopes=[...new Set(hc.map(r=>r.scope))].filter(Boolean).sort();
   const s=$('#hcscope'); s.innerHTML=''; scopes.forEach(v=>s.append(el('option',{value:v},v))); if(!scopes.length)s.append(el('option',{value:''},'（無資料）'));
+  if(scopes.includes('中央'))s.value='中央';
   hcGroupOptions();
 }
 function hcGroupOptions(){
   const scope=$('#hcscope').value; const g=$('#hcgroup'); const cur=g.value; g.innerHTML='';
-  const groups=[...new Set(hc.filter(r=>r.scope===scope).map(r=>r.agency_group))].filter(Boolean).sort((a,b)=>(a==='全體'?-1:b==='全體'?1:a.localeCompare(b)));
+  const PREF=['行政院所屬','全體','地方政府合計','中央政府合計'];
+  const groups=[...new Set(hc.filter(r=>r.scope===scope).map(r=>r.agency_group))].filter(Boolean).sort((a,b)=>{const pa=PREF.indexOf(a),pb=PREF.indexOf(b);if(pa!==pb)return (pa<0?99:pa)-(pb<0?99:pb);return a.localeCompare(b,'zh-Hant');});
   groups.forEach(v=>g.append(el('option',{value:v},v))); if(groups.includes(cur))g.value=cur;
   const m=$('#hcmeasure'); const curm=m.value; m.innerHTML='';
   [...new Set(hc.filter(r=>r.scope===scope&&r.agency_group===g.value).map(r=>r.measure))].filter(Boolean).forEach(v=>m.append(el('option',{value:v},v))); if([...m.options].some(o=>o.value===curm))m.value=curm;
@@ -286,9 +289,10 @@ function hcCatChips(){
   const box=$('#hccats'); box.innerHTML='';
   for(const c of [...hcCatSel]) if(!cats.includes(c)) hcCatSel.delete(c);
   if(!hcCatSel.size) cats.slice(0,4).forEach(c=>hcCatSel.add(c));
-  cats.forEach((c,i)=>box.append(el('button',{class:'chip','aria-pressed':hcCatSel.has(c),onclick:()=>{hcCatSel.has(c)?hcCatSel.delete(c):(hcCatSel.size<8&&hcCatSel.add(c));hcCatChips();}},el('i',{class:'sw',style:`background:${css(SERIES[cats.indexOf(c)%8])}`}),c)));
+  const sel=cats.filter(c=>hcCatSel.has(c)); cats.forEach(c=>box.append(el('button',{class:'chip','aria-pressed':hcCatSel.has(c),onclick:()=>{hcCatSel.has(c)?hcCatSel.delete(c):(hcCatSel.size<8&&hcCatSel.add(c));hcCatChips();}},el('i',{class:'sw',style:`background:${hcCatSel.has(c)?css(SERIES[sel.indexOf(c)%8]):'var(--grid)'}`}),c)));
   drawChart();
 }
+$('#hcpreset').onclick=()=>{ $('#hcscope').value='中央'; hcGroupOptions(); $('#hcgroup').value='行政院所屬'; hcGroupOptions(); $('#hcmeasure').value='實有人數'; hcCatSel.clear(); ['聘用','約僱','技工工友駐衛警(事務性人力)','第二類員額近似(聘用+約僱+事務性)','約用人員(行政機關,Q4)','約用人員(合計,Q4)'].forEach(c=>hcCatSel.add(c)); hcCatChips(); };
 $('#hcscope').onchange=hcGroupOptions; $('#hcgroup').onchange=()=>{hcGroupOptions();}; $('#hcmeasure').onchange=hcCatChips;
 function drawChart(){
   const svg=$('#hcsvg'); if(!svg||svg.closest('section').hidden)return; svg.innerHTML='';
@@ -298,7 +302,7 @@ function drawChart(){
   const cats=allCats.filter(c=>hcCatSel.has(c));
   $('#hctitle').textContent=`${scope||''}${group&&group!=='全體'?'・'+group:''}　各類人員${meas||'人數'}`;
   $('#hcsub').textContent=rows.length?`民國 ${Math.min(...rows.map(r=>r.year))}～${Math.max(...rows.map(r=>r.year))} 年；資料來源見下方資料表`:'';
-  const lg=$('#hclegend'); lg.innerHTML=''; if(cats.length>1)cats.forEach(c=>lg.append(el('span',{style:`color:${css(SERIES[allCats.indexOf(c)%8])}`},el('i'),el('span',{style:'color:var(--ink2)'},c))));
+  const lg=$('#hclegend'); lg.innerHTML=''; if(cats.length>1)cats.forEach(c=>lg.append(el('span',{style:`color:${css(SERIES[cats.indexOf(c)%8])}`},el('i'),el('span',{style:'color:var(--ink2)'},c))));
   renderHcTable(rows);
   if(!rows.length){ svg.innerHTML=`<text x="50%" y="50%" text-anchor="middle" fill="${css('--muted')}">尚無資料（data/headcount.csv）</text>`; return; }
   const W=svg.clientWidth||900,H=340,m={t:16,r:24,b:36,l:64}; svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
@@ -308,7 +312,7 @@ function drawChart(){
   const ticks=5; for(let i=0;i<=ticks;i++){const v=ymax/ticks*i; svg.append(S('line',{x1:m.l,x2:W-m.r,y1:yy(v),y2:yy(v),stroke:css('--grid'),'stroke-width':1})); const t=S('text',{x:m.l-8,y:yy(v)+4,'text-anchor':'end',fill:css('--muted'),'font-size':11}); t.textContent=v>=10000?(v/10000).toFixed(1)+'萬':Math.round(v).toLocaleString(); svg.append(t);}
   svg.append(S('line',{x1:m.l,x2:W-m.r,y1:yy(0),y2:yy(0),stroke:css('--axis')}));
   const step=Math.ceil(years.length/12); years.forEach((y,i)=>{ if(i%step&&i!==years.length-1)return; const t=S('text',{x:x(y),y:H-m.b+18,'text-anchor':'middle',fill:css('--muted'),'font-size':11}); t.textContent=y; svg.append(t); });
-  const series=cats.map(c=>({name:c,color:css(SERIES[allCats.indexOf(c)%8]),pts:years.map(y=>{const r=rows.find(r=>r.category===c&&r.year===y);return r?{y,v:r.value,r}:null;})}));
+  const series=cats.map(c=>({name:c,color:css(SERIES[cats.indexOf(c)%8]),pts:years.map(y=>{const r=rows.find(r=>r.category===c&&r.year===y);return r?{y,v:r.value,r}:null;})}));
   for(const s of series){ const seg=[]; let cur=[]; s.pts.forEach(p=>{ if(p)cur.push(p); else if(cur.length){seg.push(cur);cur=[];} }); if(cur.length)seg.push(cur);
     seg.forEach(sg=>svg.append(S('path',{d:sg.map((p,i)=>(i?'L':'M')+x(p.y)+','+yy(p.v)).join(' '),fill:'none',stroke:s.color,'stroke-width':2,'stroke-linejoin':'round','stroke-linecap':'round'})));
     s.pts.filter(Boolean).forEach(p=>svg.append(S('circle',{cx:x(p.y),cy:yy(p.v),r:4,fill:s.color,stroke:css('--surface'),'stroke-width':2})));
