@@ -222,13 +222,13 @@ const specialTags = a => Object.keys(SPECIAL).filter(k => SPECIAL[k](a));
 
 // ---------- 指標欄位（比對表）
 const COLS = [
-  ['部會','部會',0],['層級','層級',1],['類型','類型',0],['員額合計','員額合計',1],['首長職等','首長職等',0],['副首長數','副首長數',1],['主任秘書','主任秘書',1],
-  ['單位數','單位數',1],['組長數','組長數',1],['副組長數','副組長數',1],['處長數','處長數',1],['副處長數','副處長數',1],['科長數','科長數',1],['股長數','股長數',1],
+  ['部會','部會',0],['層級','層級',1],['類型','類型',0],['員額合計','員額合計',1],['首長職等','首長職等',0],['副首長職稱','副首長職稱',0],['副首長數','副首長數',1],['主任秘書','主任秘書',1],
+  ['業務單位數','業務單位數',1],['幕僚單位數','幕僚單位數',1],['科數','科數',1],['組長數','組長數',1],['副組長數','副組長數',1],['處長數','處長數',1],['副處長數','副處長數',1],['科長數','科長數',1],['股長數','股長數',1],
   ['專門委員','專門委員',1],['簡任員額','簡任員額',1],['簡任比','簡任比',1],['簡任主管','簡任主管',1],['簡任非主管','簡任非主管',1],['簡任非主管比','簡任非主管比',1],
   ['薦任員額','薦任員額',1],['委任員額','委任員額',1],['其他官等員額','其他官等員額',1],['主管員額','主管員額',1],['主管比','主管比',1],
   ['幕僚單位員額','幕僚單位員額',1],['幕僚比','幕僚比',1],['暫列職稱數','暫列職稱數',1],['得列人數','得列人數',1],['組織法規最新異動日','組織法規最新異動日',0],['驗算狀態','驗算狀態',0]
 ];
-const DEFAULT_COLS = ['部會','層級','員額合計','首長職等','副首長數','主任秘書','單位數','組長數','副組長數','科長數','專門委員','簡任員額','簡任非主管','簡任非主管比','主管比','幕僚比','驗算狀態'];
+const DEFAULT_COLS = ['部會','層級','員額合計','首長職等','副首長數','主任秘書','業務單位數','幕僚單位數','科數','組長數','副組長數','科長數','專門委員','簡任員額','簡任非主管','簡任非主管比','主管比','幕僚比','驗算狀態'];
 const val = (a, k) => (k in a.指標) ? a.指標[k] : a[k];
 
 // =====================================================================
@@ -276,10 +276,11 @@ function showAgency(a){
   <div class="muted small">組織法規：<a href="${esc(a.組織法規連結)}" target="_blank">${esc(a.組織法規名稱)}</a>（最新異動 ${esc(a.組織法規最新異動日||'—')}）
   ${a.編制表來源?`・<a href="${esc(a.編制表來源)}" target="_blank">編制表 PDF</a>`:'・無編制表'}・驗算狀態：<b>${esc(a.驗算狀態||'無')}</b>${a.分表說明?`・${esc(a.分表說明)}`:''}</div>
   <div class="row" style="margin-top:8px"><button class="primary" id="toCompare">以此機關進行同級比對</button></div>
-  <div class="kpis">${kpi('編制員額合計',m.員額合計)}${kpi('首長職等',m.首長職等||'—')}${kpi('副首長',m.副首長數+(m.副首長兼任數?`（兼${m.副首長兼任數}）`:''))}${kpi('主任秘書',m.主任秘書)}${kpi('單位數',m.單位數)}
+  <div class="kpis">${kpi('編制員額合計',m.員額合計)}${kpi('首長職等',m.首長職等||'—')}${kpi('副首長（'+esc(m.副首長職稱||'—')+'）',m.副首長數+(m.副首長兼任數?`（兼${m.副首長兼任數}）`:''))}${kpi('主任秘書',m.主任秘書)}${kpi('業務單位／幕僚單位',(m.業務單位數??'—')+' / '+(m.幕僚單位數??'—'))}${kpi('科數（處務規程）',m.科數??'—')}
   ${kpi('組長／副組長',m.組長數+' / '+m.副組長數)}${kpi('處長／副處長',m.處長數+' / '+m.副處長數)}${kpi('科長',m.科長數)}${kpi('專門委員',m.專門委員)}
   ${kpi('簡任員額（比）',m.簡任員額+'（'+fmt(m.簡任比)+'）')}${kpi('簡任非主管（比）',m.簡任非主管+'（'+fmt(m.簡任非主管比)+'）')}${kpi('簡／薦／委／其他',[m.簡任員額,m.薦任員額,m.委任員額,m.其他官等員額].join(' / '))}
   ${kpi('主管員額（比）',m.主管員額+'（'+fmt(m.主管比)+'）')}${kpi('幕僚單位員額（比）',m.幕僚單位員額+'（'+fmt(m.幕僚比)+'）')}${kpi('暫列職稱數',m.暫列職稱數)}${kpi('得列人數',m.得列人數)}</div>`;
+  if(m.單位清單) h+=`<div class="muted small">內部單位（${esc(m.單位依據)}）：${esc(m.單位清單)}</div>`;
   if(a.掌理事項) h+=`<details open><summary>掌理事項（組織法規）</summary><div class="art">${esc(a.掌理事項)}</div></details>`;
   h+=`<details open><summary>編制表明細（${pos.length} 列）</summary><div class="tablewrap" style="max-height:50vh"><table><thead><tr><th>序</th><th>單位</th><th>職稱</th><th>官等</th><th>職等</th><th class="num">員額</th><th class="num">兼任</th><th>備註</th></tr></thead><tbody>`+
     pos.map(p=>`<tr><td>${p.序??''}${p.分表?`<span class="badge">表${esc(p.分表)}</span>`:''}</td><td>${esc(p.單位)}</td><td>${esc(p.職稱)}</td><td>${esc(p.官等)}</td><td>${esc(p.職等)}</td><td class="num">${p.員額??'<span class="muted">—</span>'}</td><td class="num">${p.兼任??''}</td><td class="small">${esc(p.備註)}</td></tr>`).join('')+`</tbody></table></div></details>`;
@@ -297,7 +298,7 @@ renderSearchChips(); searchAgencies();
 // =====================================================================
 // 同級比對
 // =====================================================================
-const C = { target:null, lv:new Set(), kind:new Set(), dept:null, nmin:null, nmax:null, duty:'', excl:new Set(['驗算狀態非相符']), cols:new Set(pref.get('cols',DEFAULT_COLS)), sort:null, asc:true };
+const C = { target:null, lv:new Set(), kind:new Set(), dept:null, nmin:null, nmax:null, duty:'', excl:new Set(['驗算狀態非相符']), cols:new Set(pref.get('cols_v2',DEFAULT_COLS)), sort:null, asc:true };
 $('#cqlist').innerHTML = A.map(a=>`<option value="${esc(a.機關)}">`).join('');
 $('#cq').addEventListener('change',e=>{ if(byName[e.target.value]) setTarget(e.target.value); });
 $('#cq').addEventListener('keydown',e=>{ if(e.key==='Enter'){ const v=e.target.value.trim(); const hit=byName[v]||A.find(a=>a.機關.includes(v)); if(hit) setTarget(hit.機關); } });
@@ -329,7 +330,7 @@ function median(arr){ const s=arr.filter(v=>typeof v==='number').sort((x,y)=>x-y
 function mean(arr){ const s=arr.filter(v=>typeof v==='number'); return s.length? s.reduce((x,y)=>x+y,0)/s.length : null; }
 function renderColPick(){
   const host=$('#colPick'); host.innerHTML='';
-  COLS.forEach(([k])=>{ const l=document.createElement('label'); l.className=C.cols.has(k)?'on':''; l.textContent=k; l.onclick=()=>{ C.cols.has(k)?C.cols.delete(k):C.cols.add(k); pref.set('cols',[...C.cols]); renderColPick(); renderCompare(); }; host.appendChild(l); });
+  COLS.forEach(([k])=>{ const l=document.createElement('label'); l.className=C.cols.has(k)?'on':''; l.textContent=k; l.onclick=()=>{ C.cols.has(k)?C.cols.delete(k):C.cols.add(k); pref.set('cols_v2',[...C.cols]); renderColPick(); renderCompare(); }; host.appendChild(l); });
 }
 let lastRows=[];
 function renderCompare(){
