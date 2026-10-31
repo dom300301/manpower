@@ -12,6 +12,9 @@
   data/comparison.json  各類人員權益對照
   data/headcount.csv    員額統計時間序列
   data/local_gov.json   22 縣市契約人力樣態
+  data/reports.json     立法院法制局／預算中心報告（補抓後）
+  data/reports_oversight.json 監察院／審計部文件（補抓後）
+  data/literature.json  學術文獻（補抓後）
 """
 import csv
 import json
@@ -109,6 +112,8 @@ def main():
         'comparison': load_json('comparison.json', {'meta': {'personnel_types': []}, 'dimensions': []}),
         'headcount': load_headcount(),
         'local_gov': load_json('local_gov.json', []),
+        'reports': load_json('reports.json', []) + load_json('reports_oversight.json', []),
+        'literature': load_json('literature.json', []),
     }
     if check_only:
         print('檢查完成。')

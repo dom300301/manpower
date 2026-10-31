@@ -93,6 +93,7 @@ svg.chart{width:100%;height:340px;display:block}
     <button role="tab" data-tab="compare">權益對照</button>
     <button role="tab" data-tab="headcount">員額趨勢</button>
     <button role="tab" data-tab="local">地方樣態</button>
+    <button role="tab" data-tab="reports">報告文獻</button>
   </nav>
 </header>
 <main>
@@ -156,6 +157,14 @@ svg.chart{width:100%;height:340px;display:block}
   </div>
   <div class="tablewrap"><table id="lgtable"></table></div>
   <div id="lgcards" style="margin-top:12px"></div>
+</section>
+<section id="tab-reports" hidden>
+  <div class="toolbar">
+    <input type="search" id="rpq" placeholder="搜尋報告、文獻（標題、摘要、發現）">
+    <select id="rporg"><option value="">全部來源</option></select>
+    <span class="count" id="rpcount"></span>
+  </div>
+  <div id="rplist"></div>
 </section>
 </main>
 <script>
@@ -349,7 +358,7 @@ function renderLocal(){
     if(g.salary_scheme)c.append(el('p',{},el('b',{},'薪資制度：'),txt(g.salary_scheme)));
     if(g.notable_practices)c.append(el('p',{},el('b',{},'特殊作法：'),Array.isArray(g.notable_practices)?g.notable_practices.join('；'):txt(g.notable_practices)));
     if(g.headcount&&g.headcount.length)c.append(el('p',{},el('b',{},'人數：'),g.headcount.map(h=>`${h.year} ${h.category} ${fmt(h.value)}（${h.source||''}）`).join('；')));
-    if(g.regulations&&g.regulations.length){const d=el('details');d.append(el('summary',{},`規定 ${g.regulations.length} 件`));d.append(el('ul',{},g.regulations.map(r=>{const link=r.url?`<a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.title)}</a>`:esc(r.title); const yr=r.year?'（'+esc(r.year)+'）':''; const acc=r.accessible; const na=(acc===true||acc==='true'||acc==='accessible')?'':`<span class="na">　${acc==='listing'?'僅見目錄名稱':'全文未取得（網域受限）'}</span>`; const sm=r.summary?'<br>'+esc(r.summary):''; return el('li',{class:'src',html:link+yr+na+sm});}))); c.append(d);}
+    if(g.regulations&&g.regulations.length){const d=el('details');d.append(el('summary',{},`規定 ${g.regulations.length} 件`));d.append(el('ul',{},g.regulations.map(r=>{const link=r.url?`<a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.title)}</a>`:esc(r.title); const yr=r.year?'（'+esc(r.year)+'）':''; const acc=r.accessible; const na=(acc===true||acc==='true'||acc==='accessible')?'':`<span class="na">　${acc==='listing'?'僅見目錄名稱':'全文未取得（網域受限）'}</span>`; const sm=r.summary?'<br>'+esc(r.summary):''; const li=el('li',{class:'src',html:link+yr+na+sm}); if(Array.isArray(r.points)&&r.points.length){const pd=el('details');pd.append(el('summary',{},`條文全文（${r.points.length} 點）`));const art=el('article',{class:'law'});r.points.forEach(pt=>art.append(el('div',{class:'art',html:`<b>${esc(pt.no||'')}</b> ${esc(pt.text||'')}`})));pd.append(art);li.append(pd);} return li;}))); c.append(d);}
     cards.append(c);
   }
   t.append(tb); $('#lgcount').textContent=`${n} / ${lg.length} 縣市`;
@@ -357,8 +366,33 @@ function renderLocal(){
 }
 ['#lgq','#lgfilter'].forEach(s=>$(s).addEventListener('input',renderLocal));
 
+/* ---------- 報告與文獻 ---------- */
+const rp=(Array.isArray(DATA&&DATA.reports)?DATA.reports:[]).map(r=>({...r,_kind:'報告',_org:r.org||'',_date:String(r.date||'')})).concat((Array.isArray(DATA&&DATA.literature)?DATA.literature:[]).map(r=>({...r,_kind:'文獻',_org:'學術文獻',_date:String(r.year||''),summary:r.abstract,key_findings:r.findings_relevant?[].concat(r.findings_relevant):[]})));
+fillSelect($('#rporg'), rp.map(r=>r._org));
+function renderReports(){
+  const q=$('#rpq').value.trim(), org=$('#rporg').value; const box=$('#rplist'); box.innerHTML=''; let n=0;
+  for(const r of rp.slice().sort((a,b)=>b._date.localeCompare(a._date))){
+    if(org&&r._org!==org)continue;
+    const blob=[r.title,r.summary,(r.key_findings||[]).join(' '),(r.findings||[]).join(' '),(r.recommendations||[]).join(' '),r.case_no,r.author].filter(Boolean).join('\n');
+    if(q&&!blob.includes(q))continue; n++;
+    const c=el('div',{class:'card'});
+    c.append(el('h3',{},r.title||''), el('div',{class:'sub'},[r._kind,r._org,r.case_no,r._date,r.author,r.school,r.degree].filter(Boolean).join('　·　')));
+    c.append(el('div',{}, (r.personnel_types||r.related_personnel_types||r.keywords||[]).map(t=>el('span',{class:'tag'},t))));
+    if(r.summary)c.append(el('p',{},r.summary));
+    const det=el('details'); det.append(el('summary',{},'重點發現、建議、關鍵數字、來源'));
+    const list=(t,arr)=>arr&&arr.length?[el('p',{},el('b',{},t)),el('ul',{},arr.map(x=>el('li',{},typeof x==='string'?x:JSON.stringify(x))))]:[];
+    det.append(...list('重點發現',r.key_findings||r.findings),...list('建議',r.recommendations));
+    if(r.numbers&&r.numbers.length){det.append(el('p',{},el('b',{},'關鍵數字')));const t=el('table');t.append(el('tbody',{},r.numbers.map(x=>el('tr',{},el('td',{},x.item||''),el('td',{class:'num'},fmt(x.value)),el('td',{},x.year||'')))));det.append(t);}
+    if(r.url)det.append(el('p',{class:'src',html:`來源：<a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.url)}</a>`}));
+    c.append(det); box.append(c);
+  }
+  $('#rpcount').textContent=`${n} / ${rp.length} 件`;
+  if(!n)box.append(el('p',{class:'empty'},rp.length?'沒有符合的項目':'尚無報告與文獻資料（data/reports.json、reports_oversight.json、literature.json）'));
+}
+['#rpq','#rporg'].forEach(s=>$(s).addEventListener('input',renderReports));
+
 /* ---------- 啟動 ---------- */
-if(DATA){ renderLaws(); renderTimeline(); renderDrafts(); renderCmp(); hcOptions(); renderLocal(); showTab(initTab); }
+if(DATA){ renderLaws(); renderTimeline(); renderDrafts(); renderCmp(); hcOptions(); renderLocal(); renderReports(); showTab(initTab); }
 </script>
 </body>
 </html>
