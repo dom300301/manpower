@@ -1123,5 +1123,175 @@
   "local_path": "contract-manpower/raw/stats/mocs_概況統計_表7歷年全國公務人員人數按銓敘狀況分.pdf",
   "parse_method": "未解析",
   "note": ""
+ },
+ {
+  "name": "主計總處 100年度中央政府總預算法定預算 參考表 中央政府機關總員額法員額彙計表",
+  "download_url": "https://ws.dgbas.gov.tw/public/data/dgbas01/100/100ctab/100c機關總員額法員額彙計表.xls",
+  "page_url": "https://www.dgbas.gov.tw/News_Content.aspx?n=3625&s=103533",
+  "download_date": "2026-10-31",
+  "years_covered": "100",
+  "local_path": "contract-manpower/raw/stats/dgbas/dgbas_總員額法員額彙計表_100c.xls ; contract-manpower/raw/stats/dgbas/dgbas_總員額法員額彙計表_100c.pdf",
+  "parse_method": "xlrd/openpyxl 讀第一工作表；合計列、第一類及第二類人員列、第三～五類人員列、各「主管」列",
+  "note": "預算員額（法定預算）；108.12.31修法前分類定義（第一類含公立醫院職員；總數高限173,000、第一類86,700、第二類41,200）；100年度預算案頁無本表，採法定預算版"
+ },
+ {
+  "name": "主計總處 101年度中央政府總預算預算案 參考表 中央政府機關總員額法員額彙計表",
+  "download_url": "https://ws.dgbas.gov.tw/public/data/dgbas01/101/101btab/101b機關總員額法員額彙計表.xls",
+  "page_url": "https://www.dgbas.gov.tw/News_Content.aspx?n=3625&s=103577",
+  "download_date": "2026-10-31",
+  "years_covered": "101",
+  "local_path": "contract-manpower/raw/stats/dgbas/dgbas_總員額法員額彙計表_101b.xls ; contract-manpower/raw/stats/dgbas/dgbas_總員額法員額彙計表_101b.pdf",
+  "parse_method": "xlrd/openpyxl 讀第一工作表；合計列、第一類及第二類人員列、第三～五類人員列、各「主管」列",
+  "note": "預算員額（預算案）；108.12.31修法前分類定義（第一類含公立醫院職員；總數高限173,000、第一類86,700、第二類41,200）"
+ },
+ {
+  "name": "主計總處 102年度中央政府總預算預算案 參考表 中央政府機關總員額法員額彙計表",
+  "download_url": "https://ws.dgbas.gov.tw/public/data/dgbas01/102/102btab/102b中央政府機關總員額法員額彙計表.xls",
+  "page_url": "https://www.dgbas.gov.tw/News_Content.aspx?n=3625&s=103603",
+  "download_date": "2026-10-31",
+  "years_covered": "102",
+  "local_path": "contract-manpower/raw/stats/dgbas/dgbas_總員額法員額彙計表_102b.xls",
+  "parse_method": "xlrd/openpyxl 讀第一工作表；合計列、第一類及第二類人員列、第三～五類人員列、各「主管」列",
+  "note": "預算員額（預算案）；108.12.31修法前分類定義（第一類含公立醫院職員；總數高限173,000、第一類86,700、第二類41,200）"
+ },
+ {
+  "name": "主計總處 103年度中央政府總預算預算案 參考表 中央政府機關總員額法員額彙計表",
+  "download_url": "https://ws.dgbas.gov.tw/public/data/dgbas01/103/103btab/103b中央政府機關總員額法員額彙計表.xls",
+  "page_url": "https://www.dgbas.gov.tw/News_Content.aspx?n=3625&s=103638",
+  "download_date": "2026-10-31",
+  "years_covered": "103",
+  "local_path": "contract-manpower/raw/stats/dgbas/dgbas_總員額法員額彙計表_103b.xls ; contract-manpower/raw/stats/dgbas/dgbas_總員額法員額彙計表_103b.pdf",
+  "parse_method": "xlrd/openpyxl 讀第一工作表；合計列、第一類及第二類人員列、第三～五類人員列、各「主管」列",
+  "note": "預算員額（預算案）；108.12.31修法前分類定義（第一類含公立醫院職員；總數高限173,000、第一類86,700、第二類41,200）"
+ },
+ {
+  "name": "主計總處 104年度中央政府總預算預算案 參考表 中央政府機關總員額法員額彙計表",
+  "download_url": "https://ws.dgbas.gov.tw/public/data/dgbas01/104/104btab/104b中央政府機關總員額法員額彙計表.xls",
+  "page_url": "https://www.dgbas.gov.tw/News_Content.aspx?n=3625&s=103672",
+  "download_date": "2026-10-31",
+  "years_covered": "104",
+  "local_path": "contract-manpower/raw/stats/dgbas/dgbas_總員額法員額彙計表_104b.xls",
+  "parse_method": "xlrd/openpyxl 讀第一工作表；合計列、第一類及第二類人員列、第三～五類人員列、各「主管」列",
+  "note": "預算員額（預算案）；108.12.31修法前分類定義（第一類含公立醫院職員；總數高限173,000、第一類86,700、第二類41,200）"
+ },
+ {
+  "name": "主計總處 105年度中央政府總預算預算案 參考表 中央政府機關總員額法員額彙計表",
+  "download_url": "https://ws.dgbas.gov.tw/public/data/dgbas01/105/105btab/105b中央政府機關總員額法員額彙計表.xls",
+  "page_url": "https://www.dgbas.gov.tw/News_Content.aspx?n=3625&s=103706",
+  "download_date": "2026-10-31",
+  "years_covered": "105",
+  "local_path": "contract-manpower/raw/stats/dgbas/dgbas_總員額法員額彙計表_105b.xls",
+  "parse_method": "xlrd/openpyxl 讀第一工作表；合計列、第一類及第二類人員列、第三～五類人員列、各「主管」列",
+  "note": "預算員額（預算案）；108.12.31修法前分類定義（第一類含公立醫院職員；總數高限173,000、第一類86,700、第二類41,200）"
+ },
+ {
+  "name": "主計總處 106年度中央政府總預算預算案 參考表 中央政府機關總員額法員額彙計表",
+  "download_url": "https://ws.dgbas.gov.tw/public/data/dgbas01/106/106btab/106b中央政府機關總員額法員額彙計表.xls",
+  "page_url": "https://www.dgbas.gov.tw/News_Content.aspx?n=3625&s=103742",
+  "download_date": "2026-10-31",
+  "years_covered": "106",
+  "local_path": "contract-manpower/raw/stats/dgbas/dgbas_總員額法員額彙計表_106b.xls",
+  "parse_method": "xlrd/openpyxl 讀第一工作表；合計列、第一類及第二類人員列、第三～五類人員列、各「主管」列",
+  "note": "預算員額（預算案）；108.12.31修法前分類定義（第一類含公立醫院職員；總數高限173,000、第一類86,700、第二類41,200）"
+ },
+ {
+  "name": "主計總處 107年度中央政府總預算預算案 參考表 中央政府機關總員額法員額彙計表",
+  "download_url": "https://ws.dgbas.gov.tw/public/data/dgbas01/107/107btab/107b機關總員額法員額彙計表.xls",
+  "page_url": "https://www.dgbas.gov.tw/News_Content.aspx?n=3625&s=103776",
+  "download_date": "2026-10-31",
+  "years_covered": "107",
+  "local_path": "contract-manpower/raw/stats/dgbas/dgbas_總員額法員額彙計表_107b.xls ; contract-manpower/raw/stats/dgbas/dgbas_總員額法員額彙計表_107b.pdf",
+  "parse_method": "xlrd/openpyxl 讀第一工作表；合計列、第一類及第二類人員列、第三～五類人員列、各「主管」列",
+  "note": "預算員額（預算案）；108.12.31修法前分類定義（第一類含公立醫院職員；總數高限173,000、第一類86,700、第二類41,200）"
+ },
+ {
+  "name": "主計總處 108年度中央政府總預算預算案 參考表 中央政府機關總員額法員額彙計表",
+  "download_url": "https://ws.dgbas.gov.tw/public/data/dgbas01/108/108btab/108b機關總員額法員額彙計表.xls",
+  "page_url": "https://www.dgbas.gov.tw/News_Content.aspx?n=3625&s=103788",
+  "download_date": "2026-10-31",
+  "years_covered": "108",
+  "local_path": "contract-manpower/raw/stats/dgbas/dgbas_總員額法員額彙計表_108b.xls ; contract-manpower/raw/stats/dgbas/dgbas_總員額法員額彙計表_108b.pdf",
+  "parse_method": "xlrd/openpyxl 讀第一工作表；合計列、第一類及第二類人員列、第三～五類人員列、各「主管」列",
+  "note": "預算員額（預算案）；108.12.31修法前分類定義（第一類含公立醫院職員；總數高限173,000、第一類86,700、第二類41,200）"
+ },
+ {
+  "name": "主計總處 109年度中央政府總預算預算案 參考表 中央政府機關總員額法員額彙計表",
+  "download_url": "https://ws.dgbas.gov.tw/public/data/dgbas01/109/109btab/109b機關總員額法員額彙計表.xls",
+  "page_url": "https://www.dgbas.gov.tw/News_Content.aspx?n=3625&s=104328",
+  "download_date": "2026-10-31",
+  "years_covered": "109",
+  "local_path": "contract-manpower/raw/stats/dgbas/dgbas_總員額法員額彙計表_109b.xls ; contract-manpower/raw/stats/dgbas/dgbas_總員額法員額彙計表_109b.pdf",
+  "parse_method": "xlrd/openpyxl 讀第一工作表；合計列、第一類及第二類人員列、第三～五類人員列、各「主管」列",
+  "note": "預算員額（預算案）；108.12.31修法前分類定義（第一類含公立醫院職員；總數高限173,000、第一類86,700、第二類41,200）"
+ },
+ {
+  "name": "主計總處 110年度中央政府總預算預算案 參考表 中央政府機關總員額法員額彙計表",
+  "download_url": "https://ws.dgbas.gov.tw/public/data/dgbas01/110/110btab/110b機關總員額法員額彙計表.xls",
+  "page_url": "https://www.dgbas.gov.tw/News_Content.aspx?n=3625&s=103831",
+  "download_date": "2026-10-31",
+  "years_covered": "110",
+  "local_path": "contract-manpower/raw/stats/dgbas/dgbas_總員額法員額彙計表_110b.xls ; contract-manpower/raw/stats/dgbas/dgbas_總員額法員額彙計表_110b.pdf",
+  "parse_method": "xlrd/openpyxl 讀第一工作表；合計列、第一類及第二類人員列、第三～五類人員列、各「主管」列",
+  "note": "預算員額（預算案）；108.12.31修法後分類定義（第一類不含公立醫院職員；總數高限160,900、第一類74,600、第二類40,100）"
+ },
+ {
+  "name": "主計總處 111年度中央政府總預算預算案 參考表 中央政府機關總員額法員額彙計表",
+  "download_url": "https://ws.dgbas.gov.tw/public/data/dgbas01/111/111btab/111b機關總員額法員額彙計表.xlsx",
+  "page_url": "https://www.dgbas.gov.tw/News_Content.aspx?n=3625&s=103801",
+  "download_date": "2026-10-31",
+  "years_covered": "111",
+  "local_path": "contract-manpower/raw/stats/dgbas/dgbas_總員額法員額彙計表_111b.xlsx ; contract-manpower/raw/stats/dgbas/dgbas_總員額法員額彙計表_111b.pdf",
+  "parse_method": "xlrd/openpyxl 讀第一工作表；合計列、第一類及第二類人員列、第三～五類人員列、各「主管」列",
+  "note": "預算員額（預算案）；108.12.31修法後分類定義（第一類不含公立醫院職員；總數高限160,900、第一類74,600、第二類40,100）"
+ },
+ {
+  "name": "主計總處 112年度中央政府總預算預算案 參考表 中央政府機關總員額法員額彙計表",
+  "download_url": "https://ws.dgbas.gov.tw/public/data/dgbas01/112/112btab/112b機關總員額法員額彙計表.xlsx",
+  "page_url": "https://www.dgbas.gov.tw/News_Content.aspx?n=3625&s=227801",
+  "download_date": "2026-10-31",
+  "years_covered": "112",
+  "local_path": "contract-manpower/raw/stats/dgbas/dgbas_總員額法員額彙計表_112b.xlsx ; contract-manpower/raw/stats/dgbas/dgbas_總員額法員額彙計表_112b.pdf",
+  "parse_method": "xlrd/openpyxl 讀第一工作表；合計列、第一類及第二類人員列、第三～五類人員列、各「主管」列",
+  "note": "預算員額（預算案）；108.12.31修法後分類定義（第一類不含公立醫院職員；總數高限160,900、第一類74,600、第二類40,100）"
+ },
+ {
+  "name": "主計總處 113年度中央政府總預算預算案 參考表 中央政府機關總員額法員額彙計表",
+  "download_url": "https://ws.dgbas.gov.tw/001/Upload/461/relfile/11333/231560/b機關總員額法員額彙計表.xlsx",
+  "page_url": "https://www.dgbas.gov.tw/News_Content.aspx?n=3625&s=231560",
+  "download_date": "2026-10-31",
+  "years_covered": "113",
+  "local_path": "contract-manpower/raw/stats/dgbas/dgbas_總員額法員額彙計表_113b.xlsx ; contract-manpower/raw/stats/dgbas/dgbas_總員額法員額彙計表_113b.pdf",
+  "parse_method": "xlrd/openpyxl 讀第一工作表；合計列、第一類及第二類人員列、第三～五類人員列、各「主管」列",
+  "note": "預算員額（預算案）；108.12.31修法後分類定義（第一類不含公立醫院職員；總數高限160,900、第一類74,600、第二類40,100）"
+ },
+ {
+  "name": "主計總處 114年度中央政府總預算預算案 參考表 中央政府機關總員額法員額彙計表",
+  "download_url": "https://ws.dgbas.gov.tw/001/Upload/461/relfile/11333/233556/b機關總員額法員額彙計表.xlsx",
+  "page_url": "https://www.dgbas.gov.tw/News_Content.aspx?n=3625&s=233556",
+  "download_date": "2026-10-31",
+  "years_covered": "114",
+  "local_path": "contract-manpower/raw/stats/dgbas/dgbas_總員額法員額彙計表_114b.xlsx ; contract-manpower/raw/stats/dgbas/dgbas_總員額法員額彙計表_114b.pdf",
+  "parse_method": "xlrd/openpyxl 讀第一工作表；合計列、第一類及第二類人員列、第三～五類人員列、各「主管」列",
+  "note": "預算員額（預算案）；108.12.31修法後分類定義（第一類不含公立醫院職員；總數高限160,900、第一類74,600、第二類40,100）"
+ },
+ {
+  "name": "主計總處 115年度中央政府總預算預算案 參考表 中央政府機關總員額法員額彙計表",
+  "download_url": "https://ws.dgbas.gov.tw/001/Upload/461/relfile/11333/235176/b機關總員額法員額彙計表.xlsx",
+  "page_url": "https://www.dgbas.gov.tw/News_Content.aspx?n=3625&s=235176",
+  "download_date": "2026-10-31",
+  "years_covered": "115",
+  "local_path": "contract-manpower/raw/stats/dgbas/dgbas_總員額法員額彙計表_115b.xlsx ; contract-manpower/raw/stats/dgbas/dgbas_總員額法員額彙計表_115b.pdf",
+  "parse_method": "xlrd/openpyxl 讀第一工作表；合計列、第一類及第二類人員列、第三～五類人員列、各「主管」列",
+  "note": "預算員額（預算案）；108.12.31修法後分類定義（第一類不含公立醫院職員；總數高限160,900、第一類74,600、第二類40,100）"
+ },
+ {
+  "name": "主計總處 116年度中央政府總預算預算案 參考表 中央政府機關總員額法員額彙計表",
+  "download_url": "https://ws.dgbas.gov.tw/001/Upload/461/relfile/11333/236582/b機關總員額法員額彙計表.xlsx",
+  "page_url": "https://www.dgbas.gov.tw/News_Content.aspx?n=3625&s=236582",
+  "download_date": "2026-10-31",
+  "years_covered": "116",
+  "local_path": "contract-manpower/raw/stats/dgbas/dgbas_總員額法員額彙計表_116b.xlsx ; contract-manpower/raw/stats/dgbas/dgbas_總員額法員額彙計表_116b.pdf",
+  "parse_method": "xlrd/openpyxl 讀第一工作表；合計列、第一類及第二類人員列、第三～五類人員列、各「主管」列",
+  "note": "預算員額（預算案）；108.12.31修法後分類定義（第一類不含公立醫院職員；總數高限160,900、第一類74,600、第二類40,100）"
  }
 ]

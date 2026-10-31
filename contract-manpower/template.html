@@ -130,7 +130,8 @@ svg.chart{width:100%;height:340px;display:block}
     <select id="hcscope"></select>
     <select id="hcgroup"></select>
     <select id="hcmeasure"></select>
-    <button class="chip" id="hcpreset" title="疊合聘用、約僱、事務性人力、第二類近似值與約用人員">目的二對照</button>
+    <button class="chip" id="hcpreset" title="實有人數：聘用、約僱、事務性人力、第二類近似值與約用人員">目的二對照（實有）</button>
+    <button class="chip" id="hcpreset2" title="主計總處員額彙計表：總員額法第一、二類及第二類細項之預算員額">目的二對照（法定分類）</button>
     <span id="hccats"></span>
   </div>
   <div class="chartcard">
@@ -141,7 +142,7 @@ svg.chart{width:100%;height:340px;display:block}
     <div class="tip" id="hctip"></div>
   </div>
   <details><summary>資料表（含來源）</summary><div class="tablewrap"><table id="hctable"></table></div></details>
-  <p class="note">提示：按「目的二對照」可一鍵疊合第二類員額（聘用＋約僱＋事務性人力）與約用人員；分析結論見 research/06_人力消長分析.md。類別名稱含「Q4」或「近似」者為建檔時合成之序列，來源與計算方式見資料表備註。</p>
+  <p class="note">提示：「目的二對照（實有）」疊合人事總處實有人數與約用人員；「目的二對照（法定分類）」顯示主計總處員額彙計表的總員額法第一、二類預算員額（110 年度起為 108 年修法後定義，第一類不含公立醫院職員）；分析結論見 research/06_人力消長分析.md。類別名稱含「Q4」或「近似」者為建檔時合成之序列，來源與計算方式見資料表備註。</p>
 </section>
 <section id="tab-local" hidden>
   <div class="toolbar">
@@ -302,6 +303,7 @@ function hcCatChips(){
   drawChart();
 }
 $('#hcpreset').onclick=()=>{ $('#hcscope').value='中央'; hcGroupOptions(); $('#hcgroup').value='行政院所屬'; hcGroupOptions(); $('#hcmeasure').value='實有人數'; hcCatSel.clear(); ['聘用','約僱','技工工友駐衛警(事務性人力)','第二類員額近似(聘用+約僱+事務性)','約用人員(行政機關,Q4)','約用人員(合計,Q4)'].forEach(c=>hcCatSel.add(c)); hcCatChips(); };
+$('#hcpreset2').onclick=()=>{ $('#hcscope').value='中央'; hcGroupOptions(); $('#hcgroup').value='總員額法適用機關合計'; hcGroupOptions(); $('#hcmeasure').value='預算員額'; hcCatSel.clear(); ['總員額法第一類員額','總員額法第二類員額','總員額法第二類員額－聘僱人員(聘用+約僱)','總員額法第二類員額－工友(含技工、駕駛)','總員額法第二類員額－駐衛警察'].forEach(c=>hcCatSel.add(c)); hcCatChips(); };
 $('#hcscope').onchange=hcGroupOptions; $('#hcgroup').onchange=()=>{hcGroupOptions();}; $('#hcmeasure').onchange=hcCatChips;
 function drawChart(){
   const svg=$('#hcsvg'); if(!svg||svg.closest('section').hidden)return; svg.innerHTML='';
