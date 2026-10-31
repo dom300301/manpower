@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>契約人力制度查詢</title>
+<style>
+:root{
+  color-scheme:light;
+  --page:#f9f9f7;--surface:#fcfcfb;--ink:#0b0b0b;--ink2:#52514e;--muted:#898781;
+  --grid:#e1e0d9;--axis:#c3c2b7;--border:rgba(11,11,11,.10);--accent:#2a78d6;--accent-soft:#cde2fb;
+  --s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--s4:#eda100;--s5:#e87ba4;--s6:#008300;--s7:#6250d6;--s8:#e34948;
+  --good:#0ca30c;--warn:#fab219;--crit:#d03b3b;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;--page:#0d0d0d;--surface:#1a1a19;--ink:#f0efec;--ink2:#c3c2b7;--muted:#898781;
+    --grid:#2c2c2a;--axis:#383835;--border:rgba(255,255,255,.10);--accent:#3987e5;--accent-soft:#1c5cab;
+    --s1:#3987e5;--s2:#d95926;--s3:#199e70;--s4:#c98500;--s5:#d55181;--s6:#008300;--s7:#9085e9;--s8:#e66767;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;--page:#0d0d0d;--surface:#1a1a19;--ink:#f0efec;--ink2:#c3c2b7;--muted:#898781;
+  --grid:#2c2c2a;--axis:#383835;--border:rgba(255,255,255,.10);--accent:#3987e5;--accent-soft:#1c5cab;
+  --s1:#3987e5;--s2:#d95926;--s3:#199e70;--s4:#c98500;--s5:#d55181;--s6:#008300;--s7:#9085e9;--s8:#e66767;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--page);color:var(--ink);font:15px/1.6 system-ui,-apple-system,"Segoe UI","Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif}
+header{position:sticky;top:0;z-index:5;background:var(--surface);border-bottom:1px solid var(--border);padding:10px 16px;display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center}
+header h1{font-size:17px;margin:0;font-weight:600}
+header .meta{color:var(--muted);font-size:12px}
+nav{display:flex;flex-wrap:wrap;gap:4px;margin-left:auto}
+nav button{border:1px solid var(--border);background:transparent;color:var(--ink2);padding:6px 12px;border-radius:999px;cursor:pointer;font-size:14px}
+nav button[aria-selected="true"]{background:var(--accent);color:#fff;border-color:var(--accent)}
+main{max-width:1200px;margin:0 auto;padding:16px}
+section[hidden]{display:none}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 12px}
+.toolbar input[type=search],.toolbar select{font:inherit;padding:6px 10px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--ink);min-width:160px}
+.toolbar input[type=search]{flex:1 1 260px}
+.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--border);background:var(--surface);color:var(--ink2);padding:3px 10px;border-radius:999px;font-size:13px;cursor:pointer;user-select:none}
+.chip[aria-pressed="true"]{background:var(--accent-soft);color:var(--ink);border-color:var(--accent)}
+.chip .sw{width:10px;height:10px;border-radius:2px;display:inline-block}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:12px}
+.card h3{margin:0 0 4px;font-size:16px}
+.card .sub{color:var(--muted);font-size:13px}
+.tag{display:inline-block;font-size:12px;padding:1px 8px;border-radius:999px;background:var(--accent-soft);color:var(--ink);margin:2px 4px 2px 0}
+.count{color:var(--muted);font-size:13px;margin-left:auto}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{border-bottom:1px solid var(--grid);padding:6px 8px;text-align:left;vertical-align:top}
+th{color:var(--ink2);font-weight:600;background:var(--surface);position:sticky;top:0;z-index:1}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+.tablewrap{overflow:auto;max-height:70vh;border:1px solid var(--border);border-radius:12px;background:var(--surface)}
+details summary{cursor:pointer;color:var(--accent)}
+article.law{white-space:pre-wrap;font-size:14px}
+article.law .art{margin:8px 0;padding-left:8px;border-left:3px solid var(--grid)}
+article.law .art b{color:var(--ink2)}
+mark{background:#fff3b0;color:#0b0b0b;padding:0 1px}
+.timeline{position:relative;padding-left:24px}
+.timeline:before{content:"";position:absolute;left:8px;top:0;bottom:0;width:2px;background:var(--grid)}
+.tl{position:relative;margin-bottom:14px}
+.tl:before{content:"";position:absolute;left:-21px;top:8px;width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 2px var(--surface)}
+.tl .date{font-weight:600;font-variant-numeric:tabular-nums}
+.tl .actor{color:var(--muted);font-size:13px}
+.matrix td{min-width:170px}
+.matrix td .b{display:block;color:var(--muted);font-size:12px;margin-top:4px}
+.matrix tr td:first-child{font-weight:600;background:var(--surface);position:sticky;left:0}
+.chartcard{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 16px 4px;margin-bottom:12px;position:relative}
+.chartcard h3{margin:0 0 2px;font-size:15px}
+.chartcard .sub{color:var(--muted);font-size:13px;margin-bottom:6px}
+svg.chart{width:100%;height:340px;display:block}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px;color:var(--ink2);margin:4px 0 8px}
+.legend i{display:inline-block;width:14px;height:2px;background:currentColor;vertical-align:middle;margin-right:6px;border-radius:1px}
+.tip{position:absolute;pointer-events:none;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:6px 10px;font-size:13px;box-shadow:0 4px 16px rgba(0,0,0,.12);display:none;z-index:3;min-width:160px}
+.tip b{font-variant-numeric:tabular-nums}
+.tip .k{display:inline-block;width:12px;height:2px;margin-right:6px;vertical-align:middle}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px}
+.note{color:var(--muted);font-size:13px}
+.empty{color:var(--muted);padding:24px;text-align:center}
+.src a{color:var(--accent);text-decoration:none}
+.src a:hover{text-decoration:underline}
+.ok{color:var(--good)}.na{color:var(--muted)}
+@media (max-width:640px){main{padding:10px}.matrix td{min-width:140px}}
+</style>
+</head>
+<body>
+<header>
+  <h1>契約人力制度查詢</h1>
+  <span class="meta" id="built"></span>
+  <nav id="nav" role="tablist">
+    <button role="tab" data-tab="laws">法規</button>
+    <button role="tab" data-tab="timeline">沿革</button>
+    <button role="tab" data-tab="compare">權益對照</button>
+    <button role="tab" data-tab="headcount">員額趨勢</button>
+    <button role="tab" data-tab="local">地方樣態</button>
+  </nav>
+</header>
+<main>
+<section id="tab-laws" hidden>
+  <div class="toolbar">
+    <input type="search" id="lawq" placeholder="搜尋法規名稱或條文全文（空白分隔多關鍵字）">
+    <select id="lawtag"><option value="">全部人員類別／主題</option></select>
+    <select id="lawlevel"><option value="">全部位階</option></select>
+    <span class="count" id="lawcount"></span>
+  </div>
+  <div id="lawlist"></div>
+</section>
+<section id="tab-timeline" hidden>
+  <div class="toolbar">
+    <input type="search" id="tlq" placeholder="搜尋事件">
+    <select id="tlactor"><option value="">全部行動者</option></select>
+    <select id="tlcat"><option value="">全部類型</option></select>
+    <span class="count" id="tlcount"></span>
+  </div>
+  <div class="grid2">
+    <div><div class="timeline" id="tllist"></div></div>
+    <div id="drafts"></div>
+  </div>
+</section>
+<section id="tab-compare" hidden>
+  <div class="toolbar">
+    <span id="cmpgroups"></span>
+    <span class="count" id="cmpnote"></span>
+  </div>
+  <div class="tablewrap"><table class="matrix" id="cmptable"></table></div>
+</section>
+<section id="tab-headcount" hidden>
+  <div class="toolbar">
+    <select id="hcscope"></select>
+    <select id="hcgroup"></select>
+    <select id="hcmeasure"></select>
+    <span id="hccats"></span>
+  </div>
+  <div class="chartcard">
+    <h3 id="hctitle">各類人員人數</h3>
+    <div class="sub" id="hcsub"></div>
+    <div class="legend" id="hclegend"></div>
+    <svg class="chart" id="hcsvg" role="img" aria-label="各類人員人數折線圖"></svg>
+    <div class="tip" id="hctip"></div>
+  </div>
+  <details><summary>資料表（含來源）</summary><div class="tablewrap"><table id="hctable"></table></div></details>
+  <p class="note">提示：先選「中央」「總員額法第二類」與「臨時人員」兩條線並列，即可檢視目的二的「第二類員額消退 vs 約用人員增加」對照。</p>
+</section>
+<section id="tab-local" hidden>
+  <div class="toolbar">
+    <input type="search" id="lgq" placeholder="搜尋縣市或規定內容">
+    <select id="lgfilter">
+      <option value="">全部</option>
+      <option value="political">有隨首長進退條款</option>
+      <option value="caps">有總量管制</option>
+      <option value="core">有核心／公權力限制</option>
+      <option value="lsa">適用勞基法</option>
+    </select>
+    <span class="count" id="lgcount"></span>
+  </div>
+  <div class="tablewrap"><table id="lgtable"></table></div>
+  <div id="lgcards" style="margin-top:12px"></div>
+</section>
+</main>
+<script>
+const DATA = {"built":"2026-10-31","laws":[],"timeline":[],"drafts":[],"comparison":{"meta":{"title":"各類人員權益對照表（草案，待依 laws.json 條文逐格驗證）","drafted":"2026-10-31","status":"draft","personnel_types":[{"key":"civil","name":"公務人員（常務）","nature":"公法上職務關係（任用）","legal_basis":"公務人員任用法"},{"key":"pinyong","name":"聘用人員","nature":"公法上契約關係（行政契約）","legal_basis":"聘用人員聘用條例"},{"key":"yuegu","name":"約僱人員","nature":"公法上契約關係（行政契約）","legal_basis":"行政院暨所屬機關約僱人員僱用辦法"},{"key":"linshi","name":"臨時人員／約用人員","nature":"私法上勞動契約（適用勞基法）","legal_basis":"行政院與所屬中央及地方各機關學校臨時人員進用及運用要點；各地方政府約用（臨時）人員管理要點"},{"key":"contract","name":"勞務承攬人力","nature":"與機關無契約關係；與承攬廠商間為勞動契約","legal_basis":"政府採購法、民法承攬章；承攬廠商適用勞基法"}],"verification_note":"每格 basis 欄引用之條號為草擬時依記憶填寫，需與 data/laws.json 全文核對後把 verified 改為 true。"},"dimensions":[{"key":"entry","group":"進用","name":"進用方式與資格","cells":{"civil":{"text":"依公務人員任用法，須經國家考試及格或其他法定資格，經銓敘部銓敘審定。","basis":"公務人員任用法§9、§24","verified":false},"pinyong":{"text":"應業務需要，以契約定期聘用之專業或技術人員；須報人事總處（原行政院）核定，並送銓敘部登記備查。不得擔任主管職務。","basis":"聘用條例§2、§3、§6、§7","verified":false},"yuegu":{"text":"機關學校應業務需要，定期僱用擔任相當分類職位公務人員第五職等以下之臨時性工作；不得擔任主管及正式職務。","basis":"約僱辦法§2、§3、§4","verified":false},"linshi":{"text":"機關以年度預算（或計畫經費）進用，依臨時人員要點公開甄選；各地方政府依自訂要點進用，部分縣市設總量管制。","basis":"臨時人員進用及運用要點§3～§5；各縣市約用人員管理要點","verified":false},"contract":{"text":"機關依政府採購法辦理勞務採購，由得標廠商提供人力完成工作；機關不直接進用人員，不得對廠商人員為指揮監督（否則有假承攬真僱傭疑慮）。","basis":"政府採購法§2、§7；民法§490","verified":false}}},{"key":"term","group":"進用","name":"契約期間與續約","cells":{"civil":{"text":"無任期，經任用即具永業性身分，非依法不得免職。","basis":"公務人員保障法§9","verified":false},"pinyong":{"text":"以契約定期聘用，期滿得續聘；聘期配合計畫或預算年度，一般一年一聘。","basis":"聘用條例§3、§5；施行細則","verified":false},"yuegu":{"text":"僱用期間依業務需要定之，最長不得超過一年；期滿得續僱。","basis":"約僱辦法§5","verified":false},"linshi":{"text":"原則以一年為限，得續約；依勞基法§9 定期契約規定，連續性工作應為不定期契約（實務多以年度預算定期）。","basis":"臨時人員要點；勞基法§9","verified":false},"contract":{"text":"依採購契約期間（通常一至三年），期滿重新招標；人員與廠商間契約依勞基法。","basis":"政府採購法§52、§63","verified":false}}},{"key":"headcount","group":"進用","name":"員額管制","cells":{"civil":{"text":"中央：總員額法第一類員額（含政務、常務、醫事人員）上限內；地方：地方行政機關組織準則、員額設置基準。","basis":"中央政府機關總員額法§3、§4；地方行政機關組織準則","verified":false},"pinyong":{"text":"中央：總員額法第二類員額（聘用、約僱）上限內，列入機關預算員額；地方：依地方制度相關規定與預算。","basis":"總員額法§3、§4","verified":false},"yuegu":{"text":"同聘用，屬總員額法第二類員額。","basis":"總員額法§3","verified":false},"linshi":{"text":"不計入總員額法員額；以業務費／人事費等預算進用，人事總處另以「臨時人員人力運用情形」管控，部分縣市設占預算員額比例上限。","basis":"總員額法§3（未列入）；臨時人員要點","verified":false},"contract":{"text":"不計入員額，僅受採購預算限制。","basis":"—","verified":false}}},{"key":"pay","group":"待遇","name":"待遇／報酬制度","cells":{"civil":{"text":"依公務人員俸給法支本俸、加給（職務、技術或專業、地域）。","basis":"公務人員俸給法§3、§5","verified":false},"pinyong":{"text":"依「聘用人員比照分類職位公務人員俸點支給報酬標準表」以薪點折算，按月支給，原則不得支給加給（另有專業加給比照）。","basis":"聘用條例§6；報酬標準表","verified":false},"yuegu":{"text":"依「約僱人員僱用辦法」比照相當職等薪點支給，第五職等以下。","basis":"約僱辦法§6","verified":false},"linshi":{"text":"依機關自訂薪資標準（多比照約僱薪點或依學歷分級），不得低於勞基法基本工資。","basis":"臨時人員要點；勞基法§21","verified":false},"contract":{"text":"由廠商決定，採購契約得約定最低薪資或人力規格；機關不直接給付。","basis":"採購契約","verified":false}}},{"key":"bonus","group":"待遇","name":"年終工作獎金／考績獎金","cells":{"civil":{"text":"年終工作獎金 1.5 個月；考績獎金依考績等第（甲等 1 個月、乙等 0.5 個月）。","basis":"軍公教人員年終工作獎金發給注意事項；考績法§7","verified":false},"pinyong":{"text":"年終工作獎金比照支給；考核獎金依「聘用人員考核」規定（甲等 1 個月薪酬）。","basis":"年終工作獎金注意事項；聘僱人員考核規定","verified":false},"yuegu":{"text":"同聘用。","basis":"同左","verified":false},"linshi":{"text":"年終獎金依機關預算與要點（多比照 1.5 個月）；無考績獎金，部分機關有考核獎勵。","basis":"臨時人員要點；各機關規定","verified":false},"contract":{"text":"依廠商與勞工約定；機關不給付。","basis":"—","verified":false}}},{"key":"appraisal","group":"考核","name":"考績／考核","cells":{"civil":{"text":"公務人員考績法：年終考績、另予考績、專案考績；丁等免職。","basis":"公務人員考績法§3～§12","verified":false},"pinyong":{"text":"依「行政院及所屬各機關聘僱人員考核辦法」（或機關自訂）辦理年終考核，分甲乙丙等，丙等不續聘。","basis":"聘用條例施行細則；聘僱人員考核規定","verified":false},"yuegu":{"text":"同聘用。","basis":"同左","verified":false},"linshi":{"text":"依機關考核規定；表現不佳依勞基法§11、§12 終止契約。","basis":"臨時人員要點；勞基法§11、§12","verified":false},"contract":{"text":"機關考核廠商履約（驗收、違約金），不考核個人。","basis":"政府採購法§70-1、採購契約","verified":false}}},{"key":"leave","group":"待遇","name":"休假制度","cells":{"civil":{"text":"公務人員請假規則：事假、病假、婚假、娩假、休假（年資 1 年 7 日起至 30 日）。","basis":"公務人員請假規則§3、§7","verified":false},"pinyong":{"text":"準用公務人員請假規則（休假日數依年資比照）。","basis":"公務人員請假規則§19","verified":false},"yuegu":{"text":"同聘用（準用請假規則）。","basis":"請假規則§19","verified":false},"linshi":{"text":"依勞基法特別休假（6 個月 3 日、1 年 7 日…）及性別工作平等法假別；機關得優於法定。","basis":"勞基法§38；勞工請假規則","verified":false},"contract":{"text":"依勞基法，由廠商給假。","basis":"勞基法§38","verified":false}}},{"key":"insurance","group":"保險","name":"保險","cells":{"civil":{"text":"公教人員保險（公保）＋全民健保。","basis":"公教人員保險法§2","verified":false},"pinyong":{"text":"公保（聘用人員為公保被保險人）＋健保。","basis":"公教人員保險法§2、施行細則","verified":false},"yuegu":{"text":"公保（約僱人員 88 年起納入公保）＋健保。","basis":"公教人員保險法§2","verified":false},"linshi":{"text":"勞工保險＋就業保險＋健保；機關負擔雇主保費。","basis":"勞工保險條例§6；就業保險法§5","verified":false},"contract":{"text":"勞保、就保、健保由廠商投保。","basis":"勞工保險條例§6","verified":false}}},{"key":"retirement","group":"退休","name":"退休／離職給與","cells":{"civil":{"text":"公務人員退休資遣撫卹法：退撫基金共同提撥，月退休金或一次退休金。","basis":"公務人員退休資遣撫卹法","verified":false},"pinyong":{"text":"不適用退撫法；依「各機關學校聘僱人員離職儲金給與辦法」，機關與個人各提撥薪酬 6%（原 5%），離職時一次給付；另公保養老給付。","basis":"離職儲金給與辦法§3～§6","verified":false},"yuegu":{"text":"同聘用（離職儲金）。","basis":"離職儲金給與辦法","verified":false},"linshi":{"text":"勞工退休金條例（新制）：雇主提繳 6% 至個人專戶；具舊制年資者依勞基法§53～§55。","basis":"勞工退休金條例§6、§14","verified":false},"contract":{"text":"由廠商依勞退條例提繳。","basis":"勞工退休金條例§6","verified":false}}},{"key":"compensation","group":"退休","name":"撫卹／職災／資遣","cells":{"civil":{"text":"退撫法撫卹金、資遣給與；公務人員執行職務意外傷亡慰問金。","basis":"退撫法；慰問金發給辦法","verified":false},"pinyong":{"text":"公保死亡給付、殘廢給付；離職儲金；無撫卹金。","basis":"公教人員保險法","verified":false},"yuegu":{"text":"同聘用。","basis":"同左","verified":false},"linshi":{"text":"勞基法職災補償（§59）、資遣費（§17 或勞退條例§12）；勞保職災給付。","basis":"勞基法§17、§59；勞工職業災害保險及保護法","verified":false},"contract":{"text":"由廠商負責；機關依民法§189 原則不負責任，但有定作或指示過失者除外。","basis":"民法§189","verified":false}}},{"key":"service_act","group":"義務","name":"公務員服務法（兼職、旋轉門、保密）","cells":{"civil":{"text":"適用。","basis":"公務員服務法§2","verified":false},"pinyong":{"text":"適用（受有俸給之文武職公務員，聘用人員經解釋納入）；旋轉門條款於主管職務不適用因不得任主管。","basis":"公務員服務法§2、§24；銓敘部函釋","verified":false},"yuegu":{"text":"適用（同聘用）。","basis":"公務員服務法§2、§24","verified":false},"linshi":{"text":"不適用公務員服務法；但刑法公務員、貪污治罪條例依「依法令從事公務」個案認定；機關多於契約約定保密與兼職限制。","basis":"公務員服務法§2 反面；刑法§10","verified":false},"contract":{"text":"不適用；契約約定保密義務。","basis":"—","verified":false}}},{"key":"neutrality","group":"義務","name":"行政中立法","cells":{"civil":{"text":"適用。","basis":"公務人員行政中立法§2","verified":false},"pinyong":{"text":"準用。","basis":"行政中立法§17","verified":false},"yuegu":{"text":"準用。","basis":"行政中立法§17","verified":false},"linshi":{"text":"不適用（未列入 §17 準用對象）。","basis":"行政中立法§17 反面","verified":false},"contract":{"text":"不適用。","basis":"—","verified":false}}},{"key":"protection","group":"救濟","name":"公務人員保障法（身分保障、復審、申訴）","cells":{"civil":{"text":"適用：身分保障、官職等與俸給保障；不服行政處分得復審，管理措施得申訴、再申訴。","basis":"保障法§2、§9、§25、§77","verified":false},"pinyong":{"text":"準用（§102 第 1 款：聘用人員）：得提起復審、申訴、再申訴，但不及於任用資格保障。","basis":"保障法§102","verified":false},"yuegu":{"text":"準用（§102：約僱人員）。","basis":"保障法§102","verified":false},"linshi":{"text":"不適用（非保障法對象）；救濟循勞動法途徑。","basis":"保障法§102 反面","verified":false},"contract":{"text":"不適用。","basis":"—","verified":false}}},{"key":"remedy","group":"救濟","name":"救濟途徑（不續聘、解約、薪資爭議）","cells":{"civil":{"text":"復審 → 行政訴訟；申訴 → 再申訴（終局）。免職處分得提行政訴訟。","basis":"保障法§25、§72、§77；行政訴訟法","verified":false},"pinyong":{"text":"不續聘／解聘：向保訓會復審（實務：不續聘屬契約期滿，多認非行政處分，改依行政契約循一般給付訴訟）；薪資爭議提行政訴訟（公法上契約）。","basis":"保障法§102；行政訴訟法§8；行政程序法§135","verified":false},"yuegu":{"text":"同聘用（復審／行政訴訟）。","basis":"同左","verified":false},"linshi":{"text":"勞資爭議：勞動局調解 → 勞動事件法民事訴訟（確認僱傭關係、給付工資）；違法解僱得請求回復僱傭。","basis":"勞資爭議處理法§6、§9；勞動事件法","verified":false},"contract":{"text":"對廠商：勞資爭議處理法／民事訴訟；對機關：無直接救濟（除非認定假承攬真僱傭，得主張與機關成立僱傭關係）。","basis":"勞資爭議處理法；勞基法§2","verified":false}}},{"key":"association","group":"救濟","name":"結社（協會／工會）","cells":{"civil":{"text":"得組公務人員協會，不得罷工。","basis":"公務人員協會法§2、§46","verified":false},"pinyong":{"text":"得加入公務人員協會（聘用、約僱人員為協會法適用對象）。","basis":"公務人員協會法§2","verified":false},"yuegu":{"text":"同聘用。","basis":"公務人員協會法§2","verified":false},"linshi":{"text":"得依工會法組織或加入工會（受僱於政府機關之勞工）；得依勞資爭議處理法為爭議行為，但有限制。","basis":"工會法§4；勞資爭議處理法§54","verified":false},"contract":{"text":"得加入廠商工會。","basis":"工會法§4","verified":false}}},{"key":"career","group":"待遇","name":"升遷、轉任與年資採計","cells":{"civil":{"text":"依公務人員陞遷法；年資計入退休與俸級晉敘。","basis":"公務人員陞遷法","verified":false},"pinyong":{"text":"無陞遷制度；考試及格轉任公務人員時，聘用年資得採計提敘俸級（相當職等）。","basis":"公務人員俸給法§17；聘用條例§7","verified":false},"yuegu":{"text":"同聘用（年資得提敘）。","basis":"俸給法§17","verified":false},"linshi":{"text":"無；轉任公務人員後，臨時人員年資原則不得採計提敘（公務人員俸給法施行細則）。","basis":"俸給法施行細則§15","verified":false},"contract":{"text":"無。","basis":"—","verified":false}}},{"key":"welfare","group":"待遇","name":"福利（子女教育補助、婚喪生育補助、優惠貸款）","cells":{"civil":{"text":"全國軍公教員工待遇支給要點之生活津貼（結婚、生育、喪葬、子女教育補助）。","basis":"全國軍公教員工待遇支給要點","verified":false},"pinyong":{"text":"多數比照支給（依支給要點適用對象含聘用約僱）。","basis":"待遇支給要點","verified":false},"yuegu":{"text":"同聘用。","basis":"待遇支給要點","verified":false},"linshi":{"text":"原則不適用軍公教支給要點；部分機關以福利互助或自訂要點給付。","basis":"臨時人員要點","verified":false},"contract":{"text":"無。","basis":"—","verified":false}}},{"key":"authority","group":"義務","name":"得否行使公權力／擔任主管","cells":{"civil":{"text":"得。","basis":"任用法","verified":false},"pinyong":{"text":"不得擔任主管職務；可從事專業技術工作，行政程序上得為承辦人但核定權責在公務人員。","basis":"聘用條例§3","verified":false},"yuegu":{"text":"不得擔任主管及正式職務；限第五職等以下臨時性工作。","basis":"約僱辦法§2、§3","verified":false},"linshi":{"text":"要點規定不得從事涉及公權力行使之核心業務（各縣市要點多明文）；實務上常擔任業務助理。","basis":"臨時人員要點；各縣市約用要點","verified":false},"contract":{"text":"不得（公權力不得由廠商人員行使；機關不得指揮）。","basis":"政府採購法；行政程序法§16","verified":false}}},{"key":"labor_act","group":"義務","name":"勞動基準法適用","cells":{"civil":{"text":"不適用。","basis":"勞基法§3、§84；勞動部公告","verified":false},"pinyong":{"text":"不適用（聘用人員經勞動部公告排除）。","basis":"勞動部 87 年公告","verified":false},"yuegu":{"text":"不適用（約僱人員排除）。","basis":"勞動部 87 年公告","verified":false},"linshi":{"text":"適用（97 年 1 月 1 日起公部門臨時人員適用勞基法）。","basis":"勞委會 96 年公告","verified":false},"contract":{"text":"適用（與廠商間）。","basis":"勞基法§3","verified":false}}}]},"headcount":[],"local_gov":[]};
+const $ = s => document.querySelector(s);
+const el = (t, a={}, ...k) => { const e=document.createElement(t); for(const [x,y] of Object.entries(a)){ if(x==='class')e.className=y; else if(x==='html')e.innerHTML=y; else if(x.startsWith('on'))e.addEventListener(x.slice(2),y); else e.setAttribute(x,y);} for(const c of k.flat()){ if(c==null)continue; e.append(c.nodeType?c:document.createTextNode(String(c))); } return e; };
+const esc = s => String(s??'').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const SERIES = ['--s1','--s2','--s3','--s4','--s5','--s6','--s7','--s8'];
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+$('#built').textContent = DATA ? `資料建檔日 ${DATA.built}` : '';
+if (!DATA) document.body.innerHTML = '<p class="empty">尚未建檔：請執行 python3 build.py</p>';
+
+/* ---------- 分頁 ---------- */
+const tabs = [...document.querySelectorAll('#nav button')];
+function showTab(name){ tabs.forEach(b=>b.setAttribute('aria-selected', b.dataset.tab===name)); document.querySelectorAll('main > section').forEach(s=>s.hidden = s.id!=='tab-'+name); try{localStorage.setItem('cm.tab',name);}catch(e){} if(name==='headcount') drawChart(); }
+tabs.forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
+let initTab='laws'; try{ initTab = localStorage.getItem('cm.tab')||'laws'; }catch(e){}
+
+/* ---------- 工具 ---------- */
+function highlight(text, kws){ let h=esc(text); for(const k of kws){ if(!k)continue; h=h.replace(new RegExp(k.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'g'), m=>`<mark>${m}</mark>`);} return h; }
+function fillSelect(sel, values, keep){ const cur=sel.value; [...sel.options].slice(1).forEach(o=>o.remove()); [...new Set(values.filter(Boolean))].sort().forEach(v=>sel.append(el('option',{value:v},v))); if(keep) sel.value=cur; }
+function fmt(n){ return Number(n).toLocaleString('zh-Hant-TW'); }
+
+/* ---------- 法規 ---------- */
+const laws = (DATA&&DATA.laws)||[];
+fillSelect($('#lawtag'), laws.flatMap(l=>l.tags||[]));
+fillSelect($('#lawlevel'), laws.map(l=>l.level));
+function renderLaws(){
+  const kws=$('#lawq').value.trim().split(/\s+/).filter(Boolean), tag=$('#lawtag').value, level=$('#lawlevel').value;
+  const box=$('#lawlist'); box.innerHTML='';
+  let n=0;
+  for(const l of laws){
+    if(tag && !(l.tags||[]).includes(tag)) continue;
+    if(level && l.level!==level) continue;
+    const arts=l.articles||[];
+    const full=l.name+' '+arts.map(a=>(a.no||'')+' '+(a.text||'')).join('\n');
+    if(kws.length && !kws.every(k=>full.includes(k))) continue;
+    n++;
+    const hit = kws.length ? arts.filter(a=>kws.some(k=>((a.no||'')+(a.text||'')).includes(k))) : [];
+    const card=el('div',{class:'card'});
+    card.append(el('h3',{html:highlight(l.name,kws)}));
+    card.append(el('div',{class:'sub'}, [l.level, l.authority, l.modified_date?`最近異動 ${l.modified_date}`:null].filter(Boolean).join('　')));
+    card.append(el('div',{}, (l.tags||[]).map(t=>el('span',{class:'tag'},t))));
+    if(l.note) card.append(el('p',{class:'note'},l.note));
+    if(hit.length){ const d=el('article',{class:'law'}); hit.slice(0,12).forEach(a=>d.append(el('div',{class:'art',html:`<b>${esc(a.no||'')}</b> ${highlight(a.text,kws)}`}))); if(hit.length>12)d.append(el('p',{class:'note'},`…另有 ${hit.length-12} 條符合`)); card.append(el('div',{class:'note'},`符合條文 ${hit.length} 條：`), d); }
+    const det=el('details'); det.append(el('summary',{},`全文（${arts.length} 條）、沿革、來源`));
+    const body=el('div');
+    if(l.history&&l.history.length){ body.append(el('p',{},el('b',{},'沿革：')), el('ul',{}, (Array.isArray(l.history)?l.history:[l.history]).map(h=>el('li',{}, typeof h==='string'?h:`${h.date||''} ${h.summary||h.text||''}`)))); }
+    if(l.url) body.append(el('p',{class:'src',html:`來源：<a href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.url)}</a>`}));
+    const art=el('article',{class:'law'}); arts.forEach(a=>art.append(el('div',{class:'art',html:`<b>${esc(a.no||'')}</b> ${highlight(a.text,kws)}`}))); body.append(art);
+    det.append(body); card.append(det); box.append(card);
+  }
+  $('#lawcount').textContent=`${n} / ${laws.length} 部`;
+  if(!n) box.append(el('p',{class:'empty'},laws.length?'沒有符合的法規':'尚無法規資料（data/laws.json）'));
+}
+['#lawq','#lawtag','#lawlevel'].forEach(s=>$(s).addEventListener('input',renderLaws));
+
+/* ---------- 沿革與草案 ---------- */
+const tl=((DATA&&DATA.timeline)||[]).slice().sort((a,b)=>String(a.date).localeCompare(String(b.date)));
+fillSelect($('#tlactor'), tl.map(e=>e.actor)); fillSelect($('#tlcat'), tl.map(e=>e.category));
+function renderTimeline(){
+  const q=$('#tlq').value.trim(), actor=$('#tlactor').value, cat=$('#tlcat').value; const box=$('#tllist'); box.innerHTML=''; let n=0;
+  for(const e of tl){
+    if(actor&&e.actor!==actor)continue; if(cat&&e.category!==cat)continue;
+    if(q && !(e.event+' '+(e.summary||'')+' '+(e.significance||'')).includes(q))continue; n++;
+    const d=el('div',{class:'tl'});
+    d.append(el('div',{class:'date'},`${e.date}${e.roc_year?`（民國 ${e.roc_year} 年）`:''}`));
+    d.append(el('div',{},el('b',{},e.event)), el('div',{class:'actor'},[e.actor,e.category,(e.personnel_types||[]).join('、')].filter(Boolean).join('　·　')));
+    if(e.summary)d.append(el('div',{},e.summary));
+    if(e.significance)d.append(el('div',{class:'note'},'制度論觀點：'+e.significance));
+    if(e.sources&&e.sources.length)d.append(el('div',{class:'src note',html:'來源：'+e.sources.map(s=>s.url?`<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.title||s.url)}</a>${s.accessible===false?'（本環境未能取得全文）':''}`:esc(s.title||'')).join('；')}));
+    box.append(d);
+  }
+  $('#tlcount').textContent=`${n} / ${tl.length} 件`;
+  if(!n)box.append(el('p',{class:'empty'},tl.length?'沒有符合的事件':'尚無沿革資料（data/timeline.json）'));
+}
+['#tlq','#tlactor','#tlcat'].forEach(s=>$(s).addEventListener('input',renderTimeline));
+function renderDrafts(){
+  const box=$('#drafts'); box.innerHTML=''; const ds=(DATA&&DATA.drafts)||[];
+  box.append(el('h3',{},`歷次專法草案（${ds.length}）`));
+  if(!ds.length){box.append(el('p',{class:'empty'},'尚無草案資料（data/drafts.json）'));return;}
+  for(const d of ds){
+    const c=el('div',{class:'card'});
+    c.append(el('h3',{},d.name), el('div',{class:'sub'},[d.year,d.proposer,d.status].filter(Boolean).join('　·　')));
+    const det=el('details'); det.append(el('summary',{},'條文要點、爭議、與現制差異'));
+    const list=(t,arr)=>arr&&arr.length?[el('p',{},el('b',{},t)),el('ul',{},arr.map(x=>el('li',{},typeof x==='string'?x:JSON.stringify(x))))]:[];
+    det.append(...list('條文要點',d.key_provisions),...list('爭議',d.controversies));
+    if(d.comparison_with_current)det.append(el('p',{},el('b',{},'與現制差異：'),typeof d.comparison_with_current==='string'?d.comparison_with_current:JSON.stringify(d.comparison_with_current)));
+    if(d.sources&&d.sources.length)det.append(el('div',{class:'src note',html:'來源：'+d.sources.map(s=>s.url?`<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.title||s.url)}</a>`:esc(s.title||s)).join('；')}));
+    c.append(det); box.append(c);
+  }
+}
+
+/* ---------- 權益對照 ---------- */
+const cmp=(DATA&&DATA.comparison)||{meta:{personnel_types:[]},dimensions:[]};
+const cmpGroups=[...new Set(cmp.dimensions.map(d=>d.group))]; let cmpSel=new Set(cmpGroups);
+function renderCmp(){
+  const gb=$('#cmpgroups'); gb.innerHTML='';
+  cmpGroups.forEach(g=>gb.append(el('button',{class:'chip','aria-pressed':cmpSel.has(g),onclick:()=>{cmpSel.has(g)?cmpSel.delete(g):cmpSel.add(g);renderCmp();}},g)));
+  const types=cmp.meta.personnel_types||[]; const t=$('#cmptable'); t.innerHTML='';
+  const thead=el('thead'); const tr=el('tr'); tr.append(el('th',{},'項目')); types.forEach(p=>tr.append(el('th',{},p.name,el('div',{class:'note'},p.nature||'')))); thead.append(tr); t.append(thead);
+  const tb=el('tbody');
+  for(const d of cmp.dimensions){ if(!cmpSel.has(d.group))continue; const r=el('tr'); r.append(el('td',{},d.name,el('div',{class:'note'},d.group)));
+    types.forEach(p=>{const c=(d.cells||{})[p.key]||{}; r.append(el('td',{},c.text||'—',el('span',{class:'b'},(c.basis||'')+(c.verified?' ✓':''))));}); tb.append(r); }
+  t.append(tb);
+  const v=cmp.dimensions.flatMap(d=>Object.values(d.cells||{})); const ok=v.filter(c=>c.verified).length;
+  $('#cmpnote').textContent=cmp.dimensions.length?`${cmp.dimensions.length} 項 × ${types.length} 類；法源已核對 ${ok}/${v.length} 格（✓）`:'尚無對照資料';
+}
+
+/* ---------- 員額趨勢 ---------- */
+const hc=(DATA&&DATA.headcount)||[];
+const hcCatSel=new Set();
+function hcOptions(){
+  const scopes=[...new Set(hc.map(r=>r.scope))].filter(Boolean).sort();
+  const s=$('#hcscope'); s.innerHTML=''; scopes.forEach(v=>s.append(el('option',{value:v},v))); if(!scopes.length)s.append(el('option',{value:''},'（無資料）'));
+  hcGroupOptions();
+}
+function hcGroupOptions(){
+  const scope=$('#hcscope').value; const g=$('#hcgroup'); const cur=g.value; g.innerHTML='';
+  const groups=[...new Set(hc.filter(r=>r.scope===scope).map(r=>r.agency_group))].filter(Boolean).sort((a,b)=>(a==='全體'?-1:b==='全體'?1:a.localeCompare(b)));
+  groups.forEach(v=>g.append(el('option',{value:v},v))); if(groups.includes(cur))g.value=cur;
+  const m=$('#hcmeasure'); const curm=m.value; m.innerHTML='';
+  [...new Set(hc.filter(r=>r.scope===scope&&r.agency_group===g.value).map(r=>r.measure))].filter(Boolean).forEach(v=>m.append(el('option',{value:v},v))); if([...m.options].some(o=>o.value===curm))m.value=curm;
+  hcCatChips();
+}
+function hcCatChips(){
+  const scope=$('#hcscope').value, group=$('#hcgroup').value, meas=$('#hcmeasure').value;
+  const cats=[...new Set(hc.filter(r=>r.scope===scope&&r.agency_group===group&&r.measure===meas).map(r=>r.category))].filter(Boolean);
+  const box=$('#hccats'); box.innerHTML='';
+  for(const c of [...hcCatSel]) if(!cats.includes(c)) hcCatSel.delete(c);
+  if(!hcCatSel.size) cats.slice(0,4).forEach(c=>hcCatSel.add(c));
+  cats.forEach((c,i)=>box.append(el('button',{class:'chip','aria-pressed':hcCatSel.has(c),onclick:()=>{hcCatSel.has(c)?hcCatSel.delete(c):(hcCatSel.size<8&&hcCatSel.add(c));hcCatChips();}},el('i',{class:'sw',style:`background:${css(SERIES[cats.indexOf(c)%8])}`}),c)));
+  drawChart();
+}
+$('#hcscope').onchange=hcGroupOptions; $('#hcgroup').onchange=()=>{hcGroupOptions();}; $('#hcmeasure').onchange=hcCatChips;
+function drawChart(){
+  const svg=$('#hcsvg'); if(!svg||svg.closest('section').hidden)return; svg.innerHTML='';
+  const scope=$('#hcscope').value, group=$('#hcgroup').value, meas=$('#hcmeasure').value;
+  const rows=hc.filter(r=>r.scope===scope&&r.agency_group===group&&r.measure===meas&&hcCatSel.has(r.category));
+  const allCats=[...new Set(hc.filter(r=>r.scope===scope&&r.agency_group===group&&r.measure===meas).map(r=>r.category))];
+  const cats=allCats.filter(c=>hcCatSel.has(c));
+  $('#hctitle').textContent=`${scope||''}${group&&group!=='全體'?'・'+group:''}　各類人員${meas||'人數'}`;
+  $('#hcsub').textContent=rows.length?`民國 ${Math.min(...rows.map(r=>r.year))}～${Math.max(...rows.map(r=>r.year))} 年；資料來源見下方資料表`:'';
+  const lg=$('#hclegend'); lg.innerHTML=''; if(cats.length>1)cats.forEach(c=>lg.append(el('span',{style:`color:${css(SERIES[allCats.indexOf(c)%8])}`},el('i'),el('span',{style:'color:var(--ink2)'},c))));
+  renderHcTable(rows);
+  if(!rows.length){ svg.innerHTML=`<text x="50%" y="50%" text-anchor="middle" fill="${css('--muted')}">尚無資料（data/headcount.csv）</text>`; return; }
+  const W=svg.clientWidth||900,H=340,m={t:16,r:24,b:36,l:64}; svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  const years=[...new Set(rows.map(r=>r.year))].sort((a,b)=>a-b); const ymax=Math.max(...rows.map(r=>r.value))*1.08||1;
+  const x=y=>m.l+(years.length>1?(years.indexOf(y)/(years.length-1)):0.5)*(W-m.l-m.r), yy=v=>m.t+(1-v/ymax)*(H-m.t-m.b);
+  const ns='http://www.w3.org/2000/svg', S=(t,a)=>{const e=document.createElementNS(ns,t);for(const[k,v]of Object.entries(a))e.setAttribute(k,v);return e;};
+  const ticks=5; for(let i=0;i<=ticks;i++){const v=ymax/ticks*i; svg.append(S('line',{x1:m.l,x2:W-m.r,y1:yy(v),y2:yy(v),stroke:css('--grid'),'stroke-width':1})); const t=S('text',{x:m.l-8,y:yy(v)+4,'text-anchor':'end',fill:css('--muted'),'font-size':11}); t.textContent=v>=10000?(v/10000).toFixed(1)+'萬':Math.round(v).toLocaleString(); svg.append(t);}
+  svg.append(S('line',{x1:m.l,x2:W-m.r,y1:yy(0),y2:yy(0),stroke:css('--axis')}));
+  const step=Math.ceil(years.length/12); years.forEach((y,i)=>{ if(i%step&&i!==years.length-1)return; const t=S('text',{x:x(y),y:H-m.b+18,'text-anchor':'middle',fill:css('--muted'),'font-size':11}); t.textContent=y; svg.append(t); });
+  const series=cats.map(c=>({name:c,color:css(SERIES[allCats.indexOf(c)%8]),pts:years.map(y=>{const r=rows.find(r=>r.category===c&&r.year===y);return r?{y,v:r.value,r}:null;})}));
+  for(const s of series){ const seg=[]; let cur=[]; s.pts.forEach(p=>{ if(p)cur.push(p); else if(cur.length){seg.push(cur);cur=[];} }); if(cur.length)seg.push(cur);
+    seg.forEach(sg=>svg.append(S('path',{d:sg.map((p,i)=>(i?'L':'M')+x(p.y)+','+yy(p.v)).join(' '),fill:'none',stroke:s.color,'stroke-width':2,'stroke-linejoin':'round','stroke-linecap':'round'})));
+    s.pts.filter(Boolean).forEach(p=>svg.append(S('circle',{cx:x(p.y),cy:yy(p.v),r:4,fill:s.color,stroke:css('--surface'),'stroke-width':2})));
+    const last=[...s.pts].reverse().find(Boolean); if(last&&cats.length<=4){const t=S('text',{x:x(last.y)+8,y:yy(last.v)+4,fill:css('--ink2'),'font-size':11});t.textContent=fmt(last.v);svg.append(t);}
+  }
+  const cross=S('line',{y1:m.t,y2:H-m.b,stroke:css('--axis'),'stroke-width':1,visibility:'hidden'}); svg.append(cross);
+  const tip=$('#hctip');
+  svg.onpointermove=e=>{ const rect=svg.getBoundingClientRect(); const px=(e.clientX-rect.left)*W/rect.width; let best=years[0],bd=1e9; years.forEach(y=>{const d=Math.abs(x(y)-px);if(d<bd){bd=d;best=y;}}); cross.setAttribute('x1',x(best));cross.setAttribute('x2',x(best));cross.setAttribute('visibility','visible');
+    tip.innerHTML=''; tip.append(el('div',{},el('b',{},`民國 ${best} 年`))); series.forEach(s=>{const p=s.pts.find(p=>p&&p.y===best); tip.append(el('div',{},el('span',{class:'k',style:`background:${s.color}`}),el('b',{},p?fmt(p.v):'—'),el('span',{style:'color:var(--ink2)'},' '+s.name)));});
+    tip.style.display='block'; const cr=svg.closest('.chartcard').getBoundingClientRect(); let lx=e.clientX-cr.left+12; if(lx+tip.offsetWidth>cr.width-8)lx=e.clientX-cr.left-tip.offsetWidth-12; tip.style.left=lx+'px'; tip.style.top=(e.clientY-cr.top-10)+'px'; };
+  svg.onpointerleave=()=>{tip.style.display='none';cross.setAttribute('visibility','hidden');};
+}
+function renderHcTable(rows){
+  const t=$('#hctable'); t.innerHTML=''; if(!rows.length)return;
+  t.append(el('thead',{},el('tr',{},['民國年','類別','數值','單位','來源','備註'].map((h,i)=>el('th',{class:i===2?'num':''},h)))));
+  const tb=el('tbody'); rows.slice().sort((a,b)=>a.year-b.year||a.category.localeCompare(b.category)).forEach(r=>tb.append(el('tr',{},el('td',{},r.year),el('td',{},r.category),el('td',{class:'num'},fmt(r.value)),el('td',{},r.unit||'人'),el('td',{class:'src',html:r.source_url?`<a href="${esc(r.source_url)}" target="_blank" rel="noopener">${esc(r.source_name||r.source_url)}</a>`:esc(r.source_name||'')}),el('td',{},r.note||'')))); t.append(tb);
+}
+window.addEventListener('resize',()=>drawChart());
+
+/* ---------- 地方樣態 ---------- */
+const lg=(DATA&&DATA.local_gov)||[];
+const yes=v=>v&&/^(有|是|true)/.test(String(typeof v==='object'?v.status||v.exists||'':v));
+function renderLocal(){
+  const q=$('#lgq').value.trim(), f=$('#lgfilter').value; const t=$('#lgtable'); t.innerHTML=''; const cards=$('#lgcards'); cards.innerHTML=''; let n=0;
+  t.append(el('thead',{},el('tr',{},['縣市','契約人力類型','隨首長進退','適用勞基法','總量管制','核心／公權力限制','規定數'].map(h=>el('th',{},h)))));
+  const tb=el('tbody');
+  for(const g of lg){
+    const blob=JSON.stringify(g); if(q&&!blob.includes(q))continue;
+    const pol=g.political_appointee_clause, lsa=g.labor_standards_act;
+    if(f==='political'&&!yes(pol))continue; if(f==='caps'&&!(g.caps_or_limits&&g.caps_or_limits!=='不明'&&g.caps_or_limits!=='無'))continue; if(f==='core'&&!(g.core_noncore_rule&&g.core_noncore_rule!=='不明'&&g.core_noncore_rule!=='無'))continue; if(f==='lsa'&&!yes(lsa))continue; n++;
+    const txt=v=>v==null?'—':typeof v==='object'?(v.status||v.exists||'')+(v.content?'：'+v.content:''):String(v);
+    tb.append(el('tr',{},el('td',{},g.name),el('td',{},(g.contract_types||[]).join('、')),el('td',{class:yes(pol)?'ok':''},txt(pol)),el('td',{},txt(lsa)),el('td',{},txt(g.caps_or_limits)),el('td',{},txt(g.core_noncore_rule)),el('td',{class:'num'},(g.regulations||[]).length)));
+    const c=el('div',{class:'card'}); c.append(el('h3',{},`${g.name}（${g.type||''}）`));
+    if(g.salary_scheme)c.append(el('p',{},el('b',{},'薪資制度：'),txt(g.salary_scheme)));
+    if(g.notable_practices)c.append(el('p',{},el('b',{},'特殊作法：'),Array.isArray(g.notable_practices)?g.notable_practices.join('；'):txt(g.notable_practices)));
+    if(g.headcount&&g.headcount.length)c.append(el('p',{},el('b',{},'人數：'),g.headcount.map(h=>`${h.year} ${h.category} ${fmt(h.value)}（${h.source||''}）`).join('；')));
+    if(g.regulations&&g.regulations.length){const d=el('details');d.append(el('summary',{},`規定 ${g.regulations.length} 件`));d.append(el('ul',{},g.regulations.map(r=>{const link=r.url?`<a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.title)}</a>`:esc(r.title); const yr=r.year?'（'+esc(r.year)+'）':''; const na=r.accessible===false?'<span class="na">　全文未取得</span>':''; const sm=r.summary?'<br>'+esc(r.summary):''; return el('li',{class:'src',html:link+yr+na+sm});}))); c.append(d);}
+    cards.append(c);
+  }
+  t.append(tb); $('#lgcount').textContent=`${n} / ${lg.length} 縣市`;
+  if(!lg.length)cards.append(el('p',{class:'empty'},'尚無地方資料（data/local_gov.json）'));
+}
+['#lgq','#lgfilter'].forEach(s=>$(s).addEventListener('input',renderLocal));
+
+/* ---------- 啟動 ---------- */
+if(DATA){ renderLaws(); renderTimeline(); renderDrafts(); renderCmp(); hcOptions(); renderLocal(); showTab(initTab); }
+</script>
+</body>
+</html>

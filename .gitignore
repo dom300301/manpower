@@ -16,3 +16,5 @@ qa-search/report.txt
 org-compare/moj_cache/
 org-compare/pending_updates.json
 org-compare/更新偵測報告.md
+# 契約人力研究：下載快取與暫存
+contract-manpower/raw/
