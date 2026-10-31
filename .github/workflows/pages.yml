@@ -1,0 +1,30 @@
+# 把 org-compare/output/index.html 發布到 GitHub Pages（線上查詢版）
+# 啟用方式（一次）：GitHub 專案 → Settings → Pages → Build and deployment → Source 選「GitHub Actions」
+# 之後只要 main 或預設分支（claude/dreamy-davinci-0xuicp）的 org-compare/output/index.html 有更新，就會自動重新發布。
+name: 發布組織法規查詢網頁
+on:
+  push:
+    branches: [main, claude/dreamy-davinci-0xuicp]
+    paths: ['org-compare/output/index.html']
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages
+  cancel-in-progress: true
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - run: mkdir -p site && cp org-compare/output/index.html site/index.html
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - id: deployment
+        uses: actions/deploy-pages@v4

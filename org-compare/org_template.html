@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>組織法規與編制表查詢</title>
+<style>
+:root{
+  --bg:#f5f6f8; --panel:#fff; --text:#1c1e21; --muted:#6b7280; --line:#e2e5ea;
+  --accent:#1f5fa8; --accent-soft:#e6eef9; --mark:#fff2a8; --mark-text:#000;
+  --chip:#eef0f3; --chip-on:#1f5fa8; --chip-on-text:#fff; --danger:#b4232c; --ok:#1d6b3a; --warn:#8a5a00;
+  --target:#fff4d6; --fs:15px;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#121417; --panel:#1b1e23; --text:#e7e9ee; --muted:#9aa3b2; --line:#2b3038;
+  --accent:#7fb1f0; --accent-soft:#1d2a3d; --mark:#8a6d00; --mark-text:#fff;
+  --chip:#262b33; --chip-on:#7fb1f0; --chip-on-text:#0f1319; --ok:#8fd6a8; --warn:#e8c57a; --target:#3a3115;
+}}
+:root[data-theme="dark"]{
+  --bg:#121417; --panel:#1b1e23; --text:#e7e9ee; --muted:#9aa3b2; --line:#2b3038;
+  --accent:#7fb1f0; --accent-soft:#1d2a3d; --mark:#8a6d00; --mark-text:#fff;
+  --chip:#262b33; --chip-on:#7fb1f0; --chip-on-text:#0f1319; --ok:#8fd6a8; --warn:#e8c57a; --target:#3a3115;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--bg);color:var(--text);font:var(--fs)/1.6 -apple-system,"PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif}
+a{color:var(--accent)}
+button,select,input{font:inherit;color:inherit}
+button{background:none;border:1px solid var(--line);border-radius:8px;padding:4px 10px;cursor:pointer}
+button:hover{border-color:var(--accent)}
+button.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+input[type=search],input[type=text],input[type=number],select{padding:7px 10px;border:1.5px solid var(--line);border-radius:8px;background:var(--bg);color:var(--text)}
+input:focus,select:focus{outline:none;border-color:var(--accent)}
+mark{background:var(--mark);color:var(--mark-text);padding:0 1px;border-radius:2px}
+header{position:sticky;top:0;z-index:5;background:var(--panel);border-bottom:1px solid var(--line);padding:8px 16px}
+.topbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.topbar h1{font-size:1.1em;margin:0;white-space:nowrap}
+.meta{color:var(--muted);font-size:.82em}
+.spacer{flex:1}
+.tabs{display:flex;gap:4px;margin-top:6px}
+.tabs button{border:none;border-bottom:3px solid transparent;border-radius:0;padding:6px 14px;font-weight:600;color:var(--muted)}
+.tabs button.on{color:var(--accent);border-bottom-color:var(--accent)}
+.page{display:none;padding:12px 16px 60px}
+.page.on{display:block}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0;align-items:center}
+.chips .lbl{color:var(--muted);font-size:.85em;white-space:nowrap}
+.chip{background:var(--chip);border:none;border-radius:999px;padding:3px 11px;font-size:.88em}
+.chip.on{background:var(--chip-on);color:var(--chip-on-text)}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:6px 0}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin-bottom:12px}
+.box h3{margin:0 0 8px;font-size:1em;color:var(--accent);display:flex;align-items:center;gap:8px}
+.box h3 .spacer{flex:1}
+.grid2{display:grid;grid-template-columns:minmax(300px,380px) 1fr;gap:12px}
+@media (max-width:900px){.grid2{display:block}}
+#alist{max-height:calc(100vh - 220px);overflow:auto}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px 12px;margin-bottom:6px;cursor:pointer}
+.card:hover,.card.active{border-color:var(--accent)}
+.card.active{background:var(--accent-soft)}
+.card .t{font-weight:700}
+.card .s{color:var(--muted);font-size:.85em}
+.badge{display:inline-block;font-size:.75em;padding:1px 7px;border-radius:6px;background:var(--chip);color:var(--muted);margin-right:4px}
+.badge.lv{background:var(--accent-soft);color:var(--accent)}
+.badge.warn{background:#fff1d6;color:var(--warn)}
+.badge.ok{background:#e8f5ec;color:var(--ok)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin:8px 0}
+.kpi{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+.kpi .v{font-size:1.4em;font-weight:700}
+.kpi .k{color:var(--muted);font-size:.8em}
+table{border-collapse:collapse;width:100%;font-size:.9em}
+th,td{border:1px solid var(--line);padding:4px 8px;vertical-align:top;text-align:left}
+th{background:var(--bg);position:sticky;top:0;cursor:pointer;white-space:nowrap}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+tr.target td{background:var(--target);font-weight:700}
+tr.stat td{background:var(--accent-soft);font-weight:600}
+.tablewrap{overflow:auto;max-height:70vh;border:1px solid var(--line);border-radius:8px}
+.dtitle{font-size:1.3em;font-weight:700;margin:4px 0}
+details summary{cursor:pointer;color:var(--accent);font-weight:600;margin:6px 0}
+.art{white-space:pre-wrap;margin:4px 0 10px;padding-left:10px;border-left:3px solid var(--line)}
+.art b{color:var(--accent)}
+.muted{color:var(--muted)}
+.small{font-size:.85em}
+.cols{display:flex;gap:4px;flex-wrap:wrap}
+.cols label{font-size:.82em;background:var(--chip);border-radius:6px;padding:2px 6px;cursor:pointer;white-space:nowrap}
+.cols label.on{background:var(--chip-on);color:var(--chip-on-text)}
+.empty{color:var(--muted);padding:30px;text-align:center}
+#loading{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:99;color:var(--muted)}
+footer{color:var(--muted);font-size:.8em;text-align:center;padding:10px}
+@media print{header,.chips,.row,#alist{display:none!important}.page{display:block!important}}
+</style>
+</head>
+<body>
+<div id="loading">資料載入中…</div>
+<header id="hdr">
+  <div class="topbar">
+    <h1>組織法規與編制表查詢</h1>
+    <span class="meta" id="buildinfo"></span>
+    <span class="spacer"></span>
+    <button id="fontBtn" title="調整字級">字級</button>
+    <button id="themeBtn" title="深淺色">深淺色</button>
+  </div>
+  <div class="tabs">
+    <button data-tab="search" class="on">機關查詢</button>
+    <button data-tab="compare">同級比對</button>
+    <button data-tab="info">指標說明與資料狀態</button>
+  </div>
+</header>
+
+<section class="page on" id="page-search">
+  <div class="row">
+    <input id="q" type="search" placeholder="輸入機關名稱、部會或業務關鍵字（例：海洋 保育）" autocomplete="off" style="flex:1;min-width:240px">
+    <button id="clearBtn">清除</button>
+  </div>
+  <div class="chips" id="lvChips"></div>
+  <div class="chips" id="kindChips"></div>
+  <div class="chips" id="deptChips"></div>
+  <div class="grid2">
+    <div><div class="muted small" id="acount"></div><div id="alist"></div></div>
+    <div id="adetail"><div class="empty">左側選擇機關。</div></div>
+  </div>
+</section>
+
+<section class="page" id="page-compare">
+  <div class="box">
+    <h3>1. 目標機關</h3>
+    <div class="row">
+      <input id="cq" type="search" placeholder="輸入機關名稱關鍵字後選取" autocomplete="off" style="flex:1;min-width:240px" list="cqlist">
+      <datalist id="cqlist"></datalist>
+      <span id="ctarget" class="muted"></span>
+    </div>
+  </div>
+  <div class="box">
+    <h3>2. 比較群組 <span class="spacer"></span><span class="muted small" id="gcount"></span></h3>
+    <div class="chips" id="cLv"><span class="lbl">層級</span></div>
+    <div class="chips" id="cKind"><span class="lbl">類型</span></div>
+    <div class="chips" id="cDept"><span class="lbl">部會</span></div>
+    <div class="row">
+      <span class="lbl muted small">員額範圍</span>
+      <input id="nmin" type="number" placeholder="最少" style="width:90px"> ～ <input id="nmax" type="number" placeholder="最多" style="width:90px">
+      <button id="nearBtn" class="small" title="以目標機關員額的 ±50% 為範圍">目標 ±50%</button>
+      <span class="lbl muted small">業務關鍵字（組織法掌理事項）</span>
+      <input id="dutyq" type="text" placeholder="例：保育 污染" style="width:180px">
+    </div>
+    <div class="chips" id="cExcl"><span class="lbl">排除</span></div>
+  </div>
+  <div class="box">
+    <h3>3. 比對結果 <span class="spacer"></span>
+      <button id="csvBtn" class="small">匯出 CSV</button>
+      <button id="copyBtn" class="small">複製表格</button></h3>
+    <div class="cols" id="colPick"></div>
+    <div class="tablewrap" id="ctable"><div class="empty">請先選擇目標機關。</div></div>
+    <div class="muted small" style="margin-top:6px">黃底列為目標機關；「中位數」「平均」列為比較群組（不含目標）的統計。點欄位名稱可排序。</div>
+  </div>
+</section>
+
+<section class="page" id="page-info">
+  <div class="box"><h3>指標定義</h3><div id="defs"></div></div>
+  <div class="box"><h3>資料版本</h3><div id="version"></div></div>
+  <div class="box"><h3>驗算狀態非「相符」的機關（使用其數字時請留意）</h3><div id="flagged"></div></div>
+  <div class="box"><h3>使用說明</h3>
+    <ol class="small">
+      <li>「機關查詢」：輸入名稱或業務關鍵字，點選機關後可看結構指標、編制表明細、組織法規與處務規程條文，並有法規資料庫連結。</li>
+      <li>「同級比對」：先選目標機關，系統預設以同層級、同類型（例如三級「署」）為比較群組，可再用部會、員額範圍、業務關鍵字縮小，或排除醫療、警消、軍事等特殊機關。</li>
+      <li>比對表可勾選要顯示的指標、點欄名排序、匯出 CSV 貼到 Excel。</li>
+      <li>資料全部取自全國法規資料庫（條文與編制表 PDF），未經改寫；預算員額、現有員額尚未納入。</li>
+    </ol>
+  </div>
+</section>
+<footer>離線單檔版・資料內嵌於本檔案，不連網亦可使用；上傳主機即為線上版</footer>
+
+<script id="data" type="text/plain" data-mode="/*__MODE__*/">/*__DATA__*/</script>
+<script>
+(async function(){
+const el = document.getElementById('data');
+let DATA;
+if (el.dataset.mode === 'gzip') {
+  if (!('DecompressionStream' in window)) { document.getElementById('loading').textContent = '此瀏覽器版本過舊，無法解壓資料。請改用 Edge／Chrome 80 以上，或請建檔人員以 --no-compress 重新建檔。'; return; }
+  const bin = Uint8Array.from(atob(el.textContent.trim()), c => c.charCodeAt(0));
+  const ds = new DecompressionStream('gzip');
+  const text = await new Response(new Blob([bin]).stream().pipeThrough(ds)).text();
+  DATA = JSON.parse(text);
+} else {
+  DATA = JSON.parse(el.textContent);
+}
+el.remove();
+document.getElementById('loading').remove();
+
+const A = DATA.agencies.agencies, DEFS = DATA.agencies.metric_definitions, P = DATA.positions, ART = DATA.articles, META = DATA.meta;
+const byName = Object.fromEntries(A.map(a => [a.機關, a]));
+const posBy = {}; P.forEach(p => (posBy[p.機關] = posBy[p.機關] || []).push(p));
+const artBy = {}; ART.forEach(x => (artBy[x.機關] = artBy[x.機關] || []).push(x));
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fmt = v => v == null ? '' : (typeof v === 'number' && !Number.isInteger(v) ? (v * 100).toFixed(1) + '%' : v);
+
+// ---------- 偏好
+const pref = { get(k,d){ try{ const v=localStorage.getItem('org_'+k); return v===null?d:JSON.parse(v);}catch(e){return d;} }, set(k,v){ try{ localStorage.setItem('org_'+k, JSON.stringify(v)); }catch(e){} } };
+const fontSizes=[15,17,19,22]; let fi=pref.get('font',0);
+const applyFont=()=>document.documentElement.style.setProperty('--fs', fontSizes[fi]+'px'); applyFont();
+$('#fontBtn').onclick=()=>{ fi=(fi+1)%fontSizes.length; pref.set('font',fi); applyFont(); };
+const theme=pref.get('theme',null); if(theme) document.documentElement.dataset.theme=theme;
+$('#themeBtn').onclick=()=>{ const cur=document.documentElement.dataset.theme||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'); const n=cur==='dark'?'light':'dark'; document.documentElement.dataset.theme=n; pref.set('theme',n); };
+$('#buildinfo').textContent = `建檔 ${DATA.built}・${A.length} 機關・${P.length} 筆編制・${ART.length} 條條文`;
+
+// ---------- 分頁
+document.querySelectorAll('.tabs button').forEach(b => b.onclick = () => {
+  document.querySelectorAll('.tabs button').forEach(x => x.classList.toggle('on', x === b));
+  document.querySelectorAll('.page').forEach(p => p.classList.toggle('on', p.id === 'page-' + b.dataset.tab));
+});
+
+// ---------- 特殊類別（排除用）
+const SPECIAL = {
+  '醫療機構': a => /醫院|療養院|分院|醫療|衛生福利部.*(之家|教養院|兒童)/.test(a.機關) || /^(臺北|臺中|高雄|屏東)榮民總醫院/.test(a.機關),
+  '警察／消防／海巡': a => /警察|警政署|消防署|海巡署/.test(a.機關),
+  '軍事／國防': a => /國防部|軍/.test(a.機關) && !/國防部$/.test(a.機關),
+  '矯正機關': a => /監獄|看守所|戒治所|觀護所|矯正學校|明陽中學|誠正中學|敦品中學/.test(a.機關),
+  '駐外機構': a => /駐外/.test(a.機關),
+  '學校／學院': a => /大學|學校|學院/.test(a.機關),
+  '國稅局分局／稽徵所': a => /國稅局.+分局|稽徵所/.test(a.機關),
+  '驗算狀態非相符': a => !/^相符/.test(a.驗算狀態 || ''),
+};
+const specialTags = a => Object.keys(SPECIAL).filter(k => SPECIAL[k](a));
+
+// ---------- 指標欄位（比對表）
+const COLS = [
+  ['部會','部會',0],['層級','層級',1],['類型','類型',0],['員額合計','員額合計',1],['首長職等','首長職等',0],['副首長數','副首長數',1],['主任秘書','主任秘書',1],
+  ['單位數','單位數',1],['組長數','組長數',1],['副組長數','副組長數',1],['處長數','處長數',1],['副處長數','副處長數',1],['科長數','科長數',1],['股長數','股長數',1],
+  ['專門委員','專門委員',1],['簡任員額','簡任員額',1],['簡任比','簡任比',1],['簡任主管','簡任主管',1],['簡任非主管','簡任非主管',1],['簡任非主管比','簡任非主管比',1],
+  ['薦任員額','薦任員額',1],['委任員額','委任員額',1],['其他官等員額','其他官等員額',1],['主管員額','主管員額',1],['主管比','主管比',1],
+  ['幕僚單位員額','幕僚單位員額',1],['幕僚比','幕僚比',1],['暫列職稱數','暫列職稱數',1],['得列人數','得列人數',1],['組織法規最新異動日','組織法規最新異動日',0],['驗算狀態','驗算狀態',0]
+];
+const DEFAULT_COLS = ['部會','層級','員額合計','首長職等','副首長數','主任秘書','單位數','組長數','副組長數','科長數','專門委員','簡任員額','簡任非主管','簡任非主管比','主管比','幕僚比','驗算狀態'];
+const val = (a, k) => (k in a.指標) ? a.指標[k] : a[k];
+
+// =====================================================================
+// 機關查詢
+// =====================================================================
+const S = { q:'', lv:null, kind:null, dept:null, cur:null };
+const kinds = [...new Set(A.map(a=>a.類型))].sort((x,y)=>A.filter(a=>a.類型===y).length-A.filter(a=>a.類型===x).length);
+const depts = [...new Set(A.map(a=>a.部會))].sort();
+function chips(host, label, items, cur, onpick, countOf){
+  host.innerHTML = `<span class="lbl">${label}</span>`;
+  items.forEach(it => { const b=document.createElement('button'); b.className='chip'+(cur===it?' on':''); b.textContent = countOf? `${it} ${countOf(it)}` : it; b.onclick=()=>onpick(it); host.appendChild(b); });
+}
+function renderSearchChips(){
+  chips($('#lvChips'),'層級',[1,2,3,4],S.lv,v=>{S.lv=S.lv===v?null:v;renderSearchChips();searchAgencies();},v=>A.filter(a=>a.層級===v).length);
+  chips($('#kindChips'),'類型',kinds,S.kind,v=>{S.kind=S.kind===v?null:v;renderSearchChips();searchAgencies();});
+  chips($('#deptChips'),'部會',depts,S.dept,v=>{S.dept=S.dept===v?null:v;renderSearchChips();searchAgencies();});
+}
+function matchTerms(a, terms){
+  if(!terms.length) return true;
+  const hay = a.機關 + ' ' + a.部會 + ' ' + (a.掌理事項||'') + ' ' + (a.組織法規名稱||'');
+  return terms.every(t => hay.includes(t));
+}
+function searchAgencies(){
+  const terms = S.q.trim().split(/[\s　]+/).filter(Boolean);
+  const score = a => terms.length ? (terms.every(t=>a.機關.includes(t)) ? 0 : (terms.some(t=>a.機關.includes(t)) ? 1 : 2)) : 0;
+  const res = A.filter(a => (S.lv==null||a.層級===S.lv) && (!S.kind||a.類型===S.kind) && (!S.dept||a.部會===S.dept) && matchTerms(a,terms))
+    .map(a=>[score(a),a]).sort((x,y)=>x[0]-y[0] || x[1].層級-y[1].層級 || x[1].機關.localeCompare(y[1].機關,'zh-Hant')).map(x=>x[1]);
+  $('#acount').textContent = `${res.length} 個機關`;
+  const host=$('#alist'); host.innerHTML='';
+  res.slice(0,400).forEach(a=>{
+    const d=document.createElement('div'); d.className='card'+(S.cur===a.機關?' active':'');
+    d.innerHTML = `<div class="t">${esc(a.機關)}</div><div class="s"><span class="badge lv">${a.層級}級</span><span class="badge">${esc(a.類型)}</span>${esc(a.部會)}・員額 ${a.指標.員額合計}${/^相符/.test(a.驗算狀態||'')?'':`<span class="badge warn">${esc(a.驗算狀態||'無資料')}</span>`}</div>`;
+    d.onclick=()=>{ S.cur=a.機關; showAgency(a); document.querySelectorAll('#alist .card').forEach(c=>c.classList.toggle('active',c===d)); };
+    host.appendChild(d);
+  });
+  if(res.length>400) host.insertAdjacentHTML('beforeend','<div class="muted small">只顯示前 400 筆，請縮小條件。</div>');
+}
+function kpi(k,v){ return `<div class="kpi"><div class="v">${fmt(v)}</div><div class="k">${k}</div></div>`; }
+function showAgency(a){
+  const m=a.指標, pos=posBy[a.機關]||[], arts=artBy[a.機關]||[];
+  const org=arts.filter(x=>x.法規類別==='組織法規'), proc=arts.filter(x=>x.法規類別!=='組織法規');
+  const tags=specialTags(a);
+  let h=`<div class="dtitle">${esc(a.機關)}</div>
+  <div class="muted small"><span class="badge lv">${a.層級}級</span><span class="badge">${esc(a.類型)}</span>機關代碼 ${esc(a.機關代碼)}・隸屬 ${esc(a.隸屬||'—')}・${esc(a.部會)}${tags.length?'・'+tags.map(t=>`<span class="badge">${t}</span>`).join(''):''}</div>
+  <div class="muted small">組織法規：<a href="${esc(a.組織法規連結)}" target="_blank">${esc(a.組織法規名稱)}</a>（最新異動 ${esc(a.組織法規最新異動日||'—')}）
+  ${a.編制表來源?`・<a href="${esc(a.編制表來源)}" target="_blank">編制表 PDF</a>`:'・無編制表'}・驗算狀態：<b>${esc(a.驗算狀態||'無')}</b>${a.分表說明?`・${esc(a.分表說明)}`:''}</div>
+  <div class="row" style="margin-top:8px"><button class="primary" id="toCompare">以此機關進行同級比對</button></div>
+  <div class="kpis">${kpi('編制員額合計',m.員額合計)}${kpi('首長職等',m.首長職等||'—')}${kpi('副首長',m.副首長數+(m.副首長兼任數?`（兼${m.副首長兼任數}）`:''))}${kpi('主任秘書',m.主任秘書)}${kpi('單位數',m.單位數)}
+  ${kpi('組長／副組長',m.組長數+' / '+m.副組長數)}${kpi('處長／副處長',m.處長數+' / '+m.副處長數)}${kpi('科長',m.科長數)}${kpi('專門委員',m.專門委員)}
+  ${kpi('簡任員額（比）',m.簡任員額+'（'+fmt(m.簡任比)+'）')}${kpi('簡任非主管（比）',m.簡任非主管+'（'+fmt(m.簡任非主管比)+'）')}${kpi('簡／薦／委／其他',[m.簡任員額,m.薦任員額,m.委任員額,m.其他官等員額].join(' / '))}
+  ${kpi('主管員額（比）',m.主管員額+'（'+fmt(m.主管比)+'）')}${kpi('幕僚單位員額（比）',m.幕僚單位員額+'（'+fmt(m.幕僚比)+'）')}${kpi('暫列職稱數',m.暫列職稱數)}${kpi('得列人數',m.得列人數)}</div>`;
+  if(a.掌理事項) h+=`<details open><summary>掌理事項（組織法規）</summary><div class="art">${esc(a.掌理事項)}</div></details>`;
+  h+=`<details open><summary>編制表明細（${pos.length} 列）</summary><div class="tablewrap" style="max-height:50vh"><table><thead><tr><th>序</th><th>單位</th><th>職稱</th><th>官等</th><th>職等</th><th class="num">員額</th><th class="num">兼任</th><th>備註</th></tr></thead><tbody>`+
+    pos.map(p=>`<tr><td>${p.序??''}${p.分表?`<span class="badge">表${esc(p.分表)}</span>`:''}</td><td>${esc(p.單位)}</td><td>${esc(p.職稱)}</td><td>${esc(p.官等)}</td><td>${esc(p.職等)}</td><td class="num">${p.員額??'<span class="muted">—</span>'}</td><td class="num">${p.兼任??''}</td><td class="small">${esc(p.備註)}</td></tr>`).join('')+`</tbody></table></div></details>`;
+  const artHtml = list => list.map(x=>`<div class="art"><b>${esc(x.條號)}</b>　${esc(x.條文內容)}</div>`).join('');
+  if(org.length) h+=`<details><summary>${esc(org[0].法規名稱)}（${org.length} 條，異動 ${esc(org[0].最新異動日)}）</summary>${artHtml(org)}</details>`;
+  if(proc.length) h+=`<details><summary>${esc(proc[0].法規名稱)}（${proc.length} 條，異動 ${esc(proc[0].最新異動日)}）</summary>${artHtml(proc)}</details>`;
+  $('#adetail').innerHTML=h;
+  $('#toCompare').onclick=()=>{ setTarget(a.機關); document.querySelector('.tabs button[data-tab=compare]').click(); };
+  if(matchMedia('(max-width:900px)').matches) $('#adetail').scrollIntoView({behavior:'smooth'});
+}
+$('#q').addEventListener('input',e=>{S.q=e.target.value;searchAgencies();});
+$('#clearBtn').onclick=()=>{S.q='';S.lv=S.kind=S.dept=null;$('#q').value='';renderSearchChips();searchAgencies();};
+renderSearchChips(); searchAgencies();
+
+// =====================================================================
+// 同級比對
+// =====================================================================
+const C = { target:null, lv:new Set(), kind:new Set(), dept:null, nmin:null, nmax:null, duty:'', excl:new Set(['驗算狀態非相符']), cols:new Set(pref.get('cols',DEFAULT_COLS)), sort:null, asc:true };
+$('#cqlist').innerHTML = A.map(a=>`<option value="${esc(a.機關)}">`).join('');
+$('#cq').addEventListener('change',e=>{ if(byName[e.target.value]) setTarget(e.target.value); });
+$('#cq').addEventListener('keydown',e=>{ if(e.key==='Enter'){ const v=e.target.value.trim(); const hit=byName[v]||A.find(a=>a.機關.includes(v)); if(hit) setTarget(hit.機關); } });
+function setTarget(name){
+  const a=byName[name]; C.target=a; $('#cq').value=name;
+  C.lv=new Set([a.層級]); C.kind=new Set([a.類型]); C.dept=null; C.nmin=C.nmax=null; $('#nmin').value=$('#nmax').value='';
+  $('#ctarget').innerHTML=`已選：<b>${esc(a.機關)}</b>（${a.層級}級・${esc(a.類型)}・員額 ${a.指標.員額合計}）`;
+  renderCompareChips(); renderCompare();
+}
+function multiChips(host,label,items,set,countOf){
+  host.innerHTML=`<span class="lbl">${label}</span>`;
+  items.forEach(it=>{ const b=document.createElement('button'); b.className='chip'+(set.has(it)?' on':''); b.textContent=countOf?`${it} ${countOf(it)}`:it; b.onclick=()=>{ set.has(it)?set.delete(it):set.add(it); renderCompareChips(); renderCompare(); }; host.appendChild(b); });
+}
+function renderCompareChips(){
+  multiChips($('#cLv'),'層級',[1,2,3,4],C.lv);
+  multiChips($('#cKind'),'類型',kinds,C.kind);
+  chips($('#cDept'),'部會',['全部',...depts],C.dept||'全部',v=>{C.dept=v==='全部'?null:v;renderCompareChips();renderCompare();});
+  multiChips($('#cExcl'),'排除',Object.keys(SPECIAL),C.excl);
+}
+function groupOf(){
+  const t=C.target; if(!t) return [];
+  const terms=C.duty.trim().split(/[\s　]+/).filter(Boolean);
+  return A.filter(a => a!==t && (!C.lv.size||C.lv.has(a.層級)) && (!C.kind.size||C.kind.has(a.類型)) && (!C.dept||a.部會===C.dept)
+    && (C.nmin==null||a.指標.員額合計>=C.nmin) && (C.nmax==null||a.指標.員額合計<=C.nmax)
+    && (!terms.length||terms.every(k=>(a.掌理事項||'').includes(k)))
+    && ![...C.excl].some(k=>SPECIAL[k](a)));
+}
+function median(arr){ const s=arr.filter(v=>typeof v==='number').sort((x,y)=>x-y); if(!s.length) return null; const m=Math.floor(s.length/2); return s.length%2?s[m]:(s[m-1]+s[m])/2; }
+function mean(arr){ const s=arr.filter(v=>typeof v==='number'); return s.length? s.reduce((x,y)=>x+y,0)/s.length : null; }
+function renderColPick(){
+  const host=$('#colPick'); host.innerHTML='';
+  COLS.forEach(([k])=>{ const l=document.createElement('label'); l.className=C.cols.has(k)?'on':''; l.textContent=k; l.onclick=()=>{ C.cols.has(k)?C.cols.delete(k):C.cols.add(k); pref.set('cols',[...C.cols]); renderColPick(); renderCompare(); }; host.appendChild(l); });
+}
+let lastRows=[];
+function renderCompare(){
+  const t=C.target; if(!t){ $('#ctable').innerHTML='<div class="empty">請先選擇目標機關。</div>'; return; }
+  let g=groupOf(); $('#gcount').textContent=`比較群組 ${g.length} 個機關（不含目標）`;
+  const cols=COLS.filter(([k])=>C.cols.has(k));
+  if(C.sort){ const [k,,num]=COLS.find(c=>c[0]===C.sort); g=g.slice().sort((x,y)=>{ const a=val(x,k),b=val(y,k); if(a==null) return 1; if(b==null) return -1; return (num? a-b : String(a).localeCompare(String(b),'zh-Hant'))*(C.asc?1:-1); }); }
+  else g=g.slice().sort((x,y)=>Math.abs(x.指標.員額合計-t.指標.員額合計)-Math.abs(y.指標.員額合計-t.指標.員額合計));
+  const head=`<tr><th>機關</th>${cols.map(([k,,n])=>`<th class="${n?'num':''}" data-k="${k}">${k}${C.sort===k?(C.asc?' ▲':' ▼'):''}</th>`).join('')}</tr>`;
+  const row=(a,cls)=>`<tr class="${cls||''}"><td>${esc(a.機關)}</td>${cols.map(([k,,n])=>`<td class="${n?'num':''}">${fmt(val(a,k))}</td>`).join('')}</tr>`;
+  const statRow=(label,fn)=>`<tr class="stat"><td>${label}</td>${cols.map(([k,,n])=>{ if(!n||k==='層級') return '<td></td>'; const v=fn(g.map(a=>val(a,k))); return `<td class="num">${v==null?'':(Number.isInteger(v)||k.endsWith('比')?fmt(k.endsWith('比')?v:v):v.toFixed(1))}</td>`; }).join('')}</tr>`;
+  $('#ctable').innerHTML=`<table><thead>${head}</thead><tbody>${row(t,'target')}${statRow('中位數',median)}${statRow('平均',mean)}${g.map(a=>row(a)).join('')}</tbody></table>`;
+  document.querySelectorAll('#ctable th[data-k]').forEach(th=>th.onclick=()=>{ const k=th.dataset.k; if(C.sort===k) C.asc=!C.asc; else {C.sort=k;C.asc=true;} renderCompare(); });
+  lastRows=[['機關',...cols.map(c=>c[0])],[t.機關,...cols.map(([k])=>fmt(val(t,k)))],...g.map(a=>[a.機關,...cols.map(([k])=>fmt(val(a,k)))])];
+}
+$('#nmin').oninput=e=>{C.nmin=e.target.value===''?null:+e.target.value;renderCompare();};
+$('#nmax').oninput=e=>{C.nmax=e.target.value===''?null:+e.target.value;renderCompare();};
+$('#dutyq').oninput=e=>{C.duty=e.target.value;renderCompare();};
+$('#nearBtn').onclick=()=>{ if(!C.target) return; const n=C.target.指標.員額合計; C.nmin=Math.floor(n*0.5); C.nmax=Math.ceil(n*1.5); $('#nmin').value=C.nmin; $('#nmax').value=C.nmax; renderCompare(); };
+$('#csvBtn').onclick=()=>{ if(!lastRows.length) return; const csv='﻿'+lastRows.map(r=>r.map(v=>`"${String(v??'').replace(/"/g,'""')}"`).join(',')).join('\r\n'); const b=new Blob([csv],{type:'text/csv'}); const u=URL.createObjectURL(b); const a=document.createElement('a'); a.href=u; a.download=`同級比對_${C.target.機關}_${DATA.built.slice(0,10)}.csv`; a.click(); URL.revokeObjectURL(u); };
+$('#copyBtn').onclick=async()=>{ if(!lastRows.length) return; try{ await navigator.clipboard.writeText(lastRows.map(r=>r.join('\t')).join('\n')); $('#copyBtn').textContent='已複製'; setTimeout(()=>$('#copyBtn').textContent='複製表格',1500);}catch(e){ alert('無法存取剪貼簿，請改用匯出 CSV'); } };
+renderCompareChips(); renderColPick();
+
+// =====================================================================
+// 指標說明與資料狀態
+// =====================================================================
+$('#defs').innerHTML='<table><tbody>'+Object.entries(DEFS).map(([k,v])=>`<tr><td style="white-space:nowrap"><b>${esc(k)}</b></td><td>${esc(v)}</td></tr>`).join('')+
+  `<tr><td><b>主管</b></td><td>職稱以 署長、局長、處長、所長、館長、院長、主任、主任秘書、組長、科長、股長、隊長 等結尾者（含副首長以外的「副」職不算主管：副組長、副處長視為主管，副首長視為主管）</td></tr>
+   <tr><td><b>比例欄</b></td><td>分母皆為該機關編制員額合計；括號兼任員額不計。</td></tr></tbody></table>`;
+$('#version').innerHTML=`<div class="small">${esc(META.總表說明||'')}</div><div class="small muted">資料整備 ${esc(META.整備時間)}・建檔 ${esc(DATA.built)}・機關 ${META.機關數}・明細 ${META.明細列數}・條文 ${META.條文數}</div>`;
+const flagged=A.filter(a=>!/^相符/.test(a.驗算狀態||''));
+$('#flagged').innerHTML=`<div class="small muted">共 ${flagged.length} 個</div><table><thead><tr><th>機關</th><th>層級</th><th>驗算狀態</th><th class="num">員額合計</th></tr></thead><tbody>`+flagged.map(a=>`<tr><td>${esc(a.機關)}</td><td>${a.層級}</td><td>${esc(a.驗算狀態||'無')}</td><td class="num">${a.指標.員額合計}</td></tr>`).join('')+'</tbody></table>';
+
+// 快速入口：網址 #compare=機關名
+if(location.hash.startsWith('#compare=')){ const n=decodeURIComponent(location.hash.slice(9)); if(byName[n]){ setTarget(n); document.querySelector('.tabs button[data-tab=compare]').click(); } }
+})();
+</script>
+</body>
+</html>
