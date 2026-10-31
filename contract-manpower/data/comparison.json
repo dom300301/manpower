@@ -4,13 +4,38 @@
     "drafted": "2026-10-31",
     "status": "draft",
     "personnel_types": [
-      {"key": "civil", "name": "公務人員（常務）", "nature": "公法上職務關係（任用）", "legal_basis": "公務人員任用法"},
-      {"key": "pinyong", "name": "聘用人員", "nature": "公法上契約關係（行政契約）", "legal_basis": "聘用人員聘用條例"},
-      {"key": "yuegu", "name": "約僱人員", "nature": "公法上契約關係（行政契約）", "legal_basis": "行政院暨所屬機關約僱人員僱用辦法"},
-      {"key": "linshi", "name": "臨時人員／約用人員", "nature": "私法上勞動契約（適用勞基法）", "legal_basis": "行政院與所屬中央及地方各機關學校臨時人員進用及運用要點；各地方政府約用（臨時）人員管理要點"},
-      {"key": "contract", "name": "勞務承攬人力", "nature": "與機關無契約關係；與承攬廠商間為勞動契約", "legal_basis": "政府採購法、民法承攬章；承攬廠商適用勞基法"}
+      {
+        "key": "civil",
+        "name": "公務人員（常務）",
+        "nature": "公法上職務關係（任用）",
+        "legal_basis": "公務人員任用法"
+      },
+      {
+        "key": "pinyong",
+        "name": "聘用人員",
+        "nature": "公法上契約關係（行政契約）",
+        "legal_basis": "聘用人員聘用條例"
+      },
+      {
+        "key": "yuegu",
+        "name": "約僱人員",
+        "nature": "公法上契約關係（行政契約）",
+        "legal_basis": "行政院暨所屬機關約僱人員僱用辦法"
+      },
+      {
+        "key": "linshi",
+        "name": "臨時人員／約用人員",
+        "nature": "私法上勞動契約（適用勞基法）",
+        "legal_basis": "行政院與所屬中央及地方各機關學校臨時人員進用及運用要點；各地方政府約用（臨時）人員管理要點"
+      },
+      {
+        "key": "contract",
+        "name": "勞務承攬人力",
+        "nature": "與機關無契約關係；與承攬廠商間為勞動契約",
+        "legal_basis": "政府採購法、民法承攬章；承攬廠商適用勞基法"
+      }
     ],
-    "verification_note": "每格 basis 欄引用之條號為草擬時依記憶填寫，需與 data/laws.json 全文核對後把 verified 改為 true。"
+    "verification_note": "每格 basis 欄引用之條號為草擬時依記憶填寫，需與 data/laws.json 全文核對後把 verified 改為 true；已核對者會在畫面顯示 ✓。"
   },
   "dimensions": [
     {
@@ -18,11 +43,31 @@
       "group": "進用",
       "name": "進用方式與資格",
       "cells": {
-        "civil": {"text": "依公務人員任用法，須經國家考試及格或其他法定資格，經銓敘部銓敘審定。", "basis": "公務人員任用法§9、§24", "verified": false},
-        "pinyong": {"text": "應業務需要，以契約定期聘用之專業或技術人員；須報人事總處（原行政院）核定，並送銓敘部登記備查。不得擔任主管職務。", "basis": "聘用條例§2、§3、§6、§7", "verified": false},
-        "yuegu": {"text": "機關學校應業務需要，定期僱用擔任相當分類職位公務人員第五職等以下之臨時性工作；不得擔任主管及正式職務。", "basis": "約僱辦法§2、§3、§4", "verified": false},
-        "linshi": {"text": "機關以年度預算（或計畫經費）進用，依臨時人員要點公開甄選；各地方政府依自訂要點進用，部分縣市設總量管制。", "basis": "臨時人員進用及運用要點§3～§5；各縣市約用人員管理要點", "verified": false},
-        "contract": {"text": "機關依政府採購法辦理勞務採購，由得標廠商提供人力完成工作；機關不直接進用人員，不得對廠商人員為指揮監督（否則有假承攬真僱傭疑慮）。", "basis": "政府採購法§2、§7；民法§490", "verified": false}
+        "civil": {
+          "text": "依公務人員任用法，須經國家考試及格或其他法定資格，經銓敘部銓敘審定。",
+          "basis": "公務人員任用法§9、§24",
+          "verified": false
+        },
+        "pinyong": {
+          "text": "應業務需要，以契約定期聘用之專業或技術人員；須報人事總處（原行政院）核定，並送銓敘部登記備查。不得擔任主管職務。",
+          "basis": "聘用條例§2、§3、§6、§7",
+          "verified": false
+        },
+        "yuegu": {
+          "text": "機關學校應業務需要，定期僱用擔任相當分類職位公務人員第五職等以下之臨時性工作；不得擔任主管及正式職務。",
+          "basis": "約僱辦法§2、§3、§4",
+          "verified": false
+        },
+        "linshi": {
+          "text": "機關以年度預算（或計畫經費）進用，依臨時人員要點公開甄選；各地方政府依自訂要點進用，部分縣市設總量管制。",
+          "basis": "臨時人員進用及運用要點§3～§5；各縣市約用人員管理要點",
+          "verified": false
+        },
+        "contract": {
+          "text": "機關依政府採購法辦理勞務採購，由得標廠商提供人力完成工作；機關不直接進用人員，不得對廠商人員為指揮監督（否則有假承攬真僱傭疑慮）。",
+          "basis": "政府採購法§2、§7；民法§490",
+          "verified": false
+        }
       }
     },
     {
@@ -30,11 +75,31 @@
       "group": "進用",
       "name": "契約期間與續約",
       "cells": {
-        "civil": {"text": "無任期，經任用即具永業性身分，非依法不得免職。", "basis": "公務人員保障法§9", "verified": false},
-        "pinyong": {"text": "以契約定期聘用，期滿得續聘；聘期配合計畫或預算年度，一般一年一聘。", "basis": "聘用條例§3、§5；施行細則", "verified": false},
-        "yuegu": {"text": "僱用期間依業務需要定之，最長不得超過一年；期滿得續僱。", "basis": "約僱辦法§5", "verified": false},
-        "linshi": {"text": "原則以一年為限，得續約；依勞基法§9 定期契約規定，連續性工作應為不定期契約（實務多以年度預算定期）。", "basis": "臨時人員要點；勞基法§9", "verified": false},
-        "contract": {"text": "依採購契約期間（通常一至三年），期滿重新招標；人員與廠商間契約依勞基法。", "basis": "政府採購法§52、§63", "verified": false}
+        "civil": {
+          "text": "無任期，經任用即具永業性身分，非依法不得免職。",
+          "basis": "公務人員保障法§9",
+          "verified": false
+        },
+        "pinyong": {
+          "text": "以契約定期聘用，期滿得續聘；聘期配合計畫或預算年度，一般一年一聘。",
+          "basis": "聘用條例§3、§5；施行細則",
+          "verified": false
+        },
+        "yuegu": {
+          "text": "僱用期間依業務需要定之，最長不得超過一年；期滿得續僱。",
+          "basis": "約僱辦法§5",
+          "verified": false
+        },
+        "linshi": {
+          "text": "原則以一年為限，得續約；依勞基法§9 定期契約規定，連續性工作應為不定期契約（實務多以年度預算定期）。",
+          "basis": "臨時人員要點；勞基法§9",
+          "verified": false
+        },
+        "contract": {
+          "text": "依採購契約期間（通常一至三年），期滿重新招標；人員與廠商間契約依勞基法。",
+          "basis": "政府採購法§52、§63",
+          "verified": false
+        }
       }
     },
     {
@@ -42,11 +107,31 @@
       "group": "進用",
       "name": "員額管制",
       "cells": {
-        "civil": {"text": "中央：總員額法第一類員額（含政務、常務、醫事人員）上限內；地方：地方行政機關組織準則、員額設置基準。", "basis": "中央政府機關總員額法§3、§4；地方行政機關組織準則", "verified": false},
-        "pinyong": {"text": "中央：總員額法第二類員額（聘用、約僱）上限內，列入機關預算員額；地方：依地方制度相關規定與預算。", "basis": "總員額法§3、§4", "verified": false},
-        "yuegu": {"text": "同聘用，屬總員額法第二類員額。", "basis": "總員額法§3", "verified": false},
-        "linshi": {"text": "不計入總員額法員額；以業務費／人事費等預算進用，人事總處另以「臨時人員人力運用情形」管控，部分縣市設占預算員額比例上限。", "basis": "總員額法§3（未列入）；臨時人員要點", "verified": false},
-        "contract": {"text": "不計入員額，僅受採購預算限制。", "basis": "—", "verified": false}
+        "civil": {
+          "text": "中央：總員額法第一類員額（政務人員、定有職稱官等職等之文職人員、醫事人員及聘任人員）上限 74,600 人內；地方：地方行政機關組織準則、各地方員額設置基準。",
+          "basis": "中央政府機關總員額法§3、§4（108.12.31 修正）；地方行政機關組織準則",
+          "verified": true
+        },
+        "pinyong": {
+          "text": "中央：總員額法第二類員額（依法令進用之聘僱人員、駐衛警察及工友）上限 40,100 人內，列入機關預算員額；司法院、檢察機關之聘僱人員分屬第三、四類。地方：依地方制度相關規定與預算。",
+          "basis": "總員額法§3 第 2 款、§4；員額管理辦法§12",
+          "verified": true
+        },
+        "yuegu": {
+          "text": "同聘用，屬總員額法第二類員額（聘僱人員）。",
+          "basis": "總員額法§3 第 2 款",
+          "verified": true
+        },
+        "linshi": {
+          "text": "不屬總員額法§3 任一類員額（非「依法令進用之聘僱人員」）；以業務費等預算進用，人事總處另以約用人員要點與人力運用統計管控；部分縣市設占預算員額比例上限。",
+          "basis": "總員額法§3（未列入）；約用人員進用及運用要點",
+          "verified": true
+        },
+        "contract": {
+          "text": "不計入員額，僅受採購預算限制。",
+          "basis": "—",
+          "verified": false
+        }
       }
     },
     {
@@ -54,11 +139,31 @@
       "group": "待遇",
       "name": "待遇／報酬制度",
       "cells": {
-        "civil": {"text": "依公務人員俸給法支本俸、加給（職務、技術或專業、地域）。", "basis": "公務人員俸給法§3、§5", "verified": false},
-        "pinyong": {"text": "依「聘用人員比照分類職位公務人員俸點支給報酬標準表」以薪點折算，按月支給，原則不得支給加給（另有專業加給比照）。", "basis": "聘用條例§6；報酬標準表", "verified": false},
-        "yuegu": {"text": "依「約僱人員僱用辦法」比照相當職等薪點支給，第五職等以下。", "basis": "約僱辦法§6", "verified": false},
-        "linshi": {"text": "依機關自訂薪資標準（多比照約僱薪點或依學歷分級），不得低於勞基法基本工資。", "basis": "臨時人員要點；勞基法§21", "verified": false},
-        "contract": {"text": "由廠商決定，採購契約得約定最低薪資或人力規格；機關不直接給付。", "basis": "採購契約", "verified": false}
+        "civil": {
+          "text": "依公務人員俸給法支本俸、加給（職務、技術或專業、地域）。",
+          "basis": "公務人員俸給法§3、§5",
+          "verified": false
+        },
+        "pinyong": {
+          "text": "依「聘用人員比照分類職位公務人員俸點支給報酬標準表」以薪點折算，按月支給，原則不得支給加給（另有專業加給比照）。",
+          "basis": "聘用條例§6；報酬標準表",
+          "verified": false
+        },
+        "yuegu": {
+          "text": "依「約僱人員僱用辦法」比照相當職等薪點支給，第五職等以下。",
+          "basis": "約僱辦法§6",
+          "verified": false
+        },
+        "linshi": {
+          "text": "依機關自訂薪資標準（多比照約僱薪點或依學歷分級），不得低於勞基法基本工資。",
+          "basis": "臨時人員要點；勞基法§21",
+          "verified": false
+        },
+        "contract": {
+          "text": "由廠商決定，採購契約得約定最低薪資或人力規格；機關不直接給付。",
+          "basis": "採購契約",
+          "verified": false
+        }
       }
     },
     {
@@ -66,11 +171,31 @@
       "group": "待遇",
       "name": "年終工作獎金／考績獎金",
       "cells": {
-        "civil": {"text": "年終工作獎金 1.5 個月；考績獎金依考績等第（甲等 1 個月、乙等 0.5 個月）。", "basis": "軍公教人員年終工作獎金發給注意事項；考績法§7", "verified": false},
-        "pinyong": {"text": "年終工作獎金比照支給；考核獎金依「聘用人員考核」規定（甲等 1 個月薪酬）。", "basis": "年終工作獎金注意事項；聘僱人員考核規定", "verified": false},
-        "yuegu": {"text": "同聘用。", "basis": "同左", "verified": false},
-        "linshi": {"text": "年終獎金依機關預算與要點（多比照 1.5 個月）；無考績獎金，部分機關有考核獎勵。", "basis": "臨時人員要點；各機關規定", "verified": false},
-        "contract": {"text": "依廠商與勞工約定；機關不給付。", "basis": "—", "verified": false}
+        "civil": {
+          "text": "年終工作獎金 1.5 個月；考績獎金依考績等第（甲等 1 個月、乙等 0.5 個月）。",
+          "basis": "軍公教人員年終工作獎金發給注意事項；考績法§7",
+          "verified": false
+        },
+        "pinyong": {
+          "text": "年終工作獎金比照支給；考核獎金依「聘用人員考核」規定（甲等 1 個月薪酬）。",
+          "basis": "年終工作獎金注意事項；聘僱人員考核規定",
+          "verified": false
+        },
+        "yuegu": {
+          "text": "同聘用。",
+          "basis": "同左",
+          "verified": false
+        },
+        "linshi": {
+          "text": "年終獎金依機關預算與要點（多比照 1.5 個月）；無考績獎金，部分機關有考核獎勵。",
+          "basis": "臨時人員要點；各機關規定",
+          "verified": false
+        },
+        "contract": {
+          "text": "依廠商與勞工約定；機關不給付。",
+          "basis": "—",
+          "verified": false
+        }
       }
     },
     {
@@ -78,11 +203,31 @@
       "group": "考核",
       "name": "考績／考核",
       "cells": {
-        "civil": {"text": "公務人員考績法：年終考績、另予考績、專案考績；丁等免職。", "basis": "公務人員考績法§3～§12", "verified": false},
-        "pinyong": {"text": "依「行政院及所屬各機關聘僱人員考核辦法」（或機關自訂）辦理年終考核，分甲乙丙等，丙等不續聘。", "basis": "聘用條例施行細則；聘僱人員考核規定", "verified": false},
-        "yuegu": {"text": "同聘用。", "basis": "同左", "verified": false},
-        "linshi": {"text": "依機關考核規定；表現不佳依勞基法§11、§12 終止契約。", "basis": "臨時人員要點；勞基法§11、§12", "verified": false},
-        "contract": {"text": "機關考核廠商履約（驗收、違約金），不考核個人。", "basis": "政府採購法§70-1、採購契約", "verified": false}
+        "civil": {
+          "text": "公務人員考績法：年終考績、另予考績、專案考績；丁等免職。",
+          "basis": "公務人員考績法§3～§12",
+          "verified": false
+        },
+        "pinyong": {
+          "text": "依「行政院及所屬各機關聘僱人員考核辦法」（或機關自訂）辦理年終考核，分甲乙丙等，丙等不續聘。",
+          "basis": "聘用條例施行細則；聘僱人員考核規定",
+          "verified": false
+        },
+        "yuegu": {
+          "text": "同聘用。",
+          "basis": "同左",
+          "verified": false
+        },
+        "linshi": {
+          "text": "依機關考核規定；表現不佳依勞基法§11、§12 終止契約。",
+          "basis": "臨時人員要點；勞基法§11、§12",
+          "verified": false
+        },
+        "contract": {
+          "text": "機關考核廠商履約（驗收、違約金），不考核個人。",
+          "basis": "政府採購法§70-1、採購契約",
+          "verified": false
+        }
       }
     },
     {
@@ -90,11 +235,31 @@
       "group": "待遇",
       "name": "休假制度",
       "cells": {
-        "civil": {"text": "公務人員請假規則：事假、病假、婚假、娩假、休假（年資 1 年 7 日起至 30 日）。", "basis": "公務人員請假規則§3、§7", "verified": false},
-        "pinyong": {"text": "準用公務人員請假規則（休假日數依年資比照）。", "basis": "公務人員請假規則§19", "verified": false},
-        "yuegu": {"text": "同聘用（準用請假規則）。", "basis": "請假規則§19", "verified": false},
-        "linshi": {"text": "依勞基法特別休假（6 個月 3 日、1 年 7 日…）及性別工作平等法假別；機關得優於法定。", "basis": "勞基法§38；勞工請假規則", "verified": false},
-        "contract": {"text": "依勞基法，由廠商給假。", "basis": "勞基法§38", "verified": false}
+        "civil": {
+          "text": "公務人員請假規則：事假、病假、婚假、娩假、休假（年資 1 年 7 日起至 30 日）。",
+          "basis": "公務人員請假規則§3、§7",
+          "verified": false
+        },
+        "pinyong": {
+          "text": "準用公務人員請假規則（休假日數依年資比照）。",
+          "basis": "公務人員請假規則§19",
+          "verified": false
+        },
+        "yuegu": {
+          "text": "同聘用（準用請假規則）。",
+          "basis": "請假規則§19",
+          "verified": false
+        },
+        "linshi": {
+          "text": "依勞基法特別休假（6 個月 3 日、1 年 7 日…）及性別工作平等法假別；機關得優於法定。",
+          "basis": "勞基法§38；勞工請假規則",
+          "verified": false
+        },
+        "contract": {
+          "text": "依勞基法，由廠商給假。",
+          "basis": "勞基法§38",
+          "verified": false
+        }
       }
     },
     {
@@ -102,11 +267,31 @@
       "group": "保險",
       "name": "保險",
       "cells": {
-        "civil": {"text": "公教人員保險（公保）＋全民健保。", "basis": "公教人員保險法§2", "verified": false},
-        "pinyong": {"text": "公保（聘用人員為公保被保險人）＋健保。", "basis": "公教人員保險法§2、施行細則", "verified": false},
-        "yuegu": {"text": "公保（約僱人員 88 年起納入公保）＋健保。", "basis": "公教人員保險法§2", "verified": false},
-        "linshi": {"text": "勞工保險＋就業保險＋健保；機關負擔雇主保費。", "basis": "勞工保險條例§6；就業保險法§5", "verified": false},
-        "contract": {"text": "勞保、就保、健保由廠商投保。", "basis": "勞工保險條例§6", "verified": false}
+        "civil": {
+          "text": "公教人員保險（公保）＋全民健保。",
+          "basis": "公教人員保險法§2",
+          "verified": false
+        },
+        "pinyong": {
+          "text": "公保（聘用人員為公保被保險人）＋健保。",
+          "basis": "公教人員保險法§2、施行細則",
+          "verified": false
+        },
+        "yuegu": {
+          "text": "公保（約僱人員 88 年起納入公保）＋健保。",
+          "basis": "公教人員保險法§2",
+          "verified": false
+        },
+        "linshi": {
+          "text": "勞工保險＋就業保險＋健保；機關負擔雇主保費。",
+          "basis": "勞工保險條例§6；就業保險法§5",
+          "verified": false
+        },
+        "contract": {
+          "text": "勞保、就保、健保由廠商投保。",
+          "basis": "勞工保險條例§6",
+          "verified": false
+        }
       }
     },
     {
@@ -114,11 +299,31 @@
       "group": "退休",
       "name": "退休／離職給與",
       "cells": {
-        "civil": {"text": "公務人員退休資遣撫卹法：退撫基金共同提撥，月退休金或一次退休金。", "basis": "公務人員退休資遣撫卹法", "verified": false},
-        "pinyong": {"text": "不適用退撫法；依「各機關學校聘僱人員離職儲金給與辦法」，機關與個人各提撥薪酬 6%（原 5%），離職時一次給付；另公保養老給付。", "basis": "離職儲金給與辦法§3～§6", "verified": false},
-        "yuegu": {"text": "同聘用（離職儲金）。", "basis": "離職儲金給與辦法", "verified": false},
-        "linshi": {"text": "勞工退休金條例（新制）：雇主提繳 6% 至個人專戶；具舊制年資者依勞基法§53～§55。", "basis": "勞工退休金條例§6、§14", "verified": false},
-        "contract": {"text": "由廠商依勞退條例提繳。", "basis": "勞工退休金條例§6", "verified": false}
+        "civil": {
+          "text": "公務人員退休資遣撫卹法：退撫基金共同提撥，月退休金或一次退休金。",
+          "basis": "公務人員退休資遣撫卹法",
+          "verified": false
+        },
+        "pinyong": {
+          "text": "不適用退撫法；依「各機關學校聘僱人員離職儲金給與辦法」，機關與個人各提撥薪酬 6%（原 5%），離職時一次給付；另公保養老給付。",
+          "basis": "離職儲金給與辦法§3～§6",
+          "verified": false
+        },
+        "yuegu": {
+          "text": "同聘用（離職儲金）。",
+          "basis": "離職儲金給與辦法",
+          "verified": false
+        },
+        "linshi": {
+          "text": "勞工退休金條例（新制）：雇主提繳 6% 至個人專戶；具舊制年資者依勞基法§53～§55。",
+          "basis": "勞工退休金條例§6、§14",
+          "verified": false
+        },
+        "contract": {
+          "text": "由廠商依勞退條例提繳。",
+          "basis": "勞工退休金條例§6",
+          "verified": false
+        }
       }
     },
     {
@@ -126,11 +331,31 @@
       "group": "退休",
       "name": "撫卹／職災／資遣",
       "cells": {
-        "civil": {"text": "退撫法撫卹金、資遣給與；公務人員執行職務意外傷亡慰問金。", "basis": "退撫法；慰問金發給辦法", "verified": false},
-        "pinyong": {"text": "公保死亡給付、殘廢給付；離職儲金；無撫卹金。", "basis": "公教人員保險法", "verified": false},
-        "yuegu": {"text": "同聘用。", "basis": "同左", "verified": false},
-        "linshi": {"text": "勞基法職災補償（§59）、資遣費（§17 或勞退條例§12）；勞保職災給付。", "basis": "勞基法§17、§59；勞工職業災害保險及保護法", "verified": false},
-        "contract": {"text": "由廠商負責；機關依民法§189 原則不負責任，但有定作或指示過失者除外。", "basis": "民法§189", "verified": false}
+        "civil": {
+          "text": "退撫法撫卹金、資遣給與；公務人員執行職務意外傷亡慰問金。",
+          "basis": "退撫法；慰問金發給辦法",
+          "verified": false
+        },
+        "pinyong": {
+          "text": "公保死亡給付、殘廢給付；離職儲金；無撫卹金。",
+          "basis": "公教人員保險法",
+          "verified": false
+        },
+        "yuegu": {
+          "text": "同聘用。",
+          "basis": "同左",
+          "verified": false
+        },
+        "linshi": {
+          "text": "勞基法職災補償（§59）、資遣費（§17 或勞退條例§12）；勞保職災給付。",
+          "basis": "勞基法§17、§59；勞工職業災害保險及保護法",
+          "verified": false
+        },
+        "contract": {
+          "text": "由廠商負責；機關依民法§189 原則不負責任，但有定作或指示過失者除外。",
+          "basis": "民法§189",
+          "verified": false
+        }
       }
     },
     {
@@ -138,11 +363,31 @@
       "group": "義務",
       "name": "公務員服務法（兼職、旋轉門、保密）",
       "cells": {
-        "civil": {"text": "適用。", "basis": "公務員服務法§2", "verified": false},
-        "pinyong": {"text": "適用（受有俸給之文武職公務員，聘用人員經解釋納入）；旋轉門條款於主管職務不適用因不得任主管。", "basis": "公務員服務法§2、§24；銓敘部函釋", "verified": false},
-        "yuegu": {"text": "適用（同聘用）。", "basis": "公務員服務法§2、§24", "verified": false},
-        "linshi": {"text": "不適用公務員服務法；但刑法公務員、貪污治罪條例依「依法令從事公務」個案認定；機關多於契約約定保密與兼職限制。", "basis": "公務員服務法§2 反面；刑法§10", "verified": false},
-        "contract": {"text": "不適用；契約約定保密義務。", "basis": "—", "verified": false}
+        "civil": {
+          "text": "適用。",
+          "basis": "公務員服務法§2",
+          "verified": false
+        },
+        "pinyong": {
+          "text": "適用（受有俸給之文武職公務員，聘用人員經解釋納入）；旋轉門條款於主管職務不適用因不得任主管。",
+          "basis": "公務員服務法§2、§24；銓敘部函釋",
+          "verified": false
+        },
+        "yuegu": {
+          "text": "適用（同聘用）。",
+          "basis": "公務員服務法§2、§24",
+          "verified": false
+        },
+        "linshi": {
+          "text": "不適用公務員服務法；但刑法公務員、貪污治罪條例依「依法令從事公務」個案認定；機關多於契約約定保密與兼職限制。",
+          "basis": "公務員服務法§2 反面；刑法§10",
+          "verified": false
+        },
+        "contract": {
+          "text": "不適用；契約約定保密義務。",
+          "basis": "—",
+          "verified": false
+        }
       }
     },
     {
@@ -150,11 +395,31 @@
       "group": "義務",
       "name": "行政中立法",
       "cells": {
-        "civil": {"text": "適用。", "basis": "公務人員行政中立法§2", "verified": false},
-        "pinyong": {"text": "準用。", "basis": "行政中立法§17", "verified": false},
-        "yuegu": {"text": "準用。", "basis": "行政中立法§17", "verified": false},
-        "linshi": {"text": "不適用（未列入 §17 準用對象）。", "basis": "行政中立法§17 反面", "verified": false},
-        "contract": {"text": "不適用。", "basis": "—", "verified": false}
+        "civil": {
+          "text": "適用。",
+          "basis": "公務人員行政中立法§2",
+          "verified": false
+        },
+        "pinyong": {
+          "text": "準用。",
+          "basis": "行政中立法§17",
+          "verified": false
+        },
+        "yuegu": {
+          "text": "準用。",
+          "basis": "行政中立法§17",
+          "verified": false
+        },
+        "linshi": {
+          "text": "不適用（未列入 §17 準用對象）。",
+          "basis": "行政中立法§17 反面",
+          "verified": false
+        },
+        "contract": {
+          "text": "不適用。",
+          "basis": "—",
+          "verified": false
+        }
       }
     },
     {
@@ -162,11 +427,31 @@
       "group": "救濟",
       "name": "公務人員保障法（身分保障、復審、申訴）",
       "cells": {
-        "civil": {"text": "適用：身分保障、官職等與俸給保障；不服行政處分得復審，管理措施得申訴、再申訴。", "basis": "保障法§2、§9、§25、§77", "verified": false},
-        "pinyong": {"text": "準用（§102 第 1 款：聘用人員）：得提起復審、申訴、再申訴，但不及於任用資格保障。", "basis": "保障法§102", "verified": false},
-        "yuegu": {"text": "準用（§102：約僱人員）。", "basis": "保障法§102", "verified": false},
-        "linshi": {"text": "不適用（非保障法對象）；救濟循勞動法途徑。", "basis": "保障法§102 反面", "verified": false},
-        "contract": {"text": "不適用。", "basis": "—", "verified": false}
+        "civil": {
+          "text": "適用：身分保障、官職等與俸給保障；不服行政處分得復審，管理措施得申訴、再申訴。",
+          "basis": "保障法§2、§9、§25、§77",
+          "verified": false
+        },
+        "pinyong": {
+          "text": "準用（§102 第 1 款：聘用人員）：得提起復審、申訴、再申訴，但不及於任用資格保障。",
+          "basis": "保障法§102",
+          "verified": false
+        },
+        "yuegu": {
+          "text": "準用（§102：約僱人員）。",
+          "basis": "保障法§102",
+          "verified": false
+        },
+        "linshi": {
+          "text": "不適用（非保障法對象）；救濟循勞動法途徑。",
+          "basis": "保障法§102 反面",
+          "verified": false
+        },
+        "contract": {
+          "text": "不適用。",
+          "basis": "—",
+          "verified": false
+        }
       }
     },
     {
@@ -174,11 +459,31 @@
       "group": "救濟",
       "name": "救濟途徑（不續聘、解約、薪資爭議）",
       "cells": {
-        "civil": {"text": "復審 → 行政訴訟；申訴 → 再申訴（終局）。免職處分得提行政訴訟。", "basis": "保障法§25、§72、§77；行政訴訟法", "verified": false},
-        "pinyong": {"text": "不續聘／解聘：向保訓會復審（實務：不續聘屬契約期滿，多認非行政處分，改依行政契約循一般給付訴訟）；薪資爭議提行政訴訟（公法上契約）。", "basis": "保障法§102；行政訴訟法§8；行政程序法§135", "verified": false},
-        "yuegu": {"text": "同聘用（復審／行政訴訟）。", "basis": "同左", "verified": false},
-        "linshi": {"text": "勞資爭議：勞動局調解 → 勞動事件法民事訴訟（確認僱傭關係、給付工資）；違法解僱得請求回復僱傭。", "basis": "勞資爭議處理法§6、§9；勞動事件法", "verified": false},
-        "contract": {"text": "對廠商：勞資爭議處理法／民事訴訟；對機關：無直接救濟（除非認定假承攬真僱傭，得主張與機關成立僱傭關係）。", "basis": "勞資爭議處理法；勞基法§2", "verified": false}
+        "civil": {
+          "text": "復審 → 行政訴訟；申訴 → 再申訴（終局）。免職處分得提行政訴訟。",
+          "basis": "保障法§25、§72、§77；行政訴訟法",
+          "verified": false
+        },
+        "pinyong": {
+          "text": "不續聘／解聘：向保訓會復審（實務：不續聘屬契約期滿，多認非行政處分，改依行政契約循一般給付訴訟）；薪資爭議提行政訴訟（公法上契約）。",
+          "basis": "保障法§102；行政訴訟法§8；行政程序法§135",
+          "verified": false
+        },
+        "yuegu": {
+          "text": "同聘用（復審／行政訴訟）。",
+          "basis": "同左",
+          "verified": false
+        },
+        "linshi": {
+          "text": "勞資爭議：勞動局調解 → 勞動事件法民事訴訟（確認僱傭關係、給付工資）；違法解僱得請求回復僱傭。",
+          "basis": "勞資爭議處理法§6、§9；勞動事件法",
+          "verified": false
+        },
+        "contract": {
+          "text": "對廠商：勞資爭議處理法／民事訴訟；對機關：無直接救濟（除非認定假承攬真僱傭，得主張與機關成立僱傭關係）。",
+          "basis": "勞資爭議處理法；勞基法§2",
+          "verified": false
+        }
       }
     },
     {
@@ -186,11 +491,31 @@
       "group": "救濟",
       "name": "結社（協會／工會）",
       "cells": {
-        "civil": {"text": "得組公務人員協會，不得罷工。", "basis": "公務人員協會法§2、§46", "verified": false},
-        "pinyong": {"text": "得加入公務人員協會（聘用、約僱人員為協會法適用對象）。", "basis": "公務人員協會法§2", "verified": false},
-        "yuegu": {"text": "同聘用。", "basis": "公務人員協會法§2", "verified": false},
-        "linshi": {"text": "得依工會法組織或加入工會（受僱於政府機關之勞工）；得依勞資爭議處理法為爭議行為，但有限制。", "basis": "工會法§4；勞資爭議處理法§54", "verified": false},
-        "contract": {"text": "得加入廠商工會。", "basis": "工會法§4", "verified": false}
+        "civil": {
+          "text": "得組公務人員協會，不得罷工。",
+          "basis": "公務人員協會法§2、§46",
+          "verified": false
+        },
+        "pinyong": {
+          "text": "得加入公務人員協會（聘用、約僱人員為協會法適用對象）。",
+          "basis": "公務人員協會法§2",
+          "verified": false
+        },
+        "yuegu": {
+          "text": "同聘用。",
+          "basis": "公務人員協會法§2",
+          "verified": false
+        },
+        "linshi": {
+          "text": "得依工會法組織或加入工會（受僱於政府機關之勞工）；得依勞資爭議處理法為爭議行為，但有限制。",
+          "basis": "工會法§4；勞資爭議處理法§54",
+          "verified": false
+        },
+        "contract": {
+          "text": "得加入廠商工會。",
+          "basis": "工會法§4",
+          "verified": false
+        }
       }
     },
     {
@@ -198,11 +523,31 @@
       "group": "待遇",
       "name": "升遷、轉任與年資採計",
       "cells": {
-        "civil": {"text": "依公務人員陞遷法；年資計入退休與俸級晉敘。", "basis": "公務人員陞遷法", "verified": false},
-        "pinyong": {"text": "無陞遷制度；考試及格轉任公務人員時，聘用年資得採計提敘俸級（相當職等）。", "basis": "公務人員俸給法§17；聘用條例§7", "verified": false},
-        "yuegu": {"text": "同聘用（年資得提敘）。", "basis": "俸給法§17", "verified": false},
-        "linshi": {"text": "無；轉任公務人員後，臨時人員年資原則不得採計提敘（公務人員俸給法施行細則）。", "basis": "俸給法施行細則§15", "verified": false},
-        "contract": {"text": "無。", "basis": "—", "verified": false}
+        "civil": {
+          "text": "依公務人員陞遷法；年資計入退休與俸級晉敘。",
+          "basis": "公務人員陞遷法",
+          "verified": false
+        },
+        "pinyong": {
+          "text": "無陞遷制度；考試及格轉任公務人員時，聘用年資得採計提敘俸級（相當職等）。",
+          "basis": "公務人員俸給法§17；聘用條例§7",
+          "verified": false
+        },
+        "yuegu": {
+          "text": "同聘用（年資得提敘）。",
+          "basis": "俸給法§17",
+          "verified": false
+        },
+        "linshi": {
+          "text": "無；轉任公務人員後，臨時人員年資原則不得採計提敘（公務人員俸給法施行細則）。",
+          "basis": "俸給法施行細則§15",
+          "verified": false
+        },
+        "contract": {
+          "text": "無。",
+          "basis": "—",
+          "verified": false
+        }
       }
     },
     {
@@ -210,11 +555,31 @@
       "group": "待遇",
       "name": "福利（子女教育補助、婚喪生育補助、優惠貸款）",
       "cells": {
-        "civil": {"text": "全國軍公教員工待遇支給要點之生活津貼（結婚、生育、喪葬、子女教育補助）。", "basis": "全國軍公教員工待遇支給要點", "verified": false},
-        "pinyong": {"text": "多數比照支給（依支給要點適用對象含聘用約僱）。", "basis": "待遇支給要點", "verified": false},
-        "yuegu": {"text": "同聘用。", "basis": "待遇支給要點", "verified": false},
-        "linshi": {"text": "原則不適用軍公教支給要點；部分機關以福利互助或自訂要點給付。", "basis": "臨時人員要點", "verified": false},
-        "contract": {"text": "無。", "basis": "—", "verified": false}
+        "civil": {
+          "text": "全國軍公教員工待遇支給要點之生活津貼（結婚、生育、喪葬、子女教育補助）。",
+          "basis": "全國軍公教員工待遇支給要點",
+          "verified": false
+        },
+        "pinyong": {
+          "text": "多數比照支給（依支給要點適用對象含聘用約僱）。",
+          "basis": "待遇支給要點",
+          "verified": false
+        },
+        "yuegu": {
+          "text": "同聘用。",
+          "basis": "待遇支給要點",
+          "verified": false
+        },
+        "linshi": {
+          "text": "原則不適用軍公教支給要點；部分機關以福利互助或自訂要點給付。",
+          "basis": "臨時人員要點",
+          "verified": false
+        },
+        "contract": {
+          "text": "無。",
+          "basis": "—",
+          "verified": false
+        }
       }
     },
     {
@@ -222,11 +587,31 @@
       "group": "義務",
       "name": "得否行使公權力／擔任主管",
       "cells": {
-        "civil": {"text": "得。", "basis": "任用法", "verified": false},
-        "pinyong": {"text": "不得擔任主管職務；可從事專業技術工作，行政程序上得為承辦人但核定權責在公務人員。", "basis": "聘用條例§3", "verified": false},
-        "yuegu": {"text": "不得擔任主管及正式職務；限第五職等以下臨時性工作。", "basis": "約僱辦法§2、§3", "verified": false},
-        "linshi": {"text": "要點規定不得從事涉及公權力行使之核心業務（各縣市要點多明文）；實務上常擔任業務助理。", "basis": "臨時人員要點；各縣市約用要點", "verified": false},
-        "contract": {"text": "不得（公權力不得由廠商人員行使；機關不得指揮）。", "basis": "政府採購法；行政程序法§16", "verified": false}
+        "civil": {
+          "text": "得。",
+          "basis": "任用法",
+          "verified": false
+        },
+        "pinyong": {
+          "text": "不得擔任主管職務；可從事專業技術工作，行政程序上得為承辦人但核定權責在公務人員。",
+          "basis": "聘用條例§3",
+          "verified": false
+        },
+        "yuegu": {
+          "text": "不得擔任主管及正式職務；限第五職等以下臨時性工作。",
+          "basis": "約僱辦法§2、§3",
+          "verified": false
+        },
+        "linshi": {
+          "text": "要點規定不得從事涉及公權力行使之核心業務（各縣市要點多明文）；實務上常擔任業務助理。",
+          "basis": "臨時人員要點；各縣市約用要點",
+          "verified": false
+        },
+        "contract": {
+          "text": "不得（公權力不得由廠商人員行使；機關不得指揮）。",
+          "basis": "政府採購法；行政程序法§16",
+          "verified": false
+        }
       }
     },
     {
@@ -234,11 +619,31 @@
       "group": "義務",
       "name": "勞動基準法適用",
       "cells": {
-        "civil": {"text": "不適用。", "basis": "勞基法§3、§84；勞動部公告", "verified": false},
-        "pinyong": {"text": "不適用（聘用人員經勞動部公告排除）。", "basis": "勞動部 87 年公告", "verified": false},
-        "yuegu": {"text": "不適用（約僱人員排除）。", "basis": "勞動部 87 年公告", "verified": false},
-        "linshi": {"text": "適用（97 年 1 月 1 日起公部門臨時人員適用勞基法）。", "basis": "勞委會 96 年公告", "verified": false},
-        "contract": {"text": "適用（與廠商間）。", "basis": "勞基法§3", "verified": false}
+        "civil": {
+          "text": "不適用。",
+          "basis": "勞基法§3、§84；勞動部公告",
+          "verified": false
+        },
+        "pinyong": {
+          "text": "不適用（聘用人員經勞動部公告排除）。",
+          "basis": "勞動部 87 年公告",
+          "verified": false
+        },
+        "yuegu": {
+          "text": "不適用（約僱人員排除）。",
+          "basis": "勞動部 87 年公告",
+          "verified": false
+        },
+        "linshi": {
+          "text": "適用（97 年 1 月 1 日起公部門臨時人員適用勞基法）。",
+          "basis": "勞委會 96 年公告",
+          "verified": false
+        },
+        "contract": {
+          "text": "適用（與廠商間）。",
+          "basis": "勞基法§3",
+          "verified": false
+        }
       }
     }
   ]

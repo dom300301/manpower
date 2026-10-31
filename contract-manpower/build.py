@@ -31,6 +31,11 @@ def load_json(name, default):
         return default
     with open(path, encoding='utf-8-sig') as f:
         obj = json.load(f)
+    # 容許 {"meta":..., "laws":[...]} 這類包一層的格式（comparison.json 除外）
+    if isinstance(obj, dict) and 'dimensions' not in obj:
+        lists = [v for v in obj.values() if isinstance(v, list)]
+        if lists:
+            obj = max(lists, key=len)
     n = len(obj) if isinstance(obj, list) else len(obj.get('dimensions', obj))
     print(f'  [讀] {name}：{n} 筆')
     return obj
