@@ -5,6 +5,8 @@
 | 檔案 | 用途 |
 |---|---|
 | `00_需求檢視與架構規劃.md` | **請先讀**：規範收集結果、資料缺口、PoC 結果、三層面需求檢視、建議架構、待決事項 |
+| `操作手冊.md` | **請先讀**：用法、更新作業、目前狀態與待辦（交接） |
+| `0_首次安裝.command`、`1_建檔.command`、`2_更新法規.command` | Mac 雙擊：安裝、建檔（三步）、更新法規 |
 | `02_第一版_操作與驗證.md` | **操作說明**：網頁四個分頁、三個更新指令、規則假設、驗證結果、限制 |
 | `check_grades.py` → `output/check_results.json`、`output/檢核結果_全機關.csv` | 規則引擎（逐機關、逐條檢核） |
 | `build_grade_site.py` + `grade_template.html` → `output/index.html` | 查詢網頁（離線單檔；GitHub Pages `/grade/`） |
