@@ -1,11 +1,17 @@
-# 把 org-compare/output/index.html 發布到 GitHub Pages（線上查詢版）
+# 把兩套查詢系統發布到同一個 GitHub Pages 網站（線上查詢版）
+#   網站首頁        ← org-compare/output/index.html        組織法規與編制表查詢系統
+#   /contract/      ← contract-manpower/output/index.html  契約人力制度查詢系統
 # 啟用方式（一次）：GitHub 專案 → Settings → Pages → Build and deployment → Source 選「GitHub Actions」
-# 之後只要 main 或預設分支（claude/dreamy-davinci-0xuicp）的 org-compare/output/index.html 有更新，就會自動重新發布。
-name: 發布組織法規查詢網頁
+# 之後只要 main 或預設分支（claude/dreamy-davinci-0xuicp）的任一個 index.html 有更新，就會自動重新發布兩套系統。
+# 也可在 GitHub「Actions」頁籤選本流程，按「Run workflow」手動發布。
+name: 發布查詢網頁（組織法規、契約人力）
 on:
   push:
     branches: [main, claude/dreamy-davinci-0xuicp]
-    paths: ['org-compare/output/index.html']
+    paths:
+      - 'org-compare/output/index.html'
+      - 'contract-manpower/output/index.html'
+      - '.github/workflows/pages.yml'
   workflow_dispatch:
 permissions:
   contents: read
@@ -22,7 +28,13 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
-      - run: mkdir -p site && cp org-compare/output/index.html site/index.html
+      - name: 組合網站內容
+        run: |
+          mkdir -p site/contract
+          cp org-compare/output/index.html site/index.html
+          cp contract-manpower/output/index.html site/contract/index.html
+          touch site/.nojekyll
+          ls -la site site/contract
       - uses: actions/upload-pages-artifact@v3
         with:
           path: site
