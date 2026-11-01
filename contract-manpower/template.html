@@ -1,0 +1,401 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>契約人力制度查詢</title>
+<style>
+:root{
+  color-scheme:light;
+  --page:#f9f9f7;--surface:#fcfcfb;--ink:#0b0b0b;--ink2:#52514e;--muted:#898781;
+  --grid:#e1e0d9;--axis:#c3c2b7;--border:rgba(11,11,11,.10);--accent:#2a78d6;--accent-soft:#cde2fb;
+  --s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--s4:#eda100;--s5:#e87ba4;--s6:#008300;--s7:#6250d6;--s8:#e34948;
+  --good:#0ca30c;--warn:#fab219;--crit:#d03b3b;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    color-scheme:dark;--page:#0d0d0d;--surface:#1a1a19;--ink:#f0efec;--ink2:#c3c2b7;--muted:#898781;
+    --grid:#2c2c2a;--axis:#383835;--border:rgba(255,255,255,.10);--accent:#3987e5;--accent-soft:#1c5cab;
+    --s1:#3987e5;--s2:#d95926;--s3:#199e70;--s4:#c98500;--s5:#d55181;--s6:#008300;--s7:#9085e9;--s8:#e66767;
+  }
+}
+:root[data-theme="dark"]{
+  color-scheme:dark;--page:#0d0d0d;--surface:#1a1a19;--ink:#f0efec;--ink2:#c3c2b7;--muted:#898781;
+  --grid:#2c2c2a;--axis:#383835;--border:rgba(255,255,255,.10);--accent:#3987e5;--accent-soft:#1c5cab;
+  --s1:#3987e5;--s2:#d95926;--s3:#199e70;--s4:#c98500;--s5:#d55181;--s6:#008300;--s7:#9085e9;--s8:#e66767;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--page);color:var(--ink);font:15px/1.6 system-ui,-apple-system,"Segoe UI","Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif}
+header{position:sticky;top:0;z-index:5;background:var(--surface);border-bottom:1px solid var(--border);padding:10px 16px;display:flex;flex-wrap:wrap;gap:8px 16px;align-items:center}
+header h1{font-size:17px;margin:0;font-weight:600}
+header .meta{color:var(--muted);font-size:12px}
+nav{display:flex;flex-wrap:wrap;gap:4px;margin-left:auto}
+nav button{border:1px solid var(--border);background:transparent;color:var(--ink2);padding:6px 12px;border-radius:999px;cursor:pointer;font-size:14px}
+nav button[aria-selected="true"]{background:var(--accent);color:#fff;border-color:var(--accent)}
+main{max-width:1200px;margin:0 auto;padding:16px}
+section[hidden]{display:none}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 12px}
+.toolbar input[type=search],.toolbar select{font:inherit;padding:6px 10px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--ink);min-width:160px}
+.toolbar input[type=search]{flex:1 1 260px}
+.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--border);background:var(--surface);color:var(--ink2);padding:3px 10px;border-radius:999px;font-size:13px;cursor:pointer;user-select:none}
+.chip[aria-pressed="true"]{background:var(--accent-soft);color:var(--ink);border-color:var(--accent)}
+.chip .sw{width:10px;height:10px;border-radius:2px;display:inline-block}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;margin-bottom:12px}
+.card h3{margin:0 0 4px;font-size:16px}
+.card .sub{color:var(--muted);font-size:13px}
+.tag{display:inline-block;font-size:12px;padding:1px 8px;border-radius:999px;background:var(--accent-soft);color:var(--ink);margin:2px 4px 2px 0}
+.count{color:var(--muted);font-size:13px;margin-left:auto}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{border-bottom:1px solid var(--grid);padding:6px 8px;text-align:left;vertical-align:top}
+th{color:var(--ink2);font-weight:600;background:var(--surface);position:sticky;top:0;z-index:1}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+.tablewrap{overflow:auto;max-height:70vh;border:1px solid var(--border);border-radius:12px;background:var(--surface)}
+details summary{cursor:pointer;color:var(--accent)}
+article.law{white-space:pre-wrap;font-size:14px}
+article.law .art{margin:8px 0;padding-left:8px;border-left:3px solid var(--grid)}
+article.law .art b{color:var(--ink2)}
+mark{background:#fff3b0;color:#0b0b0b;padding:0 1px}
+.timeline{position:relative;padding-left:24px}
+.timeline:before{content:"";position:absolute;left:8px;top:0;bottom:0;width:2px;background:var(--grid)}
+.tl{position:relative;margin-bottom:14px}
+.tl:before{content:"";position:absolute;left:-21px;top:8px;width:10px;height:10px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 2px var(--surface)}
+.tl .date{font-weight:600;font-variant-numeric:tabular-nums}
+.tl .actor{color:var(--muted);font-size:13px}
+.matrix td{min-width:170px}
+.matrix td .b{display:block;color:var(--muted);font-size:12px;margin-top:4px}
+.matrix tr td:first-child{font-weight:600;background:var(--surface);position:sticky;left:0}
+.chartcard{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:12px 16px 4px;margin-bottom:12px;position:relative}
+.chartcard h3{margin:0 0 2px;font-size:15px}
+.chartcard .sub{color:var(--muted);font-size:13px;margin-bottom:6px}
+svg.chart{width:100%;height:340px;display:block}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:13px;color:var(--ink2);margin:4px 0 8px}
+.legend i{display:inline-block;width:14px;height:2px;background:currentColor;vertical-align:middle;margin-right:6px;border-radius:1px}
+.tip{position:absolute;pointer-events:none;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:6px 10px;font-size:13px;box-shadow:0 4px 16px rgba(0,0,0,.12);display:none;z-index:3;min-width:160px}
+.tip b{font-variant-numeric:tabular-nums}
+.tip .k{display:inline-block;width:12px;height:2px;margin-right:6px;vertical-align:middle}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px}
+.note{color:var(--muted);font-size:13px}
+.empty{color:var(--muted);padding:24px;text-align:center}
+.src a{color:var(--accent);text-decoration:none;word-break:break-all}
+.card,.tl{overflow-wrap:anywhere;min-width:0}
+.src a:hover{text-decoration:underline}
+.ok{color:var(--good)}.na{color:var(--muted)}
+@media (max-width:640px){main{padding:12px 16px}.matrix td{min-width:140px}}
+</style>
+</head>
+<body>
+<header>
+  <h1>契約人力制度查詢</h1>
+  <span class="meta" id="built"></span>
+  <nav id="nav" role="tablist">
+    <button role="tab" data-tab="laws">法規</button>
+    <button role="tab" data-tab="timeline">沿革</button>
+    <button role="tab" data-tab="compare">權益對照</button>
+    <button role="tab" data-tab="headcount">員額趨勢</button>
+    <button role="tab" data-tab="local">地方樣態</button>
+    <button role="tab" data-tab="reports">報告文獻</button>
+  </nav>
+</header>
+<main>
+<section id="tab-laws" hidden>
+  <div class="toolbar">
+    <input type="search" id="lawq" placeholder="搜尋法規名稱或條文全文（空白分隔多關鍵字）">
+    <select id="lawtag"><option value="">全部人員類別／主題</option></select>
+    <select id="lawlevel"><option value="">全部位階</option></select>
+    <span class="count" id="lawcount"></span>
+  </div>
+  <div id="lawlist"></div>
+</section>
+<section id="tab-timeline" hidden>
+  <div class="toolbar">
+    <input type="search" id="tlq" placeholder="搜尋事件">
+    <select id="tlactor"><option value="">全部行動者</option></select>
+    <select id="tlcat"><option value="">全部類型</option></select>
+    <span class="count" id="tlcount"></span>
+  </div>
+  <div class="grid2">
+    <div><div class="timeline" id="tllist"></div></div>
+    <div id="drafts"></div>
+  </div>
+</section>
+<section id="tab-compare" hidden>
+  <div class="toolbar">
+    <span id="cmpgroups"></span>
+    <span class="count" id="cmpnote"></span>
+  </div>
+  <div class="tablewrap"><table class="matrix" id="cmptable"></table></div>
+</section>
+<section id="tab-headcount" hidden>
+  <div class="toolbar">
+    <select id="hcscope"></select>
+    <select id="hcgroup"></select>
+    <select id="hcmeasure"></select>
+    <button class="chip" id="hcpreset" title="實有人數：聘用、約僱、事務性人力、第二類近似值與約用人員">目的二對照（實有）</button>
+    <button class="chip" id="hcpreset2" title="主計總處員額彙計表：總員額法第一、二類及第二類細項之預算員額">目的二對照（法定分類）</button>
+    <span id="hccats"></span>
+  </div>
+  <div class="chartcard">
+    <h3 id="hctitle">各類人員人數</h3>
+    <div class="sub" id="hcsub"></div>
+    <div class="legend" id="hclegend"></div>
+    <svg class="chart" id="hcsvg" role="img" aria-label="各類人員人數折線圖"></svg>
+    <div class="tip" id="hctip"></div>
+  </div>
+  <details><summary>資料表（含來源）</summary><div class="tablewrap"><table id="hctable"></table></div></details>
+  <p class="note">提示：「目的二對照（實有）」疊合人事總處實有人數與約用人員；「目的二對照（法定分類）」顯示主計總處員額彙計表的總員額法第一、二類預算員額（110 年度起為 108 年修法後定義，第一類不含公立醫院職員）；分析結論見 research/06_人力消長分析.md。類別名稱含「Q4」或「近似」者為建檔時合成之序列，來源與計算方式見資料表備註。</p>
+</section>
+<section id="tab-local" hidden>
+  <div class="toolbar">
+    <input type="search" id="lgq" placeholder="搜尋縣市或規定內容">
+    <select id="lgfilter">
+      <option value="">全部</option>
+      <option value="political">有隨首長進退條款</option>
+      <option value="caps">有總量管制</option>
+      <option value="core">有核心／公權力限制</option>
+      <option value="lsa">適用勞基法</option>
+    </select>
+    <span class="count" id="lgcount"></span>
+  </div>
+  <div class="tablewrap"><table id="lgtable"></table></div>
+  <div id="lgcards" style="margin-top:12px"></div>
+</section>
+<section id="tab-reports" hidden>
+  <div class="toolbar">
+    <input type="search" id="rpq" placeholder="搜尋報告、文獻（標題、摘要、發現）">
+    <select id="rporg"><option value="">全部來源</option></select>
+    <span class="count" id="rpcount"></span>
+  </div>
+  <div id="rplist"></div>
+</section>
+</main>
+<script>
+const DATA = /*__DATA__*/null;
+const $ = s => document.querySelector(s);
+const el = (t, a={}, ...k) => { const e=document.createElement(t); for(const [x,y] of Object.entries(a)){ if(x==='class')e.className=y; else if(x==='html')e.innerHTML=y; else if(x.startsWith('on'))e.addEventListener(x.slice(2),y); else e.setAttribute(x,y);} for(const c of k.flat()){ if(c==null)continue; e.append(c.nodeType?c:document.createTextNode(String(c))); } return e; };
+const esc = s => String(s??'').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const SERIES = ['--s1','--s2','--s3','--s4','--s5','--s6','--s7','--s8'];
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+$('#built').textContent = DATA ? `資料建檔日 ${DATA.built}` : '';
+if (!DATA) document.body.innerHTML = '<p class="empty">尚未建檔：請執行 python3 build.py</p>';
+
+/* ---------- 分頁 ---------- */
+const tabs = [...document.querySelectorAll('#nav button')];
+function showTab(name){ tabs.forEach(b=>b.setAttribute('aria-selected', b.dataset.tab===name)); document.querySelectorAll('main > section').forEach(s=>s.hidden = s.id!=='tab-'+name); try{localStorage.setItem('cm.tab',name);}catch(e){} if(name==='headcount') drawChart(); }
+tabs.forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
+let initTab='laws'; try{ initTab = localStorage.getItem('cm.tab')||'laws'; }catch(e){}
+
+/* ---------- 工具 ---------- */
+function highlight(text, kws){ let h=esc(text); for(const k of kws){ if(!k)continue; h=h.replace(new RegExp(k.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'g'), m=>`<mark>${m}</mark>`);} return h; }
+function fillSelect(sel, values, keep){ const cur=sel.value; [...sel.options].slice(1).forEach(o=>o.remove()); [...new Set(values.filter(Boolean))].sort().forEach(v=>sel.append(el('option',{value:v},v))); if(keep) sel.value=cur; }
+function fmt(n){ const x=Number(String(n).replace(/,/g,'')); return isNaN(x)?String(n??''):x.toLocaleString('zh-Hant-TW'); }
+
+/* ---------- 法規 ---------- */
+const laws = Array.isArray(DATA&&DATA.laws)?DATA.laws:[];
+fillSelect($('#lawtag'), laws.flatMap(l=>l.tags||[]));
+fillSelect($('#lawlevel'), laws.map(l=>l.level));
+function renderLaws(){
+  const kws=$('#lawq').value.trim().split(/\s+/).filter(Boolean), tag=$('#lawtag').value, level=$('#lawlevel').value;
+  const box=$('#lawlist'); box.innerHTML='';
+  let n=0;
+  for(const l of laws){
+    if(tag && !(l.tags||[]).includes(tag)) continue;
+    if(level && l.level!==level) continue;
+    const arts=l.articles||[];
+    const full=l.name+' '+arts.map(a=>(a.no||'')+' '+(a.text||'')).join('\n');
+    if(kws.length && !kws.every(k=>full.includes(k))) continue;
+    n++;
+    const hit = kws.length ? arts.filter(a=>kws.some(k=>((a.no||'')+(a.text||'')).includes(k))) : [];
+    const card=el('div',{class:'card'});
+    card.append(el('h3',{html:highlight(l.name,kws)}));
+    card.append(el('div',{class:'sub'}, [l.level, l.authority, l.modified_date?`最近異動 ${l.modified_date}`:null].filter(Boolean).join('　')));
+    card.append(el('div',{}, (l.tags||[]).map(t=>el('span',{class:'tag'},t))));
+    if(l.note) card.append(el('p',{class:'note'},l.note));
+    if(hit.length){ const d=el('article',{class:'law'}); hit.slice(0,12).forEach(a=>d.append(el('div',{class:'art',html:`<b>${esc(a.no||'')}</b> ${highlight(a.text,kws)}`}))); if(hit.length>12)d.append(el('p',{class:'note'},`…另有 ${hit.length-12} 條符合`)); card.append(el('div',{class:'note'},`符合條文 ${hit.length} 條：`), d); }
+    const det=el('details'); det.append(el('summary',{},`全文（${arts.length} 條）、沿革、來源`));
+    const body=el('div');
+    if(l.history&&l.history.length){ body.append(el('p',{},el('b',{},'沿革：')), el('ul',{}, (Array.isArray(l.history)?l.history:[l.history]).map(h=>el('li',{}, typeof h==='string'?h:`${h.date||''} ${h.summary||h.text||''}`)))); }
+    if(l.url) body.append(el('p',{class:'src',html:`來源：<a href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.url)}</a>`}));
+    const art=el('article',{class:'law'}); arts.forEach(a=>art.append(el('div',{class:'art',html:`<b>${esc(a.no||'')}</b> ${highlight(a.text,kws)}`}))); body.append(art);
+    det.append(body); card.append(det); box.append(card);
+  }
+  $('#lawcount').textContent=`${n} / ${laws.length} 部`;
+  if(!n) box.append(el('p',{class:'empty'},laws.length?'沒有符合的法規':'尚無法規資料（data/laws.json）'));
+}
+['#lawq','#lawtag','#lawlevel'].forEach(s=>$(s).addEventListener('input',renderLaws));
+
+/* ---------- 沿革與草案 ---------- */
+const tl=(Array.isArray(DATA&&DATA.timeline)?DATA.timeline:[]).slice().sort((a,b)=>String(a.date).localeCompare(String(b.date)));
+fillSelect($('#tlactor'), tl.map(e=>e.actor)); fillSelect($('#tlcat'), tl.map(e=>e.category));
+function renderTimeline(){
+  const q=$('#tlq').value.trim(), actor=$('#tlactor').value, cat=$('#tlcat').value; const box=$('#tllist'); box.innerHTML=''; let n=0;
+  for(const e of tl){
+    if(actor&&e.actor!==actor)continue; if(cat&&e.category!==cat)continue;
+    if(q && !(e.event+' '+(e.summary||'')+' '+(e.significance||'')).includes(q))continue; n++;
+    const d=el('div',{class:'tl'});
+    d.append(el('div',{class:'date'},`${e.date}${e.roc_year?`（民國 ${e.roc_year} 年）`:''}`));
+    d.append(el('div',{},el('b',{},e.event)), el('div',{class:'actor'},[e.actor,e.category,(e.personnel_types||[]).join('、')].filter(Boolean).join('　·　')));
+    if(e.summary)d.append(el('div',{},e.summary));
+    if(e.significance)d.append(el('div',{class:'note'},'制度論觀點：'+e.significance));
+    if(e.sources&&e.sources.length)d.append(el('div',{class:'src note',html:'來源：'+e.sources.map(s=>s.url?`<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.title||s.url)}</a>${s.accessible===false?'（本環境未能取得全文）':''}`:esc(s.title||'')).join('；')}));
+    box.append(d);
+  }
+  $('#tlcount').textContent=`${n} / ${tl.length} 件`;
+  if(!n)box.append(el('p',{class:'empty'},tl.length?'沒有符合的事件':'尚無沿革資料（data/timeline.json）'));
+}
+['#tlq','#tlactor','#tlcat'].forEach(s=>$(s).addEventListener('input',renderTimeline));
+function renderDrafts(){
+  const box=$('#drafts'); box.innerHTML=''; const ds=Array.isArray(DATA&&DATA.drafts)?DATA.drafts:[];
+  box.append(el('h3',{},`歷次專法草案（${ds.length}）`));
+  if(!ds.length){box.append(el('p',{class:'empty'},'尚無草案資料（data/drafts.json）'));return;}
+  for(const d of ds){
+    const c=el('div',{class:'card'});
+    c.append(el('h3',{},d.name), el('div',{class:'sub'},[d.year,d.proposer,d.status].filter(Boolean).join('　·　')));
+    const det=el('details'); det.append(el('summary',{},'條文要點、爭議、與現制差異'));
+    const list=(t,arr)=>arr&&arr.length?[el('p',{},el('b',{},t)),el('ul',{},arr.map(x=>el('li',{},typeof x==='string'?x:JSON.stringify(x))))]:[];
+    det.append(...list('條文要點',d.key_provisions),...list('爭議',d.controversies));
+    if(d.comparison_with_current)det.append(el('p',{},el('b',{},'與現制差異：'),typeof d.comparison_with_current==='string'?d.comparison_with_current:JSON.stringify(d.comparison_with_current)));
+    if(d.sources&&d.sources.length)det.append(el('div',{class:'src note',html:'來源：'+d.sources.map(s=>s.url?`<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.title||s.url)}</a>`:esc(s.title||s)).join('；')}));
+    c.append(det); box.append(c);
+  }
+}
+
+/* ---------- 權益對照 ---------- */
+const cmp=(DATA&&DATA.comparison)||{meta:{personnel_types:[]},dimensions:[]};
+const cmpGroups=[...new Set(cmp.dimensions.map(d=>d.group))]; let cmpSel=new Set(cmpGroups);
+function renderCmp(){
+  const gb=$('#cmpgroups'); gb.innerHTML='';
+  cmpGroups.forEach(g=>gb.append(el('button',{class:'chip','aria-pressed':cmpSel.has(g),onclick:()=>{cmpSel.has(g)?cmpSel.delete(g):cmpSel.add(g);renderCmp();}},g)));
+  const types=cmp.meta.personnel_types||[]; const t=$('#cmptable'); t.innerHTML='';
+  const thead=el('thead'); const tr=el('tr'); tr.append(el('th',{},'項目')); types.forEach(p=>tr.append(el('th',{},p.name,el('div',{class:'note'},p.nature||'')))); thead.append(tr); t.append(thead);
+  const tb=el('tbody');
+  for(const d of cmp.dimensions){ if(!cmpSel.has(d.group))continue; const r=el('tr'); r.append(el('td',{},d.name,el('div',{class:'note'},d.group)));
+    types.forEach(p=>{const c=(d.cells||{})[p.key]||{}; r.append(el('td',{},c.text||'—',el('span',{class:'b'},(c.basis||'')+(c.verified?' ✓':''))));}); tb.append(r); }
+  t.append(tb);
+  const v=cmp.dimensions.flatMap(d=>Object.values(d.cells||{})); const ok=v.filter(c=>c.verified).length;
+  $('#cmpnote').textContent=cmp.dimensions.length?`${cmp.dimensions.length} 項 × ${types.length} 類；法源已核對 ${ok}/${v.length} 格（✓）`:'尚無對照資料';
+}
+
+/* ---------- 員額趨勢 ---------- */
+const hc=Array.isArray(DATA&&DATA.headcount)?DATA.headcount:[];
+const hcCatSel=new Set();
+function hcOptions(){
+  const scopes=[...new Set(hc.map(r=>r.scope))].filter(Boolean).sort();
+  const s=$('#hcscope'); s.innerHTML=''; scopes.forEach(v=>s.append(el('option',{value:v},v))); if(!scopes.length)s.append(el('option',{value:''},'（無資料）'));
+  if(scopes.includes('中央'))s.value='中央';
+  hcGroupOptions();
+}
+function hcGroupOptions(){
+  const scope=$('#hcscope').value; const g=$('#hcgroup'); const cur=g.value; g.innerHTML='';
+  const PREF=['行政院所屬','全體','地方政府合計','中央政府合計'];
+  const groups=[...new Set(hc.filter(r=>r.scope===scope).map(r=>r.agency_group))].filter(Boolean).sort((a,b)=>{const pa=PREF.indexOf(a),pb=PREF.indexOf(b);if(pa!==pb)return (pa<0?99:pa)-(pb<0?99:pb);return a.localeCompare(b,'zh-Hant');});
+  groups.forEach(v=>g.append(el('option',{value:v},v))); if(groups.includes(cur))g.value=cur;
+  const m=$('#hcmeasure'); const curm=m.value; m.innerHTML='';
+  [...new Set(hc.filter(r=>r.scope===scope&&r.agency_group===g.value).map(r=>r.measure))].filter(Boolean).forEach(v=>m.append(el('option',{value:v},v))); if([...m.options].some(o=>o.value===curm))m.value=curm;
+  hcCatChips();
+}
+function hcCatChips(){
+  const scope=$('#hcscope').value, group=$('#hcgroup').value, meas=$('#hcmeasure').value;
+  const cats=[...new Set(hc.filter(r=>r.scope===scope&&r.agency_group===group&&r.measure===meas).map(r=>r.category))].filter(Boolean);
+  const box=$('#hccats'); box.innerHTML='';
+  for(const c of [...hcCatSel]) if(!cats.includes(c)) hcCatSel.delete(c);
+  if(!hcCatSel.size) cats.slice(0,4).forEach(c=>hcCatSel.add(c));
+  const sel=cats.filter(c=>hcCatSel.has(c)); cats.forEach(c=>box.append(el('button',{class:'chip','aria-pressed':hcCatSel.has(c),onclick:()=>{hcCatSel.has(c)?hcCatSel.delete(c):(hcCatSel.size<8&&hcCatSel.add(c));hcCatChips();}},el('i',{class:'sw',style:`background:${hcCatSel.has(c)?css(SERIES[sel.indexOf(c)%8]):'var(--grid)'}`}),c)));
+  drawChart();
+}
+$('#hcpreset').onclick=()=>{ $('#hcscope').value='中央'; hcGroupOptions(); $('#hcgroup').value='行政院所屬'; hcGroupOptions(); $('#hcmeasure').value='實有人數'; hcCatSel.clear(); ['聘用','約僱','技工工友駐衛警(事務性人力)','第二類員額近似(聘用+約僱+事務性)','約用人員(行政機關,Q4)','約用人員(合計,Q4)'].forEach(c=>hcCatSel.add(c)); hcCatChips(); };
+$('#hcpreset2').onclick=()=>{ $('#hcscope').value='中央'; hcGroupOptions(); $('#hcgroup').value='總員額法適用機關合計'; hcGroupOptions(); $('#hcmeasure').value='預算員額'; hcCatSel.clear(); ['總員額法第一類員額','總員額法第二類員額','總員額法第二類員額－聘僱人員(聘用+約僱)','總員額法第二類員額－工友(含技工、駕駛)','總員額法第二類員額－駐衛警察'].forEach(c=>hcCatSel.add(c)); hcCatChips(); };
+$('#hcscope').onchange=hcGroupOptions; $('#hcgroup').onchange=()=>{hcGroupOptions();}; $('#hcmeasure').onchange=hcCatChips;
+function drawChart(){
+  const svg=$('#hcsvg'); if(!svg||svg.closest('section').hidden)return; svg.innerHTML='';
+  const scope=$('#hcscope').value, group=$('#hcgroup').value, meas=$('#hcmeasure').value;
+  const rows=hc.filter(r=>r.scope===scope&&r.agency_group===group&&r.measure===meas&&hcCatSel.has(r.category));
+  const allCats=[...new Set(hc.filter(r=>r.scope===scope&&r.agency_group===group&&r.measure===meas).map(r=>r.category))];
+  const cats=allCats.filter(c=>hcCatSel.has(c));
+  $('#hctitle').textContent=`${scope||''}${group&&group!=='全體'?'・'+group:''}　各類人員${meas||'人數'}`;
+  $('#hcsub').textContent=rows.length?`民國 ${Math.min(...rows.map(r=>r.year))}～${Math.max(...rows.map(r=>r.year))} 年；資料來源見下方資料表`:'';
+  const lg=$('#hclegend'); lg.innerHTML=''; if(cats.length>1)cats.forEach(c=>lg.append(el('span',{style:`color:${css(SERIES[cats.indexOf(c)%8])}`},el('i'),el('span',{style:'color:var(--ink2)'},c))));
+  renderHcTable(rows);
+  if(!rows.length){ svg.innerHTML=`<text x="50%" y="50%" text-anchor="middle" fill="${css('--muted')}">尚無資料（data/headcount.csv）</text>`; return; }
+  const W=svg.clientWidth||900,H=340,m={t:16,r:24,b:36,l:64}; svg.setAttribute('viewBox',`0 0 ${W} ${H}`);
+  const years=[...new Set(rows.map(r=>r.year))].sort((a,b)=>a-b); const ymax=Math.max(...rows.map(r=>r.value))*1.08||1;
+  const x=y=>m.l+(years.length>1?(years.indexOf(y)/(years.length-1)):0.5)*(W-m.l-m.r), yy=v=>m.t+(1-v/ymax)*(H-m.t-m.b);
+  const ns='http://www.w3.org/2000/svg', S=(t,a)=>{const e=document.createElementNS(ns,t);for(const[k,v]of Object.entries(a))e.setAttribute(k,v);return e;};
+  const ticks=5; for(let i=0;i<=ticks;i++){const v=ymax/ticks*i; svg.append(S('line',{x1:m.l,x2:W-m.r,y1:yy(v),y2:yy(v),stroke:css('--grid'),'stroke-width':1})); const t=S('text',{x:m.l-8,y:yy(v)+4,'text-anchor':'end',fill:css('--muted'),'font-size':11}); t.textContent=v>=10000?(v/10000).toFixed(1)+'萬':Math.round(v).toLocaleString(); svg.append(t);}
+  svg.append(S('line',{x1:m.l,x2:W-m.r,y1:yy(0),y2:yy(0),stroke:css('--axis')}));
+  const step=Math.ceil(years.length/12); years.forEach((y,i)=>{ if(i%step&&i!==years.length-1)return; const t=S('text',{x:x(y),y:H-m.b+18,'text-anchor':'middle',fill:css('--muted'),'font-size':11}); t.textContent=y; svg.append(t); });
+  const series=cats.map(c=>({name:c,color:css(SERIES[cats.indexOf(c)%8]),pts:years.map(y=>{const r=rows.find(r=>r.category===c&&r.year===y);return r?{y,v:r.value,r}:null;})}));
+  for(const s of series){ const seg=[]; let cur=[]; s.pts.forEach(p=>{ if(p)cur.push(p); else if(cur.length){seg.push(cur);cur=[];} }); if(cur.length)seg.push(cur);
+    seg.forEach(sg=>svg.append(S('path',{d:sg.map((p,i)=>(i?'L':'M')+x(p.y)+','+yy(p.v)).join(' '),fill:'none',stroke:s.color,'stroke-width':2,'stroke-linejoin':'round','stroke-linecap':'round'})));
+    s.pts.filter(Boolean).forEach(p=>svg.append(S('circle',{cx:x(p.y),cy:yy(p.v),r:4,fill:s.color,stroke:css('--surface'),'stroke-width':2})));
+    const last=[...s.pts].reverse().find(Boolean); if(last&&cats.length<=4){const t=S('text',{x:x(last.y)+8,y:yy(last.v)+4,fill:css('--ink2'),'font-size':11});t.textContent=fmt(last.v);svg.append(t);}
+  }
+  const cross=S('line',{y1:m.t,y2:H-m.b,stroke:css('--axis'),'stroke-width':1,visibility:'hidden'}); svg.append(cross);
+  const tip=$('#hctip');
+  svg.onpointermove=e=>{ const rect=svg.getBoundingClientRect(); const px=(e.clientX-rect.left)*W/rect.width; let best=years[0],bd=1e9; years.forEach(y=>{const d=Math.abs(x(y)-px);if(d<bd){bd=d;best=y;}}); cross.setAttribute('x1',x(best));cross.setAttribute('x2',x(best));cross.setAttribute('visibility','visible');
+    tip.innerHTML=''; tip.append(el('div',{},el('b',{},`民國 ${best} 年`))); series.forEach(s=>{const p=s.pts.find(p=>p&&p.y===best); tip.append(el('div',{},el('span',{class:'k',style:`background:${s.color}`}),el('b',{},p?fmt(p.v):'—'),el('span',{style:'color:var(--ink2)'},' '+s.name)));});
+    tip.style.display='block'; const cr=svg.closest('.chartcard').getBoundingClientRect(); let lx=e.clientX-cr.left+12; if(lx+tip.offsetWidth>cr.width-8)lx=e.clientX-cr.left-tip.offsetWidth-12; tip.style.left=lx+'px'; tip.style.top=(e.clientY-cr.top-10)+'px'; };
+  svg.onpointerleave=()=>{tip.style.display='none';cross.setAttribute('visibility','hidden');};
+}
+function renderHcTable(rows){
+  const t=$('#hctable'); t.innerHTML=''; if(!rows.length)return;
+  t.append(el('thead',{},el('tr',{},['民國年','類別','數值','單位','來源','備註'].map((h,i)=>el('th',{class:i===2?'num':''},h)))));
+  const tb=el('tbody'); rows.slice().sort((a,b)=>a.year-b.year||a.category.localeCompare(b.category)).forEach(r=>tb.append(el('tr',{},el('td',{},r.year),el('td',{},r.category),el('td',{class:'num'},fmt(r.value)),el('td',{},r.unit||'人'),el('td',{class:'src',html:r.source_url?`<a href="${esc(r.source_url)}" target="_blank" rel="noopener">${esc(r.source_name||r.source_url)}</a>`:esc(r.source_name||'')}),el('td',{},r.note||'')))); t.append(tb);
+}
+window.addEventListener('resize',()=>drawChart());
+
+/* ---------- 地方樣態 ---------- */
+const lg=Array.isArray(DATA&&DATA.local_gov)?DATA.local_gov:[];
+const yes=v=>v&&/^(有|是|true)/.test(String(typeof v==='object'?v.status||v.exists||'':v));
+function renderLocal(){
+  const q=$('#lgq').value.trim(), f=$('#lgfilter').value; const t=$('#lgtable'); t.innerHTML=''; const cards=$('#lgcards'); cards.innerHTML=''; let n=0;
+  t.append(el('thead',{},el('tr',{},['縣市','契約人力類型','隨首長進退','適用勞基法','總量管制','核心／公權力限制','規定數'].map(h=>el('th',{},h)))));
+  const tb=el('tbody');
+  for(const g of lg){
+    const blob=JSON.stringify(g); if(q&&!blob.includes(q))continue;
+    const pol=g.political_appointee_clause, lsa=g.labor_standards_act;
+    if(f==='political'&&!yes(pol))continue; if(f==='caps'&&!(g.caps_or_limits&&g.caps_or_limits!=='不明'&&g.caps_or_limits!=='無'))continue; if(f==='core'&&!(g.core_noncore_rule&&g.core_noncore_rule!=='不明'&&g.core_noncore_rule!=='無'))continue; if(f==='lsa'&&!yes(lsa))continue; n++;
+    const txt=v=>v==null?'—':typeof v==='object'?(v.status||v.exists||'')+(v.content?'：'+v.content:''):String(v);
+    tb.append(el('tr',{},el('td',{},g.name),el('td',{},(g.contract_types||[]).join('、')),el('td',{class:yes(pol)?'ok':''},txt(pol)),el('td',{},txt(lsa)),el('td',{},txt(g.caps_or_limits)),el('td',{},txt(g.core_noncore_rule)),el('td',{class:'num'},(g.regulations||[]).length)));
+    const c=el('div',{class:'card'}); c.append(el('h3',{},`${g.name}（${g.type||''}）`));
+    if(g.salary_scheme)c.append(el('p',{},el('b',{},'薪資制度：'),txt(g.salary_scheme)));
+    if(g.notable_practices)c.append(el('p',{},el('b',{},'特殊作法：'),Array.isArray(g.notable_practices)?g.notable_practices.join('；'):txt(g.notable_practices)));
+    if(g.headcount&&g.headcount.length)c.append(el('p',{},el('b',{},'人數：'),g.headcount.map(h=>`${h.year} ${h.category} ${fmt(h.value)}（${h.source||''}）`).join('；')));
+    if(g.regulations&&g.regulations.length){const d=el('details');d.append(el('summary',{},`規定 ${g.regulations.length} 件`));d.append(el('ul',{},g.regulations.map(r=>{const link=r.url?`<a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.title)}</a>`:esc(r.title); const yr=r.year?'（'+esc(r.year)+'）':''; const acc=r.accessible; const na=(acc===true||acc==='true'||acc==='accessible'||acc==='yes')?'':`<span class="na">　${acc==='listing'?'僅見目錄名稱':'全文未取得（網域受限）'}</span>`; const sm=r.summary?'<br>'+esc(r.summary):''; const li=el('li',{class:'src',html:link+yr+na+sm}); if(Array.isArray(r.points)&&r.points.length){const pd=el('details');pd.append(el('summary',{},`條文全文（${r.points.length} 點）`));const art=el('article',{class:'law'});r.points.forEach(pt=>art.append(el('div',{class:'art',html:`<b>${esc(pt.no||'')}</b> ${esc(pt.text||'')}`})));pd.append(art);li.append(pd);} return li;}))); c.append(d);}
+    cards.append(c);
+  }
+  t.append(tb); $('#lgcount').textContent=`${n} / ${lg.length} 縣市`;
+  if(!lg.length)cards.append(el('p',{class:'empty'},'尚無地方資料（data/local_gov.json）'));
+}
+['#lgq','#lgfilter'].forEach(s=>$(s).addEventListener('input',renderLocal));
+
+/* ---------- 報告與文獻 ---------- */
+const rp=(Array.isArray(DATA&&DATA.reports)?DATA.reports:[]).map(r=>({...r,_kind:'報告',_org:r.org||'',_date:String(r.date||'')})).concat((Array.isArray(DATA&&DATA.literature)?DATA.literature:[]).map(r=>({...r,_kind:'文獻',_org:'學術文獻',_date:String(r.year||''),summary:r.abstract,key_findings:r.findings_relevant?[].concat(r.findings_relevant):[]})));
+fillSelect($('#rporg'), rp.map(r=>r._org));
+function renderReports(){
+  const q=$('#rpq').value.trim(), org=$('#rporg').value; const box=$('#rplist'); box.innerHTML=''; let n=0;
+  for(const r of rp.slice().sort((a,b)=>b._date.localeCompare(a._date))){
+    if(org&&r._org!==org)continue;
+    const blob=[r.title,r.summary,(r.key_findings||[]).join(' '),(r.findings||[]).join(' '),(r.recommendations||[]).join(' '),r.case_no,r.author].filter(Boolean).join('\n');
+    if(q&&!blob.includes(q))continue; n++;
+    const c=el('div',{class:'card'});
+    c.append(el('h3',{},r.title||''), el('div',{class:'sub'},[r._kind,r._org,r.case_no,r._date,r.author,r.school,r.degree].filter(Boolean).join('　·　')));
+    c.append(el('div',{}, (r.personnel_types||r.related_personnel_types||r.keywords||[]).map(t=>el('span',{class:'tag'},t))));
+    if(r.summary)c.append(el('p',{},r.summary));
+    const det=el('details'); det.append(el('summary',{},'重點發現、建議、關鍵數字、來源'));
+    const list=(t,arr)=>arr&&arr.length?[el('p',{},el('b',{},t)),el('ul',{},arr.map(x=>el('li',{},typeof x==='string'?x:JSON.stringify(x))))]:[];
+    det.append(...list('重點發現',r.key_findings||r.findings),...list('建議',r.recommendations));
+    if(r.numbers&&r.numbers.length){det.append(el('p',{},el('b',{},'關鍵數字')));const t=el('table');t.append(el('tbody',{},r.numbers.map(x=>el('tr',{},el('td',{},x.item||''),el('td',{class:'num'},fmt(x.value)),el('td',{},x.year||'')))));det.append(t);}
+    if(r.url)det.append(el('p',{class:'src',html:`來源：<a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.url)}</a>`}));
+    c.append(det); box.append(c);
+  }
+  $('#rpcount').textContent=`${n} / ${rp.length} 件`;
+  if(!n)box.append(el('p',{class:'empty'},rp.length?'沒有符合的項目':'尚無報告與文獻資料（data/reports.json、reports_oversight.json、literature.json）'));
+}
+['#rpq','#rporg'].forEach(s=>$(s).addEventListener('input',renderReports));
+
+/* ---------- 啟動 ---------- */
+if(DATA){ renderLaws(); renderTimeline(); renderDrafts(); renderCmp(); hcOptions(); renderLocal(); renderReports(); showTab(initTab); }
+</script>
+</body>
+</html>

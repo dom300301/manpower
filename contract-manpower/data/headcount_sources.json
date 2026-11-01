@@ -1,0 +1,1297 @@
+[
+ {
+  "name": "搜尋摘要來源",
+  "download_url": [
+   "https://www.ly.gov.tw/Pages/Detail.aspx?nodeid=56067&pid=252977",
+   "https://www.cna.com.tw/news/aipl/202510220259.aspx",
+   "https://www.storm.mg/lifestyle/11075798",
+   "https://news.ltn.com.tw/news/politics/breakingnews/5220469"
+  ],
+  "page_url": "",
+  "download_date": "2026-10-31",
+  "years_covered": "110-115",
+  "local_path": "",
+  "parse_method": "WebSearch 摘要人工抄錄",
+  "note": "網域被擋，未能下載原文"
+ },
+ {
+  "name": "data.gov.tw 全站資料集清單中與員額/人數相關之 147 筆",
+  "download_url": "https://data.gov.tw/api/front/dataset/export?format=csv",
+  "page_url": "https://data.gov.tw/datasets/search",
+  "download_date": "2026-10-31",
+  "years_covered": "-",
+  "local_path": "contract-manpower/raw/stats/datagov_相關資料集清單.json",
+  "parse_method": "以關鍵字自全站清單篩選",
+  "note": ""
+ },
+ {
+  "name": "人事總處 政府員額管理相關資訊(115.9.8)",
+  "download_url": "https://www.dgpa.gov.tw/FileConversion?filename=dgpa/files/202609/a0cc5b49-3c37-4201-95fd-78ec3f50ea95.pdf&nfix=&name=11508政府員額管理相關資訊.pdf",
+  "page_url": "https://www.dgpa.gov.tw/information?uid=375&pid=13101",
+  "download_date": "2026-10-31",
+  "years_covered": "99-116(部分年度)",
+  "local_path": "contract-manpower/raw/stats/dgpa_11508政府員額管理相關資訊.pdf",
+  "parse_method": "pdfplumber 文字→人工摘錄數字",
+  "note": ""
+ },
+ {
+  "name": "data.gov.tw 68029 行政院及所屬各主管機關臨時人員人數(行政院所屬,107年第1季)",
+  "download_url": "https://data.gov.tw/dataset/68029",
+  "page_url": "https://data.gov.tw/dataset/68029",
+  "download_date": "2026-10-31",
+  "years_covered": "107",
+  "local_path": "contract-manpower/raw/stats/dgpa_datagov68029_1-15-1_行政院及所屬機關107年第1季臨時人員數.csv",
+  "parse_method": "csv(cp950)",
+  "note": ""
+ },
+ {
+  "name": "data.gov.tw 68029 行政院及所屬各主管機關臨時人員人數(行政院以外中央機關,107年第1季)",
+  "download_url": "https://data.gov.tw/dataset/68029",
+  "page_url": "https://data.gov.tw/dataset/68029",
+  "download_date": "2026-10-31",
+  "years_covered": "107",
+  "local_path": "contract-manpower/raw/stats/dgpa_datagov68029_1-15-2_行政院以外中央政府機關107年第1季臨時人員數.csv",
+  "parse_method": "csv(cp950)",
+  "note": ""
+ },
+ {
+  "name": "人事總處 所屬機關員額評鑑專區 113年員額評鑑情形報告",
+  "download_url": "https://www.dgpa.gov.tw/uploads/dgpa/files/202408/b4459d37-98a2-41ae-b22a-c528c35b9548.pdf",
+  "page_url": "https://www.dgpa.gov.tw/informationlist?uid=782",
+  "download_date": "2026-10-31",
+  "years_covered": "113",
+  "local_path": "contract-manpower/raw/stats/dgpa_公務人力發展學院113年員額評鑑情形報告.pdf",
+  "parse_method": "僅單一機關之評鑑報告，未解析",
+  "note": ""
+ },
+ {
+  "name": "人事總處 105年直轄市、各縣市統計要覽 依員額統計",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=331&pid=7360",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=331&pid=7360",
+  "download_date": "2026-10-31",
+  "years_covered": "105",
+  "local_path": "contract-manpower/raw/stats/dgpa_地方要覽105_依員額統計.xls",
+  "parse_method": "read_table→表頭對應欄位",
+  "note": ""
+ },
+ {
+  "name": "人事總處 106年直轄市、各縣市統計要覽 依員額統計",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=331&pid=8043",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=331&pid=8043",
+  "download_date": "2026-10-31",
+  "years_covered": "106",
+  "local_path": "contract-manpower/raw/stats/dgpa_地方要覽106_依員額統計.xlsx",
+  "parse_method": "read_table→表頭對應欄位",
+  "note": ""
+ },
+ {
+  "name": "人事總處 107年直轄市、各縣市統計要覽 依員額統計",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=331&pid=9673",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=331&pid=9673",
+  "download_date": "2026-10-31",
+  "years_covered": "107",
+  "local_path": "contract-manpower/raw/stats/dgpa_地方要覽107_依員額統計.xls",
+  "parse_method": "read_table→表頭對應欄位",
+  "note": ""
+ },
+ {
+  "name": "人事總處 108年直轄市、各縣市統計要覽 依員額統計",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=331&pid=9834",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=331&pid=9834",
+  "download_date": "2026-10-31",
+  "years_covered": "108",
+  "local_path": "contract-manpower/raw/stats/dgpa_地方要覽108_依員額統計.xls",
+  "parse_method": "read_table→表頭對應欄位",
+  "note": ""
+ },
+ {
+  "name": "人事總處 109年直轄市、各縣市統計要覽 依員額統計",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=331&pid=10601",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=331&pid=10601",
+  "download_date": "2026-10-31",
+  "years_covered": "109",
+  "local_path": "contract-manpower/raw/stats/dgpa_地方要覽109_依員額統計.xls",
+  "parse_method": "read_table→表頭對應欄位",
+  "note": ""
+ },
+ {
+  "name": "人事總處 110年直轄市、各縣市統計要覽 依員額統計",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=331&pid=10942",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=331&pid=10942",
+  "download_date": "2026-10-31",
+  "years_covered": "110",
+  "local_path": "contract-manpower/raw/stats/dgpa_地方要覽110_依員額統計.xls",
+  "parse_method": "read_table→表頭對應欄位",
+  "note": ""
+ },
+ {
+  "name": "人事總處 111年直轄市、各縣市統計要覽 依員額統計",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=331&pid=11320",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=331&pid=11320",
+  "download_date": "2026-10-31",
+  "years_covered": "111",
+  "local_path": "contract-manpower/raw/stats/dgpa_地方要覽111_依員額統計.xls",
+  "parse_method": "read_table→表頭對應欄位",
+  "note": ""
+ },
+ {
+  "name": "人事總處 112年直轄市、各縣市統計要覽 依員額統計",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=331&pid=11823",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=331&pid=11823",
+  "download_date": "2026-10-31",
+  "years_covered": "112",
+  "local_path": "contract-manpower/raw/stats/dgpa_地方要覽112_依員額統計.xlsx",
+  "parse_method": "read_table→表頭對應欄位",
+  "note": ""
+ },
+ {
+  "name": "人事總處 113年直轄市、各縣市統計要覽 依員額統計",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=331&pid=12308",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=331&pid=12308",
+  "download_date": "2026-10-31",
+  "years_covered": "113",
+  "local_path": "contract-manpower/raw/stats/dgpa_地方要覽113_依員額統計.xlsx",
+  "parse_method": "read_table→表頭對應欄位",
+  "note": ""
+ },
+ {
+  "name": "人事總處 114年直轄市、各縣市統計要覽 依員額統計",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=331&pid=12889",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=331&pid=12889",
+  "download_date": "2026-10-31",
+  "years_covered": "114",
+  "local_path": "contract-manpower/raw/stats/dgpa_地方要覽114_依員額統計.xlsx",
+  "parse_method": "read_table→表頭對應欄位",
+  "note": ""
+ },
+ {
+  "name": "人事總處 107年公教人力統計年報 名詞定義",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=9757",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=9757",
+  "download_date": "2026-10-31",
+  "years_covered": "107",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報107_統計年報相關名詞定義.docx",
+  "parse_method": "docx XML 文字（供定義比對）",
+  "note": ""
+ },
+ {
+  "name": "人事總處 107年公教人力統計年報(彙整表)",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=9757",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=9757",
+  "download_date": "2026-10-31",
+  "years_covered": "近十年",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報107_行政院所屬及地方政府公教人力統計年報(彙整表).xls",
+  "parse_method": "未直接解析（各表另有單檔）",
+  "note": ""
+ },
+ {
+  "name": "人事總處 107年行政院所屬及地方政府公教人力統計年報 表10",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=9757",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=9757",
+  "download_date": "2026-10-31",
+  "years_covered": "107",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報107_表10_各地方政府所屬公教人力實有人數.xls",
+  "parse_method": "read_table→表頭對應欄位，列標籤為機關",
+  "note": ""
+ },
+ {
+  "name": "人事總處 107年行政院所屬及地方政府公教人力統計年報 表1",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=9757",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=9757",
+  "download_date": "2026-10-31",
+  "years_covered": "近十年",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報107_表1_近十年行政院所屬公教人力實有人數.xls",
+  "parse_method": "read_table→表頭對應欄位",
+  "note": "各年度年報涵蓋近十年，csv 取涵蓋該年之最新年報"
+ },
+ {
+  "name": "人事總處 107年行政院所屬及地方政府公教人力統計年報 表2",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=9757",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=9757",
+  "download_date": "2026-10-31",
+  "years_covered": "107",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報107_表2_行政院各部會所屬公教人力實有人數.xls",
+  "parse_method": "read_table→表頭對應欄位，列標籤為機關",
+  "note": ""
+ },
+ {
+  "name": "人事總處 107年行政院所屬及地方政府公教人力統計年報 表9",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=9757",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=9757",
+  "download_date": "2026-10-31",
+  "years_covered": "近十年",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報107_表9_近十年地方政府所屬公教人力實有人數.xls",
+  "parse_method": "read_table→表頭對應欄位",
+  "note": "各年度年報涵蓋近十年，csv 取涵蓋該年之最新年報"
+ },
+ {
+  "name": "人事總處 107年行政院所屬及地方政府公教人力統計年報 附表1",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=9757",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=9757",
+  "download_date": "2026-10-31",
+  "years_covered": "107",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報107_附表1_全國公教人力實有人數(依政府別).xls",
+  "parse_method": "read_table→表頭對應欄位，列標籤為機關",
+  "note": ""
+ },
+ {
+  "name": "人事總處 107年行政院所屬及地方政府公教人力統計年報 附表5",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=9757",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=9757",
+  "download_date": "2026-10-31",
+  "years_covered": "近十年",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報107_附表5_近十年中央政府預算員額數.xls",
+  "parse_method": "read_table",
+  "note": ""
+ },
+ {
+  "name": "人事總處 107年行政院所屬及地方政府公教人力統計年報 附表6(臨時人員)",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=9757",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=9757",
+  "download_date": "2026-10-31",
+  "years_covered": "107",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報107_附表6_行政院所屬臨時人員人數.xls",
+  "parse_method": "read_table（各季）",
+  "note": ""
+ },
+ {
+  "name": "人事總處 108年公教人力統計年報(彙整表)",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=10130",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=10130",
+  "download_date": "2026-10-31",
+  "years_covered": "近十年",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報108_108年行政院所屬及地方政府公教人力統計年報(彙整表).xls",
+  "parse_method": "未直接解析（各表另有單檔）",
+  "note": ""
+ },
+ {
+  "name": "人事總處 108年公教人力統計年報 名詞定義",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=10130",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=10130",
+  "download_date": "2026-10-31",
+  "years_covered": "108",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報108_統計年報相關名詞定義.docx",
+  "parse_method": "docx XML 文字（供定義比對）",
+  "note": ""
+ },
+ {
+  "name": "人事總處 108年行政院所屬及地方政府公教人力統計年報 表10",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=10130",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=10130",
+  "download_date": "2026-10-31",
+  "years_covered": "108",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報108_表10_各地方政府所屬公教人力實有人數.xls",
+  "parse_method": "read_table→表頭對應欄位，列標籤為機關",
+  "note": ""
+ },
+ {
+  "name": "人事總處 108年行政院所屬及地方政府公教人力統計年報 表1",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=10130",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=10130",
+  "download_date": "2026-10-31",
+  "years_covered": "近十年",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報108_表1_近十年行政院所屬公教人力實有人數.xls",
+  "parse_method": "read_table→表頭對應欄位",
+  "note": "各年度年報涵蓋近十年，csv 取涵蓋該年之最新年報"
+ },
+ {
+  "name": "人事總處 108年行政院所屬及地方政府公教人力統計年報 表2",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=10130",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=10130",
+  "download_date": "2026-10-31",
+  "years_covered": "108",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報108_表2_行政院各部會所屬公教人力實有人數.xls",
+  "parse_method": "read_table→表頭對應欄位，列標籤為機關",
+  "note": ""
+ },
+ {
+  "name": "人事總處 108年行政院所屬及地方政府公教人力統計年報 表9",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=10130",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=10130",
+  "download_date": "2026-10-31",
+  "years_covered": "近十年",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報108_表9_近十年地方政府所屬公教人力實有人數.xls",
+  "parse_method": "read_table→表頭對應欄位",
+  "note": "各年度年報涵蓋近十年，csv 取涵蓋該年之最新年報"
+ },
+ {
+  "name": "人事總處 108年行政院所屬及地方政府公教人力統計年報 附表1",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=10130",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=10130",
+  "download_date": "2026-10-31",
+  "years_covered": "108",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報108_附表1_全國公教人力實有人數(依政府別).xls",
+  "parse_method": "read_table→表頭對應欄位，列標籤為機關",
+  "note": ""
+ },
+ {
+  "name": "人事總處 108年行政院所屬及地方政府公教人力統計年報 附表5",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=10130",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=10130",
+  "download_date": "2026-10-31",
+  "years_covered": "近十年",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報108_附表5_近十年中央政府預算員額數.xls",
+  "parse_method": "read_table",
+  "note": ""
+ },
+ {
+  "name": "人事總處 108年行政院所屬及地方政府公教人力統計年報 附表6(臨時人員)",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=10130",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=10130",
+  "download_date": "2026-10-31",
+  "years_covered": "108",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報108_附表6_行政院所屬臨時人員人數.xls",
+  "parse_method": "read_table（各季）",
+  "note": ""
+ },
+ {
+  "name": "人事總處 109年公教人力統計年報(彙整表)",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=10602",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=10602",
+  "download_date": "2026-10-31",
+  "years_covered": "近十年",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報109_109年行政院所屬及地方政府公教人力統計年報(彙整表).xls",
+  "parse_method": "未直接解析（各表另有單檔）",
+  "note": ""
+ },
+ {
+  "name": "人事總處 109年公教人力統計年報 名詞定義",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=10602",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=10602",
+  "download_date": "2026-10-31",
+  "years_covered": "109",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報109_統計年報相關名詞定義.docx",
+  "parse_method": "docx XML 文字（供定義比對）",
+  "note": ""
+ },
+ {
+  "name": "人事總處 109年行政院所屬及地方政府公教人力統計年報 表10",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=10602",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=10602",
+  "download_date": "2026-10-31",
+  "years_covered": "109",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報109_表10_各地方政府所屬公教人力實有人數.xls",
+  "parse_method": "read_table→表頭對應欄位，列標籤為機關",
+  "note": ""
+ },
+ {
+  "name": "人事總處 109年行政院所屬及地方政府公教人力統計年報 表1",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=10602",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=10602",
+  "download_date": "2026-10-31",
+  "years_covered": "近十年",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報109_表1_近十年行政院所屬公教人力實有人數.xls",
+  "parse_method": "read_table→表頭對應欄位",
+  "note": "各年度年報涵蓋近十年，csv 取涵蓋該年之最新年報"
+ },
+ {
+  "name": "人事總處 109年行政院所屬及地方政府公教人力統計年報 表2",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=10602",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=10602",
+  "download_date": "2026-10-31",
+  "years_covered": "109",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報109_表2_行政院各部會所屬公教人力實有人數.xls",
+  "parse_method": "read_table→表頭對應欄位，列標籤為機關",
+  "note": ""
+ },
+ {
+  "name": "人事總處 109年行政院所屬及地方政府公教人力統計年報 表9",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=10602",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=10602",
+  "download_date": "2026-10-31",
+  "years_covered": "近十年",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報109_表9_近十年地方政府所屬公教人力實有人數.xls",
+  "parse_method": "read_table→表頭對應欄位",
+  "note": "各年度年報涵蓋近十年，csv 取涵蓋該年之最新年報"
+ },
+ {
+  "name": "人事總處 109年行政院所屬及地方政府公教人力統計年報 附表1",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=10602",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=10602",
+  "download_date": "2026-10-31",
+  "years_covered": "109",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報109_附表1_全國公教人力實有人數(依政府別).xls",
+  "parse_method": "read_table→表頭對應欄位，列標籤為機關",
+  "note": ""
+ },
+ {
+  "name": "人事總處 109年行政院所屬及地方政府公教人力統計年報 附表5",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=10602",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=10602",
+  "download_date": "2026-10-31",
+  "years_covered": "近十年",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報109_附表5_近十年中央政府預算員額數.xls",
+  "parse_method": "read_table",
+  "note": ""
+ },
+ {
+  "name": "人事總處 109年行政院所屬及地方政府公教人力統計年報 附表6(臨時人員)",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=10602",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=10602",
+  "download_date": "2026-10-31",
+  "years_covered": "109",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報109_附表6_行政院所屬臨時人員人數.xls",
+  "parse_method": "read_table（各季）",
+  "note": ""
+ },
+ {
+  "name": "人事總處 110年公教人力統計年報(彙整表)",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=10939",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=10939",
+  "download_date": "2026-10-31",
+  "years_covered": "近十年",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報110_110年行政院所屬及地方政府公教人力統計年報(彙整表).xls",
+  "parse_method": "未直接解析（各表另有單檔）",
+  "note": ""
+ },
+ {
+  "name": "人事總處 110年公教人力統計年報 名詞定義",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=10939",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=10939",
+  "download_date": "2026-10-31",
+  "years_covered": "110",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報110_統計年報相關名詞定義.docx",
+  "parse_method": "docx XML 文字（供定義比對）",
+  "note": ""
+ },
+ {
+  "name": "人事總處 110年行政院所屬及地方政府公教人力統計年報 表10",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=10939",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=10939",
+  "download_date": "2026-10-31",
+  "years_covered": "110",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報110_表10_各地方政府所屬公教人力實有人數.xls",
+  "parse_method": "read_table→表頭對應欄位，列標籤為機關",
+  "note": ""
+ },
+ {
+  "name": "人事總處 110年行政院所屬及地方政府公教人力統計年報 表1",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=10939",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=10939",
+  "download_date": "2026-10-31",
+  "years_covered": "近十年",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報110_表1_近十年行政院所屬公教人力實有人數.xls",
+  "parse_method": "read_table→表頭對應欄位",
+  "note": "各年度年報涵蓋近十年，csv 取涵蓋該年之最新年報"
+ },
+ {
+  "name": "人事總處 110年行政院所屬及地方政府公教人力統計年報 表2",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=10939",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=10939",
+  "download_date": "2026-10-31",
+  "years_covered": "110",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報110_表2_行政院各部會所屬公教人力實有人數.xls",
+  "parse_method": "read_table→表頭對應欄位，列標籤為機關",
+  "note": ""
+ },
+ {
+  "name": "人事總處 110年行政院所屬及地方政府公教人力統計年報 表9",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=10939",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=10939",
+  "download_date": "2026-10-31",
+  "years_covered": "近十年",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報110_表9_近十年地方政府所屬公教人力實有人數.xls",
+  "parse_method": "read_table→表頭對應欄位",
+  "note": "各年度年報涵蓋近十年，csv 取涵蓋該年之最新年報"
+ },
+ {
+  "name": "人事總處 110年行政院所屬及地方政府公教人力統計年報 附表1",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=10939",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=10939",
+  "download_date": "2026-10-31",
+  "years_covered": "110",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報110_附表1_全國公教人力實有人數(依政府別).xls",
+  "parse_method": "read_table→表頭對應欄位，列標籤為機關",
+  "note": ""
+ },
+ {
+  "name": "人事總處 110年行政院所屬及地方政府公教人力統計年報 附表5",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=10939",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=10939",
+  "download_date": "2026-10-31",
+  "years_covered": "近十年",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報110_附表5_近十年中央政府預算員額數.xls",
+  "parse_method": "read_table",
+  "note": ""
+ },
+ {
+  "name": "人事總處 110年行政院所屬及地方政府公教人力統計年報 附表6(臨時人員)",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=10939",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=10939",
+  "download_date": "2026-10-31",
+  "years_covered": "110",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報110_附表6_行政院所屬臨時人員人數.xls",
+  "parse_method": "read_table（各季）",
+  "note": ""
+ },
+ {
+  "name": "人事總處 111年公教人力統計年報(彙整表)",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=11300",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=11300",
+  "download_date": "2026-10-31",
+  "years_covered": "近十年",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報111_111年行政院所屬及地方政府公教人力統計年報(彙整表).xls",
+  "parse_method": "未直接解析（各表另有單檔）",
+  "note": ""
+ },
+ {
+  "name": "人事總處 111年公教人力統計年報 名詞定義",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=11300",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=11300",
+  "download_date": "2026-10-31",
+  "years_covered": "111",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報111_統計年報相關名詞定義.docx",
+  "parse_method": "docx XML 文字（供定義比對）",
+  "note": ""
+ },
+ {
+  "name": "人事總處 111年行政院所屬及地方政府公教人力統計年報 表10",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=11300",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=11300",
+  "download_date": "2026-10-31",
+  "years_covered": "111",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報111_表10_各地方政府所屬公教人力實有人數.xlsx",
+  "parse_method": "read_table→表頭對應欄位，列標籤為機關",
+  "note": ""
+ },
+ {
+  "name": "人事總處 111年行政院所屬及地方政府公教人力統計年報 表1",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=11300",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=11300",
+  "download_date": "2026-10-31",
+  "years_covered": "近十年",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報111_表1_近十年行政院所屬公教人力實有人數.xlsx",
+  "parse_method": "read_table→表頭對應欄位",
+  "note": "各年度年報涵蓋近十年，csv 取涵蓋該年之最新年報"
+ },
+ {
+  "name": "人事總處 111年行政院所屬及地方政府公教人力統計年報 表2",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=11300",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=11300",
+  "download_date": "2026-10-31",
+  "years_covered": "111",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報111_表2_行政院各部會所屬公教人力實有人數.xlsx",
+  "parse_method": "read_table→表頭對應欄位，列標籤為機關",
+  "note": ""
+ },
+ {
+  "name": "人事總處 111年行政院所屬及地方政府公教人力統計年報 表9",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=11300",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=11300",
+  "download_date": "2026-10-31",
+  "years_covered": "近十年",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報111_表9_近十年地方政府所屬公教人力實有人數.xlsx",
+  "parse_method": "read_table→表頭對應欄位",
+  "note": "各年度年報涵蓋近十年，csv 取涵蓋該年之最新年報"
+ },
+ {
+  "name": "人事總處 111年行政院所屬及地方政府公教人力統計年報 附表1",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=11300",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=11300",
+  "download_date": "2026-10-31",
+  "years_covered": "111",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報111_附表1_全國公教人力實有人數(依政府別).xlsx",
+  "parse_method": "read_table→表頭對應欄位，列標籤為機關",
+  "note": ""
+ },
+ {
+  "name": "人事總處 111年行政院所屬及地方政府公教人力統計年報 附表5",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=11300",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=11300",
+  "download_date": "2026-10-31",
+  "years_covered": "近十年",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報111_附表5_近十年中央政府預算員額數.xlsx",
+  "parse_method": "read_table",
+  "note": ""
+ },
+ {
+  "name": "人事總處 111年行政院所屬及地方政府公教人力統計年報 附表6(臨時人員)",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=11300",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=11300",
+  "download_date": "2026-10-31",
+  "years_covered": "111",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報111_附表6_行政院所屬臨時人員人數.xlsx",
+  "parse_method": "read_table（各季）",
+  "note": ""
+ },
+ {
+  "name": "人事總處 112年公教人力統計年報(彙整表)",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=11812",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=11812",
+  "download_date": "2026-10-31",
+  "years_covered": "近十年",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報112_112年行政院所屬及地方政府公教人力統計年報(彙整表).xlsx",
+  "parse_method": "未直接解析（各表另有單檔）",
+  "note": ""
+ },
+ {
+  "name": "人事總處 112年公教人力統計年報 名詞定義",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=11812",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=11812",
+  "download_date": "2026-10-31",
+  "years_covered": "112",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報112_統計年報相關名詞定義.docx",
+  "parse_method": "docx XML 文字（供定義比對）",
+  "note": ""
+ },
+ {
+  "name": "人事總處 112年行政院所屬及地方政府公教人力統計年報 表10",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=11812",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=11812",
+  "download_date": "2026-10-31",
+  "years_covered": "112",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報112_表10_各地方政府所屬公教人力實有人數.xlsx",
+  "parse_method": "read_table→表頭對應欄位，列標籤為機關",
+  "note": ""
+ },
+ {
+  "name": "人事總處 112年行政院所屬及地方政府公教人力統計年報 表1",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=11812",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=11812",
+  "download_date": "2026-10-31",
+  "years_covered": "近十年",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報112_表1_近十年行政院所屬公教人力實有人數.xlsx",
+  "parse_method": "read_table→表頭對應欄位",
+  "note": "各年度年報涵蓋近十年，csv 取涵蓋該年之最新年報"
+ },
+ {
+  "name": "人事總處 112年行政院所屬及地方政府公教人力統計年報 表2",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=11812",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=11812",
+  "download_date": "2026-10-31",
+  "years_covered": "112",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報112_表2_行政院各部會所屬公教人力實有人數.xlsx",
+  "parse_method": "read_table→表頭對應欄位，列標籤為機關",
+  "note": ""
+ },
+ {
+  "name": "人事總處 112年行政院所屬及地方政府公教人力統計年報 表9",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=11812",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=11812",
+  "download_date": "2026-10-31",
+  "years_covered": "近十年",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報112_表9_近十年地方政府所屬公教人力實有人數.xlsx",
+  "parse_method": "read_table→表頭對應欄位",
+  "note": "各年度年報涵蓋近十年，csv 取涵蓋該年之最新年報"
+ },
+ {
+  "name": "人事總處 112年行政院所屬及地方政府公教人力統計年報 附表1",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=11812",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=11812",
+  "download_date": "2026-10-31",
+  "years_covered": "112",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報112_附表1_全國公教人力實有人數(依政府別).xlsx",
+  "parse_method": "read_table→表頭對應欄位，列標籤為機關",
+  "note": ""
+ },
+ {
+  "name": "人事總處 112年行政院所屬及地方政府公教人力統計年報 附表5",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=11812",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=11812",
+  "download_date": "2026-10-31",
+  "years_covered": "近十年",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報112_附表5_近十年中央政府預算員額數.xlsx",
+  "parse_method": "read_table",
+  "note": ""
+ },
+ {
+  "name": "人事總處 112年行政院所屬及地方政府公教人力統計年報 附表6(臨時人員)",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=11812",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=11812",
+  "download_date": "2026-10-31",
+  "years_covered": "112",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報112_附表6_行政院所屬臨時人員人數.xlsx",
+  "parse_method": "read_table（各季）",
+  "note": ""
+ },
+ {
+  "name": "人事總處 113年公教人力統計年報(彙整表)",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=12313",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=12313",
+  "download_date": "2026-10-31",
+  "years_covered": "近十年",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報113_113年行政院所屬及地方政府公教人力統計年報(彙整表).xlsx",
+  "parse_method": "未直接解析（各表另有單檔）",
+  "note": ""
+ },
+ {
+  "name": "人事總處 113年公教人力統計年報 名詞定義",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=12313",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=12313",
+  "download_date": "2026-10-31",
+  "years_covered": "113",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報113_統計年報相關名詞定義.docx",
+  "parse_method": "docx XML 文字（供定義比對）",
+  "note": ""
+ },
+ {
+  "name": "人事總處 113年行政院所屬及地方政府公教人力統計年報 表10",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=12313",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=12313",
+  "download_date": "2026-10-31",
+  "years_covered": "113",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報113_表10_各地方政府所屬公教人力實有人數.xlsx",
+  "parse_method": "read_table→表頭對應欄位，列標籤為機關",
+  "note": ""
+ },
+ {
+  "name": "人事總處 113年行政院所屬及地方政府公教人力統計年報 表1",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=12313",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=12313",
+  "download_date": "2026-10-31",
+  "years_covered": "近十年",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報113_表1_近十年行政院所屬公教人力實有人數.xlsx",
+  "parse_method": "read_table→表頭對應欄位",
+  "note": "各年度年報涵蓋近十年，csv 取涵蓋該年之最新年報"
+ },
+ {
+  "name": "人事總處 113年行政院所屬及地方政府公教人力統計年報 表2",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=12313",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=12313",
+  "download_date": "2026-10-31",
+  "years_covered": "113",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報113_表2_行政院各部會所屬公教人力實有人數.xlsx",
+  "parse_method": "read_table→表頭對應欄位，列標籤為機關",
+  "note": ""
+ },
+ {
+  "name": "人事總處 113年行政院所屬及地方政府公教人力統計年報 表9",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=12313",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=12313",
+  "download_date": "2026-10-31",
+  "years_covered": "近十年",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報113_表9_近十年地方政府所屬公教人力實有人數.xlsx",
+  "parse_method": "read_table→表頭對應欄位",
+  "note": "各年度年報涵蓋近十年，csv 取涵蓋該年之最新年報"
+ },
+ {
+  "name": "人事總處 113年行政院所屬及地方政府公教人力統計年報 附表1",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=12313",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=12313",
+  "download_date": "2026-10-31",
+  "years_covered": "113",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報113_附表1_全國公教人力實有人數(依政府別).xlsx",
+  "parse_method": "read_table→表頭對應欄位，列標籤為機關",
+  "note": ""
+ },
+ {
+  "name": "人事總處 113年行政院所屬及地方政府公教人力統計年報 附表5",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=12313",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=12313",
+  "download_date": "2026-10-31",
+  "years_covered": "近十年",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報113_附表5_近十年中央政府預算員額數.xlsx",
+  "parse_method": "read_table",
+  "note": ""
+ },
+ {
+  "name": "人事總處 113年行政院所屬及地方政府公教人力統計年報 附表6(約用人員)",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=12313",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=12313",
+  "download_date": "2026-10-31",
+  "years_covered": "113",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報113_附表6_行政院所屬約用人員人數.xlsx",
+  "parse_method": "read_table（各季）",
+  "note": ""
+ },
+ {
+  "name": "人事總處 114年公教人力統計年報(彙整表)",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=12873",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=12873",
+  "download_date": "2026-10-31",
+  "years_covered": "近十年",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報114_114年行政院所屬及地方政府公教人力統計年報(彙整表).xlsx",
+  "parse_method": "未直接解析（各表另有單檔）",
+  "note": ""
+ },
+ {
+  "name": "人事總處 114年公教人力統計年報 名詞定義",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=12873",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=12873",
+  "download_date": "2026-10-31",
+  "years_covered": "114",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報114_統計年報相關名詞定義.docx",
+  "parse_method": "docx XML 文字（供定義比對）",
+  "note": ""
+ },
+ {
+  "name": "人事總處 114年行政院所屬及地方政府公教人力統計年報 表10",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=12873",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=12873",
+  "download_date": "2026-10-31",
+  "years_covered": "114",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報114_表10_各地方政府所屬公教人力實有人數.xlsx",
+  "parse_method": "read_table→表頭對應欄位，列標籤為機關",
+  "note": ""
+ },
+ {
+  "name": "人事總處 114年行政院所屬及地方政府公教人力統計年報 表1",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=12873",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=12873",
+  "download_date": "2026-10-31",
+  "years_covered": "近十年",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報114_表1_近十年行政院所屬公教人力實有人數.xlsx",
+  "parse_method": "read_table→表頭對應欄位",
+  "note": "各年度年報涵蓋近十年，csv 取涵蓋該年之最新年報"
+ },
+ {
+  "name": "人事總處 114年行政院所屬及地方政府公教人力統計年報 表2",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=12873",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=12873",
+  "download_date": "2026-10-31",
+  "years_covered": "114",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報114_表2_行政院各部會所屬公教人力實有人數.xlsx",
+  "parse_method": "read_table→表頭對應欄位，列標籤為機關",
+  "note": ""
+ },
+ {
+  "name": "人事總處 114年行政院所屬及地方政府公教人力統計年報 表9",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=12873",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=12873",
+  "download_date": "2026-10-31",
+  "years_covered": "近十年",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報114_表9_近十年地方政府所屬公教人力實有人數.xlsx",
+  "parse_method": "read_table→表頭對應欄位",
+  "note": "各年度年報涵蓋近十年，csv 取涵蓋該年之最新年報"
+ },
+ {
+  "name": "人事總處 114年行政院所屬及地方政府公教人力統計年報 附表1",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=12873",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=12873",
+  "download_date": "2026-10-31",
+  "years_covered": "114",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報114_附表1_全國公教人力實有人數(依政府別).xlsx",
+  "parse_method": "read_table→表頭對應欄位，列標籤為機關",
+  "note": ""
+ },
+ {
+  "name": "人事總處 114年行政院所屬及地方政府公教人力統計年報 附表5",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=12873",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=12873",
+  "download_date": "2026-10-31",
+  "years_covered": "近十年",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報114_附表5_近十年中央政府預算員額數.xlsx",
+  "parse_method": "read_table",
+  "note": ""
+ },
+ {
+  "name": "人事總處 114年行政院所屬及地方政府公教人力統計年報 附表6(約用人員)",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=12873",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=499&pid=12873",
+  "download_date": "2026-10-31",
+  "years_covered": "114",
+  "local_path": "contract-manpower/raw/stats/dgpa_年報114_附表6_行政院所屬約用人員人數.xlsx",
+  "parse_method": "read_table（各季）",
+  "note": ""
+ },
+ {
+  "name": "人事總處 106年行政院所屬各機關公教人力概況 第4季",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=330&pid=7400",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=330&pid=7400",
+  "download_date": "2026-10-31",
+  "years_covered": "106",
+  "local_path": "contract-manpower/raw/stats/dgpa_概況106_第4季.xls",
+  "parse_method": "未解析（公教人員依官等/機關類型，不含聘僱臨時）",
+  "note": ""
+ },
+ {
+  "name": "人事總處 107年行政院所屬各機關公教人力概況 第4季",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=330&pid=8111",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=330&pid=8111",
+  "download_date": "2026-10-31",
+  "years_covered": "107",
+  "local_path": "contract-manpower/raw/stats/dgpa_概況107_第4季.xls",
+  "parse_method": "未解析（公教人員依官等/機關類型，不含聘僱臨時）",
+  "note": ""
+ },
+ {
+  "name": "人事總處 108年行政院所屬各機關公教人力概況 第4季",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=330&pid=9761",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=330&pid=9761",
+  "download_date": "2026-10-31",
+  "years_covered": "108",
+  "local_path": "contract-manpower/raw/stats/dgpa_概況108_第4季.xls",
+  "parse_method": "未解析（公教人員依官等/機關類型，不含聘僱臨時）",
+  "note": ""
+ },
+ {
+  "name": "人事總處 109年行政院所屬各機關公教人力概況 第4季",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=330&pid=10157",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=330&pid=10157",
+  "download_date": "2026-10-31",
+  "years_covered": "109",
+  "local_path": "contract-manpower/raw/stats/dgpa_概況109_第4季.xls",
+  "parse_method": "未解析（公教人員依官等/機關類型，不含聘僱臨時）",
+  "note": ""
+ },
+ {
+  "name": "人事總處 110年行政院所屬各機關公教人力概況 第4季",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=330&pid=10651",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=330&pid=10651",
+  "download_date": "2026-10-31",
+  "years_covered": "110",
+  "local_path": "contract-manpower/raw/stats/dgpa_概況110_第4季.xls",
+  "parse_method": "未解析（公教人員依官等/機關類型，不含聘僱臨時）",
+  "note": ""
+ },
+ {
+  "name": "人事總處 111年行政院所屬各機關公教人力概況 第4季",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=330&pid=11004",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=330&pid=11004",
+  "download_date": "2026-10-31",
+  "years_covered": "111",
+  "local_path": "contract-manpower/raw/stats/dgpa_概況111_第4季.xls",
+  "parse_method": "未解析（公教人員依官等/機關類型，不含聘僱臨時）",
+  "note": ""
+ },
+ {
+  "name": "人事總處 112年行政院所屬各機關公教人力概況 第4季",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=330&pid=11390",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=330&pid=11390",
+  "download_date": "2026-10-31",
+  "years_covered": "112",
+  "local_path": "contract-manpower/raw/stats/dgpa_概況112_第4季.xls",
+  "parse_method": "未解析（公教人員依官等/機關類型，不含聘僱臨時）",
+  "note": ""
+ },
+ {
+  "name": "人事總處 113年行政院所屬各機關公教人力概況 第4季",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=330&pid=11942",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=330&pid=11942",
+  "download_date": "2026-10-31",
+  "years_covered": "113",
+  "local_path": "contract-manpower/raw/stats/dgpa_概況113_第4季.xls",
+  "parse_method": "未解析（公教人員依官等/機關類型，不含聘僱臨時）",
+  "note": ""
+ },
+ {
+  "name": "人事總處 114年行政院所屬各機關公教人力概況 第4季",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=330&pid=12441",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=330&pid=12441",
+  "download_date": "2026-10-31",
+  "years_covered": "114",
+  "local_path": "contract-manpower/raw/stats/dgpa_概況114_第4季.xlsx",
+  "parse_method": "未解析（公教人員依官等/機關類型，不含聘僱臨時）",
+  "note": ""
+ },
+ {
+  "name": "人事總處 115年行政院所屬各機關公教人力概況 第3季",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=330&pid=12967",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=330&pid=12967",
+  "download_date": "2026-10-31",
+  "years_covered": "115",
+  "local_path": "contract-manpower/raw/stats/dgpa_概況115_第3季.xlsx",
+  "parse_method": "未解析（公教人員依官等/機關類型，不含聘僱臨時）",
+  "note": ""
+ },
+ {
+  "name": "人事總處 114年人事業務統計提要 1.機關數",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=902&pid=12899",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=902&pid=12899",
+  "download_date": "2026-10-31",
+  "years_covered": "114",
+  "local_path": "contract-manpower/raw/stats/dgpa_統計提要114_1_公務統計方案_機關數_資訊處114.xlsx",
+  "parse_method": "未解析",
+  "note": ""
+ },
+ {
+  "name": "人事總處 114年人事業務統計提要 2.公教人員數",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=902&pid=12898",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=902&pid=12898",
+  "download_date": "2026-10-31",
+  "years_covered": "114",
+  "local_path": "contract-manpower/raw/stats/dgpa_統計提要114_2_公務統計方案_公教人員數_資訊處114.xlsx",
+  "parse_method": "未解析（含事業機構之公教人員數）",
+  "note": ""
+ },
+ {
+  "name": "人事總處 114年人事業務統計提要 8-09",
+  "download_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=902&pid=12892",
+  "page_url": "https://www.dgpa.gov.tw/mp/info?mid=328&uid=902&pid=12892",
+  "download_date": "2026-10-31",
+  "years_covered": "歷年",
+  "local_path": "contract-manpower/raw/stats/dgpa_統計提要114_8-09_人事統計提要_人事人員與公教人員人數統計比較_綜規處114修正.xls",
+  "parse_method": "未解析",
+  "note": ""
+ },
+ {
+  "name": "人事總處 聘僱人員管理作業參考手冊(111.11)",
+  "download_url": "https://www.dgpa.gov.tw/information?uid=94&pid=11201",
+  "page_url": "https://www.dgpa.gov.tw/information?uid=94&pid=11201",
+  "download_date": "2026-10-31",
+  "years_covered": "-",
+  "local_path": "contract-manpower/raw/stats/dgpa_聘僱人員管理作業手冊_111.11編印版.pdf",
+  "parse_method": "制度文件，未解析",
+  "note": ""
+ },
+ {
+  "name": "data.gov.tw 152191 全國公務人員人數按年別分(銓敘部)",
+  "download_url": "https://www.mocs.gov.tw/FileUpload/1835-9801/Documents//1全國公務人員人數按年別分(CSV檔).csv",
+  "page_url": "https://data.gov.tw/dataset/152191",
+  "download_date": "2026-10-31",
+  "years_covered": "104-113",
+  "local_path": "contract-manpower/raw/stats/mocs_datagov152191_全國公務人員人數按年別分.csv",
+  "parse_method": "未解析（與概況統計 PDF 相同數列）",
+  "note": ""
+ },
+ {
+  "name": "銓敘部 114年銓敘統計年報 一、公務人員概況統計(表1-17)",
+  "download_url": "https://www.mocs.gov.tw/FileUpload/2137-15330/Documents//9.(一)全國公務人員概況.ods",
+  "page_url": "https://www.mocs.gov.tw/pages/detail.aspx?Node=2137&Page=15330&Index=1",
+  "download_date": "2026-10-31",
+  "years_covered": "105-114",
+  "local_path": "contract-manpower/raw/stats/mocs_年報114_一_全國公務人員概況.ods",
+  "parse_method": "未解析（表1 數值與概況統計 PDF 一致）",
+  "note": ""
+ },
+ {
+  "name": "銓敘部 114年銓敘統計年報 二、行政機關公務人員概況(表18-26)",
+  "download_url": "https://www.mocs.gov.tw/FileUpload/2137-15330/Documents//10.(二)行政機關公務人員概況.ods",
+  "page_url": "https://www.mocs.gov.tw/pages/detail.aspx?Node=2137&Page=15330&Index=1",
+  "download_date": "2026-10-31",
+  "years_covered": "114",
+  "local_path": "contract-manpower/raw/stats/mocs_年報114_二_行政機關公務人員概況.ods",
+  "parse_method": "未解析",
+  "note": ""
+ },
+ {
+  "name": "銓敘部 114年銓敘統計年報 提要分析",
+  "download_url": "https://www.mocs.gov.tw/FileUpload/2133-15323/Documents//6.114年報提要分析.pdf",
+  "page_url": "https://www.mocs.gov.tw/pages/detail.aspx?Node=2133&Page=15323&Index=1",
+  "download_date": "2026-10-31",
+  "years_covered": "114",
+  "local_path": "contract-manpower/raw/stats/mocs_年報114_提要分析.pdf",
+  "parse_method": "未解析",
+  "note": ""
+ },
+ {
+  "name": "銓敘部 99年銓敘統計年報 表1 全國公務人員人數按年別分",
+  "download_url": "https://www.mocs.gov.tw/FileUpload/937-2856/Documents//表1～表14.ods",
+  "page_url": "https://www.mocs.gov.tw/pages/list.aspx?Node=937&Type=1&Index=1",
+  "download_date": "2026-10-31",
+  "years_covered": "90-94",
+  "local_path": "contract-manpower/raw/stats/mocs_年報99_表1-14_全國公務人員概況.ods",
+  "parse_method": "自製 ODS 讀取器(content.xml)",
+  "note": ""
+ },
+ {
+  "name": "銓敘部 99年銓敘統計年報 二、行政機關公務人員概況",
+  "download_url": "https://www.mocs.gov.tw/FileUpload/937-2856/Documents//表15～表23.ods",
+  "page_url": "https://www.mocs.gov.tw/pages/detail.aspx?Node=937&Page=2856&Index=1",
+  "download_date": "2026-10-31",
+  "years_covered": "99",
+  "local_path": "contract-manpower/raw/stats/mocs_年報99_表15-23_行政機關公務人員概況.ods",
+  "parse_method": "未解析",
+  "note": ""
+ },
+ {
+  "name": "銓敘部 統計專題-公務人員概況統計 表10 歷年全國公務人力概況",
+  "download_url": "https://www.mocs.gov.tw/FileUpload/1090-4043/Documents//表10歷年全國公務人力概況.pdf",
+  "page_url": "https://www.mocs.gov.tw/pages/list.aspx?Node=1090&Type=1&Index=1",
+  "download_date": "2026-10-31",
+  "years_covered": "95-114",
+  "local_path": "contract-manpower/raw/stats/mocs_概況統計_表10歷年全國公務人力概況.pdf",
+  "parse_method": "pdfplumber 文字→正規表示式逐列解析",
+  "note": ""
+ },
+ {
+  "name": "銓敘部 統計專題-公務人員概況統計 表1 歷年全國公務人員人數按機關別分",
+  "download_url": "https://www.mocs.gov.tw/FileUpload/1090-4043/Documents//表1歷年全國公務人員人數按機關別分.pdf",
+  "page_url": "https://www.mocs.gov.tw/pages/list.aspx?Node=1090&Type=1&Index=1",
+  "download_date": "2026-10-31",
+  "years_covered": "95-114",
+  "local_path": "contract-manpower/raw/stats/mocs_概況統計_表1歷年全國公務人員人數按機關別分.pdf",
+  "parse_method": "pdfplumber 文字→正規表示式逐列解析",
+  "note": ""
+ },
+ {
+  "name": "銓敘部 概況統計 表2 歷年全國公務人員人數按人員類別分",
+  "download_url": "https://www.mocs.gov.tw/FileUpload/1090-4043/Documents//表2歷年全國公務人員人數按人員類別分.pdf",
+  "page_url": "https://www.mocs.gov.tw/pages/list.aspx?Node=1090&Type=1&Index=1",
+  "download_date": "2026-10-31",
+  "years_covered": "95-114",
+  "local_path": "contract-manpower/raw/stats/mocs_概況統計_表2歷年全國公務人員人數按人員類別分.pdf",
+  "parse_method": "未解析（官等別）",
+  "note": ""
+ },
+ {
+  "name": "銓敘部 概況統計 表7 歷年全國公務人員人數按銓敘狀況分",
+  "download_url": "https://www.mocs.gov.tw/FileUpload/1090-4043/Documents//表7歷年全國公務人員人數按銓敘狀況分.pdf",
+  "page_url": "https://www.mocs.gov.tw/pages/list.aspx?Node=1090&Type=1&Index=1",
+  "download_date": "2026-10-31",
+  "years_covered": "95-114",
+  "local_path": "contract-manpower/raw/stats/mocs_概況統計_表7歷年全國公務人員人數按銓敘狀況分.pdf",
+  "parse_method": "未解析",
+  "note": ""
+ },
+ {
+  "name": "主計總處 100年度中央政府總預算法定預算 參考表 中央政府機關總員額法員額彙計表",
+  "download_url": "https://ws.dgbas.gov.tw/public/data/dgbas01/100/100ctab/100c機關總員額法員額彙計表.xls",
+  "page_url": "https://www.dgbas.gov.tw/News_Content.aspx?n=3625&s=103533",
+  "download_date": "2026-10-31",
+  "years_covered": "100",
+  "local_path": "contract-manpower/raw/stats/dgbas/dgbas_總員額法員額彙計表_100c.xls ; contract-manpower/raw/stats/dgbas/dgbas_總員額法員額彙計表_100c.pdf",
+  "parse_method": "xlrd/openpyxl 讀第一工作表；合計列、第一類及第二類人員列、第三～五類人員列、各「主管」列",
+  "note": "預算員額（法定預算）；108.12.31修法前分類定義（第一類含公立醫院職員；總數高限173,000、第一類86,700、第二類41,200）；100年度預算案頁無本表，採法定預算版"
+ },
+ {
+  "name": "主計總處 101年度中央政府總預算預算案 參考表 中央政府機關總員額法員額彙計表",
+  "download_url": "https://ws.dgbas.gov.tw/public/data/dgbas01/101/101btab/101b機關總員額法員額彙計表.xls",
+  "page_url": "https://www.dgbas.gov.tw/News_Content.aspx?n=3625&s=103577",
+  "download_date": "2026-10-31",
+  "years_covered": "101",
+  "local_path": "contract-manpower/raw/stats/dgbas/dgbas_總員額法員額彙計表_101b.xls ; contract-manpower/raw/stats/dgbas/dgbas_總員額法員額彙計表_101b.pdf",
+  "parse_method": "xlrd/openpyxl 讀第一工作表；合計列、第一類及第二類人員列、第三～五類人員列、各「主管」列",
+  "note": "預算員額（預算案）；108.12.31修法前分類定義（第一類含公立醫院職員；總數高限173,000、第一類86,700、第二類41,200）"
+ },
+ {
+  "name": "主計總處 102年度中央政府總預算預算案 參考表 中央政府機關總員額法員額彙計表",
+  "download_url": "https://ws.dgbas.gov.tw/public/data/dgbas01/102/102btab/102b中央政府機關總員額法員額彙計表.xls",
+  "page_url": "https://www.dgbas.gov.tw/News_Content.aspx?n=3625&s=103603",
+  "download_date": "2026-10-31",
+  "years_covered": "102",
+  "local_path": "contract-manpower/raw/stats/dgbas/dgbas_總員額法員額彙計表_102b.xls",
+  "parse_method": "xlrd/openpyxl 讀第一工作表；合計列、第一類及第二類人員列、第三～五類人員列、各「主管」列",
+  "note": "預算員額（預算案）；108.12.31修法前分類定義（第一類含公立醫院職員；總數高限173,000、第一類86,700、第二類41,200）"
+ },
+ {
+  "name": "主計總處 103年度中央政府總預算預算案 參考表 中央政府機關總員額法員額彙計表",
+  "download_url": "https://ws.dgbas.gov.tw/public/data/dgbas01/103/103btab/103b中央政府機關總員額法員額彙計表.xls",
+  "page_url": "https://www.dgbas.gov.tw/News_Content.aspx?n=3625&s=103638",
+  "download_date": "2026-10-31",
+  "years_covered": "103",
+  "local_path": "contract-manpower/raw/stats/dgbas/dgbas_總員額法員額彙計表_103b.xls ; contract-manpower/raw/stats/dgbas/dgbas_總員額法員額彙計表_103b.pdf",
+  "parse_method": "xlrd/openpyxl 讀第一工作表；合計列、第一類及第二類人員列、第三～五類人員列、各「主管」列",
+  "note": "預算員額（預算案）；108.12.31修法前分類定義（第一類含公立醫院職員；總數高限173,000、第一類86,700、第二類41,200）"
+ },
+ {
+  "name": "主計總處 104年度中央政府總預算預算案 參考表 中央政府機關總員額法員額彙計表",
+  "download_url": "https://ws.dgbas.gov.tw/public/data/dgbas01/104/104btab/104b中央政府機關總員額法員額彙計表.xls",
+  "page_url": "https://www.dgbas.gov.tw/News_Content.aspx?n=3625&s=103672",
+  "download_date": "2026-10-31",
+  "years_covered": "104",
+  "local_path": "contract-manpower/raw/stats/dgbas/dgbas_總員額法員額彙計表_104b.xls",
+  "parse_method": "xlrd/openpyxl 讀第一工作表；合計列、第一類及第二類人員列、第三～五類人員列、各「主管」列",
+  "note": "預算員額（預算案）；108.12.31修法前分類定義（第一類含公立醫院職員；總數高限173,000、第一類86,700、第二類41,200）"
+ },
+ {
+  "name": "主計總處 105年度中央政府總預算預算案 參考表 中央政府機關總員額法員額彙計表",
+  "download_url": "https://ws.dgbas.gov.tw/public/data/dgbas01/105/105btab/105b中央政府機關總員額法員額彙計表.xls",
+  "page_url": "https://www.dgbas.gov.tw/News_Content.aspx?n=3625&s=103706",
+  "download_date": "2026-10-31",
+  "years_covered": "105",
+  "local_path": "contract-manpower/raw/stats/dgbas/dgbas_總員額法員額彙計表_105b.xls",
+  "parse_method": "xlrd/openpyxl 讀第一工作表；合計列、第一類及第二類人員列、第三～五類人員列、各「主管」列",
+  "note": "預算員額（預算案）；108.12.31修法前分類定義（第一類含公立醫院職員；總數高限173,000、第一類86,700、第二類41,200）"
+ },
+ {
+  "name": "主計總處 106年度中央政府總預算預算案 參考表 中央政府機關總員額法員額彙計表",
+  "download_url": "https://ws.dgbas.gov.tw/public/data/dgbas01/106/106btab/106b中央政府機關總員額法員額彙計表.xls",
+  "page_url": "https://www.dgbas.gov.tw/News_Content.aspx?n=3625&s=103742",
+  "download_date": "2026-10-31",
+  "years_covered": "106",
+  "local_path": "contract-manpower/raw/stats/dgbas/dgbas_總員額法員額彙計表_106b.xls",
+  "parse_method": "xlrd/openpyxl 讀第一工作表；合計列、第一類及第二類人員列、第三～五類人員列、各「主管」列",
+  "note": "預算員額（預算案）；108.12.31修法前分類定義（第一類含公立醫院職員；總數高限173,000、第一類86,700、第二類41,200）"
+ },
+ {
+  "name": "主計總處 107年度中央政府總預算預算案 參考表 中央政府機關總員額法員額彙計表",
+  "download_url": "https://ws.dgbas.gov.tw/public/data/dgbas01/107/107btab/107b機關總員額法員額彙計表.xls",
+  "page_url": "https://www.dgbas.gov.tw/News_Content.aspx?n=3625&s=103776",
+  "download_date": "2026-10-31",
+  "years_covered": "107",
+  "local_path": "contract-manpower/raw/stats/dgbas/dgbas_總員額法員額彙計表_107b.xls ; contract-manpower/raw/stats/dgbas/dgbas_總員額法員額彙計表_107b.pdf",
+  "parse_method": "xlrd/openpyxl 讀第一工作表；合計列、第一類及第二類人員列、第三～五類人員列、各「主管」列",
+  "note": "預算員額（預算案）；108.12.31修法前分類定義（第一類含公立醫院職員；總數高限173,000、第一類86,700、第二類41,200）"
+ },
+ {
+  "name": "主計總處 108年度中央政府總預算預算案 參考表 中央政府機關總員額法員額彙計表",
+  "download_url": "https://ws.dgbas.gov.tw/public/data/dgbas01/108/108btab/108b機關總員額法員額彙計表.xls",
+  "page_url": "https://www.dgbas.gov.tw/News_Content.aspx?n=3625&s=103788",
+  "download_date": "2026-10-31",
+  "years_covered": "108",
+  "local_path": "contract-manpower/raw/stats/dgbas/dgbas_總員額法員額彙計表_108b.xls ; contract-manpower/raw/stats/dgbas/dgbas_總員額法員額彙計表_108b.pdf",
+  "parse_method": "xlrd/openpyxl 讀第一工作表；合計列、第一類及第二類人員列、第三～五類人員列、各「主管」列",
+  "note": "預算員額（預算案）；108.12.31修法前分類定義（第一類含公立醫院職員；總數高限173,000、第一類86,700、第二類41,200）"
+ },
+ {
+  "name": "主計總處 109年度中央政府總預算預算案 參考表 中央政府機關總員額法員額彙計表",
+  "download_url": "https://ws.dgbas.gov.tw/public/data/dgbas01/109/109btab/109b機關總員額法員額彙計表.xls",
+  "page_url": "https://www.dgbas.gov.tw/News_Content.aspx?n=3625&s=104328",
+  "download_date": "2026-10-31",
+  "years_covered": "109",
+  "local_path": "contract-manpower/raw/stats/dgbas/dgbas_總員額法員額彙計表_109b.xls ; contract-manpower/raw/stats/dgbas/dgbas_總員額法員額彙計表_109b.pdf",
+  "parse_method": "xlrd/openpyxl 讀第一工作表；合計列、第一類及第二類人員列、第三～五類人員列、各「主管」列",
+  "note": "預算員額（預算案）；108.12.31修法前分類定義（第一類含公立醫院職員；總數高限173,000、第一類86,700、第二類41,200）"
+ },
+ {
+  "name": "主計總處 110年度中央政府總預算預算案 參考表 中央政府機關總員額法員額彙計表",
+  "download_url": "https://ws.dgbas.gov.tw/public/data/dgbas01/110/110btab/110b機關總員額法員額彙計表.xls",
+  "page_url": "https://www.dgbas.gov.tw/News_Content.aspx?n=3625&s=103831",
+  "download_date": "2026-10-31",
+  "years_covered": "110",
+  "local_path": "contract-manpower/raw/stats/dgbas/dgbas_總員額法員額彙計表_110b.xls ; contract-manpower/raw/stats/dgbas/dgbas_總員額法員額彙計表_110b.pdf",
+  "parse_method": "xlrd/openpyxl 讀第一工作表；合計列、第一類及第二類人員列、第三～五類人員列、各「主管」列",
+  "note": "預算員額（預算案）；108.12.31修法後分類定義（第一類不含公立醫院職員；總數高限160,900、第一類74,600、第二類40,100）"
+ },
+ {
+  "name": "主計總處 111年度中央政府總預算預算案 參考表 中央政府機關總員額法員額彙計表",
+  "download_url": "https://ws.dgbas.gov.tw/public/data/dgbas01/111/111btab/111b機關總員額法員額彙計表.xlsx",
+  "page_url": "https://www.dgbas.gov.tw/News_Content.aspx?n=3625&s=103801",
+  "download_date": "2026-10-31",
+  "years_covered": "111",
+  "local_path": "contract-manpower/raw/stats/dgbas/dgbas_總員額法員額彙計表_111b.xlsx ; contract-manpower/raw/stats/dgbas/dgbas_總員額法員額彙計表_111b.pdf",
+  "parse_method": "xlrd/openpyxl 讀第一工作表；合計列、第一類及第二類人員列、第三～五類人員列、各「主管」列",
+  "note": "預算員額（預算案）；108.12.31修法後分類定義（第一類不含公立醫院職員；總數高限160,900、第一類74,600、第二類40,100）"
+ },
+ {
+  "name": "主計總處 112年度中央政府總預算預算案 參考表 中央政府機關總員額法員額彙計表",
+  "download_url": "https://ws.dgbas.gov.tw/public/data/dgbas01/112/112btab/112b機關總員額法員額彙計表.xlsx",
+  "page_url": "https://www.dgbas.gov.tw/News_Content.aspx?n=3625&s=227801",
+  "download_date": "2026-10-31",
+  "years_covered": "112",
+  "local_path": "contract-manpower/raw/stats/dgbas/dgbas_總員額法員額彙計表_112b.xlsx ; contract-manpower/raw/stats/dgbas/dgbas_總員額法員額彙計表_112b.pdf",
+  "parse_method": "xlrd/openpyxl 讀第一工作表；合計列、第一類及第二類人員列、第三～五類人員列、各「主管」列",
+  "note": "預算員額（預算案）；108.12.31修法後分類定義（第一類不含公立醫院職員；總數高限160,900、第一類74,600、第二類40,100）"
+ },
+ {
+  "name": "主計總處 113年度中央政府總預算預算案 參考表 中央政府機關總員額法員額彙計表",
+  "download_url": "https://ws.dgbas.gov.tw/001/Upload/461/relfile/11333/231560/b機關總員額法員額彙計表.xlsx",
+  "page_url": "https://www.dgbas.gov.tw/News_Content.aspx?n=3625&s=231560",
+  "download_date": "2026-10-31",
+  "years_covered": "113",
+  "local_path": "contract-manpower/raw/stats/dgbas/dgbas_總員額法員額彙計表_113b.xlsx ; contract-manpower/raw/stats/dgbas/dgbas_總員額法員額彙計表_113b.pdf",
+  "parse_method": "xlrd/openpyxl 讀第一工作表；合計列、第一類及第二類人員列、第三～五類人員列、各「主管」列",
+  "note": "預算員額（預算案）；108.12.31修法後分類定義（第一類不含公立醫院職員；總數高限160,900、第一類74,600、第二類40,100）"
+ },
+ {
+  "name": "主計總處 114年度中央政府總預算預算案 參考表 中央政府機關總員額法員額彙計表",
+  "download_url": "https://ws.dgbas.gov.tw/001/Upload/461/relfile/11333/233556/b機關總員額法員額彙計表.xlsx",
+  "page_url": "https://www.dgbas.gov.tw/News_Content.aspx?n=3625&s=233556",
+  "download_date": "2026-10-31",
+  "years_covered": "114",
+  "local_path": "contract-manpower/raw/stats/dgbas/dgbas_總員額法員額彙計表_114b.xlsx ; contract-manpower/raw/stats/dgbas/dgbas_總員額法員額彙計表_114b.pdf",
+  "parse_method": "xlrd/openpyxl 讀第一工作表；合計列、第一類及第二類人員列、第三～五類人員列、各「主管」列",
+  "note": "預算員額（預算案）；108.12.31修法後分類定義（第一類不含公立醫院職員；總數高限160,900、第一類74,600、第二類40,100）"
+ },
+ {
+  "name": "主計總處 115年度中央政府總預算預算案 參考表 中央政府機關總員額法員額彙計表",
+  "download_url": "https://ws.dgbas.gov.tw/001/Upload/461/relfile/11333/235176/b機關總員額法員額彙計表.xlsx",
+  "page_url": "https://www.dgbas.gov.tw/News_Content.aspx?n=3625&s=235176",
+  "download_date": "2026-10-31",
+  "years_covered": "115",
+  "local_path": "contract-manpower/raw/stats/dgbas/dgbas_總員額法員額彙計表_115b.xlsx ; contract-manpower/raw/stats/dgbas/dgbas_總員額法員額彙計表_115b.pdf",
+  "parse_method": "xlrd/openpyxl 讀第一工作表；合計列、第一類及第二類人員列、第三～五類人員列、各「主管」列",
+  "note": "預算員額（預算案）；108.12.31修法後分類定義（第一類不含公立醫院職員；總數高限160,900、第一類74,600、第二類40,100）"
+ },
+ {
+  "name": "主計總處 116年度中央政府總預算預算案 參考表 中央政府機關總員額法員額彙計表",
+  "download_url": "https://ws.dgbas.gov.tw/001/Upload/461/relfile/11333/236582/b機關總員額法員額彙計表.xlsx",
+  "page_url": "https://www.dgbas.gov.tw/News_Content.aspx?n=3625&s=236582",
+  "download_date": "2026-10-31",
+  "years_covered": "116",
+  "local_path": "contract-manpower/raw/stats/dgbas/dgbas_總員額法員額彙計表_116b.xlsx ; contract-manpower/raw/stats/dgbas/dgbas_總員額法員額彙計表_116b.pdf",
+  "parse_method": "xlrd/openpyxl 讀第一工作表；合計列、第一類及第二類人員列、第三～五類人員列、各「主管」列",
+  "note": "預算員額（預算案）；108.12.31修法後分類定義（第一類不含公立醫院職員；總數高限160,900、第一類74,600、第二類40,100）"
+ }
+]
