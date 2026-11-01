@@ -18,3 +18,4 @@ org-compare/pending_updates.json
 org-compare/更新偵測報告.md
 # 官職等審核系統：考試院開放資料快取（檔案大）
 grade-check/exam_cache/
+grade-check/output/check_results.json
