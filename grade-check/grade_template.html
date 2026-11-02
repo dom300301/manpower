@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>官職等配置審核系統</title>
+<style>
+:root{--bg:#f5f6f8;--card:#fff;--ink:#1f2937;--muted:#6b7280;--line:#e5e7eb;--accent:#1d4ed8;--ok:#15803d;--okbg:#dcfce7;--bad:#b91c1c;--badbg:#fee2e2;--warn:#b45309;--warnbg:#fef3c7;--na:#6b7280;--nabg:#f3f4f6}
+*{box-sizing:border-box}body{margin:0;font-family:"Noto Sans TC","Microsoft JhengHei","PingFang TC",system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:14px;line-height:1.5}
+header{background:#111827;color:#fff;padding:10px 16px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+header h1{font-size:17px;margin:0;font-weight:600}header .meta{font-size:12px;color:#9ca3af}
+nav{display:flex;gap:4px;margin-left:auto}nav button{background:#374151;color:#e5e7eb;border:0;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:13px}nav button.on{background:var(--accent);color:#fff}
+main{padding:12px 16px;max-width:1500px;margin:0 auto}
+.page{display:none}.page.on{display:block}
+.row{display:flex;gap:12px;align-items:flex-start}
+.card{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:12px;margin-bottom:12px}
+.card h2{font-size:15px;margin:0 0 8px}.card h3{font-size:14px;margin:12px 0 6px;color:#374151}
+input[type=text],input[type=number],select,textarea{border:1px solid #cbd5e1;border-radius:6px;padding:6px 8px;font-size:13px;font-family:inherit}
+button.b{background:var(--accent);color:#fff;border:0;padding:6px 12px;border-radius:6px;cursor:pointer;font-size:13px}button.b.sec{background:#e5e7eb;color:#111827}button.b.sm{padding:3px 8px;font-size:12px}
+#aglist{max-height:72vh;overflow:auto;border:1px solid var(--line);border-radius:6px}
+#aglist div{padding:5px 8px;border-bottom:1px solid #f1f5f9;cursor:pointer;display:flex;justify-content:space-between;gap:6px}#aglist div:hover{background:#eff6ff}#aglist div.on{background:#dbeafe}
+.tag{display:inline-block;padding:1px 7px;border-radius:10px;font-size:12px;white-space:nowrap}.ok{background:var(--okbg);color:var(--ok)}.bad{background:var(--badbg);color:var(--bad)}.warn{background:var(--warnbg);color:var(--warn)}.na{background:var(--nabg);color:var(--na)}
+table{border-collapse:collapse;width:100%;font-size:13px}th,td{border:1px solid var(--line);padding:4px 6px;text-align:left;vertical-align:top}th{background:#f8fafc;position:sticky;top:0}td.num,th.num{text-align:right}
+.kpi{display:flex;gap:10px;flex-wrap:wrap}.kpi div{background:#f8fafc;border:1px solid var(--line);border-radius:8px;padding:8px 12px;min-width:150px}.kpi b{font-size:20px;display:block}.kpi small{color:var(--muted)}
+.muted{color:var(--muted)}.small{font-size:12px}
+#simtable td input,#simtable td select{width:100%;padding:3px 4px;font-size:12px}#simtable td{padding:2px 3px}
+details summary{cursor:pointer;color:var(--accent)}
+.left{width:330px;flex:none}.right{flex:1;min-width:0}
+@media (max-width:900px){.row{flex-direction:column}.left{width:100%}#aglist{max-height:40vh}}
+#loading{padding:40px;text-align:center;color:var(--muted)}
+</style>
+</head>
+<body>
+<header><h1>官職等配置審核系統</h1><span class="meta" id="meta"></span>
+<nav><button data-p="check" class="on">機關檢核</button><button data-p="sim">模擬修編</button><button data-p="title">職稱列等查詢</button><button data-p="about">規則與說明</button></nav></header>
+<main>
+<div id="loading">資料載入中…</div>
+<section class="page on" id="p-check">
+ <div class="row">
+  <div class="left card">
+   <input type="text" id="q" placeholder="機關名稱或關鍵字（空格＝同時符合）" style="width:100%">
+   <div style="margin:6px 0;display:flex;gap:6px;flex-wrap:wrap">
+    <select id="flv"><option value="">全部層級</option><option value="1">一級</option><option value="2">二級</option><option value="3">三級</option><option value="4">四級</option></select>
+    <select id="fbad"><option value="">全部</option><option value="bad">只看有不符</option><option value="chk">只看需確認</option></select>
+   </div>
+   <div class="small muted" id="cnt"></div>
+   <div id="aglist"></div>
+  </div>
+  <div class="right" id="detail"><div class="card muted">請在左側選擇機關。</div></div>
+ </div>
+</section>
+<section class="page" id="p-sim">
+ <div class="card"><h2>模擬修編</h2>
+  <div class="small muted">從「機關檢核」按「帶入模擬」把現行編制表帶進來，或自行填表。修改職稱、官等、職等、員額、備註後按「重算」，比較修編前後的比率與規則結果。官等請用「委任、薦任、簡任、委任或薦任、薦任至簡任」等準則用語；職等用「第八職等至第九職等」寫法；得列請在備註寫「內二人得列簡任第十職等」。</div>
+  <div style="margin:8px 0;display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+   <span>機關：<b id="simname">（未帶入）</b></span>
+   <label>層級 <select id="simlv"><option value="2">二級</option><option value="3">三級</option><option value="4">四級</option></select></label>
+   <label>簡任上限% <input type="number" id="simK" style="width:70px" value="35"></label>
+   <label>委任下限% <input type="number" id="simW" style="width:70px" value="10"></label>
+   <label>薦七以下下限% <input type="number" id="simJ7" style="width:70px" value="50"></label>
+   <button class="b" id="simrun">重算</button><button class="b sec" id="simadd">新增列</button><button class="b sec" id="simclear">清空</button>
+  </div>
+  <div style="overflow:auto;max-height:50vh"><table id="simtable"><thead><tr><th>職稱</th><th>官等</th><th>職等</th><th class="num">員額</th><th>備註</th><th></th></tr></thead><tbody></tbody></table></div>
+ </div>
+ <div class="card" id="simout"></div>
+</section>
+<section class="page" id="p-title">
+ <div class="card"><h2>職稱列等查詢（實證分布）</h2>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+   <select id="tlv"><option value="2">二級機關</option><option value="3">三級機關</option><option value="4">四級機關</option><option value="1">一級機關</option></select>
+   <input type="text" id="tq" list="tlist" placeholder="職稱，例如 科長" style="width:220px"><datalist id="tlist"></datalist>
+   <button class="b" id="tgo">查詢</button>
+  </div>
+  <div class="small muted" style="margin-top:6px">資料：585 個機關編制表中同層級、同職稱實際訂列的官等職等；「暫列」＝備註載「本職稱之官等職等暫列」。這是已核備的現況，不是可列的上限。</div>
+  <div id="tout" style="margin-top:10px"></div>
+ </div>
+</section>
+<section class="page" id="p-about">
+ <div class="card"><h2>規則清單（第一版）</h2><div id="rules"></div></div>
+ <div class="card"><h2>機關類別（附表三）初判表</h2><div class="small muted">由機關名稱、層級、隸屬推定，尚待人工確認。<button class="b sm sec" id="dlcat">下載 CSV</button></div><div id="catsum" style="margin-top:6px"></div></div>
+ <div class="card"><h2>限制與提醒</h2>
+  <ul class="small">
+   <li>本系統為輔助審查工具，正式認定仍依銓敘部與考試院；數字以各機關編制表 PDF（法規資料庫）為準。</li>
+   <li>比率依準則第 5、6 條計算：簡任÷薦任、委任÷各官等員額總數；跨列官等依第 6 條拆算；警察、軍職、師級、特任、比照者不計。</li>
+   <li>主管／非主管以職稱判定（…長、主任），第 8 條「薦任第七職等以下」以職務列等上限 ≤ 7 計；第 9 條第 5 款二級單位主管以科長員額計。這三項假設待與銓敘部試算表核對。</li>
+   <li>114 年 12 月 4 日前核備之編制表，依第 12 條得於下次修編時再調整；「舊制」欄供判斷是否為修正前已不符。</li>
+   <li>各機關經考試院同意之例外（第 13 條）本版未納入；不符者請先查明有無同意紀錄。</li>
+  </ul>
+ </div>
+</section>
+</main>
+<script>
+const B64='/*__DATA__*/';
+let D=null, cur=null;
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const CN={'一':1,'二':2,'三':3,'四':4,'五':5,'六':6,'七':7,'八':8,'九':9};
+function c2n(s){s=(s||'').trim();if(/^\d+$/.test(s))return+s;if(s.includes('十')){const[a,b]=s.split('十');return(a?CN[a]:1)*10+(b?CN[b]:0)}return CN[s]||0}
+function gradesOf(z){const out=new Set();for(const p of (z||'').split('或')){const ns=[...p.matchAll(/第([一二三四五六七八九十]+)職等/g)].map(m=>c2n(m[1]));if(!ns.length)continue;if(p.includes('至')&&ns.length>=2){for(let g=Math.min(...ns);g<=Math.max(...ns);g++)out.add(g)}else ns.forEach(n=>out.add(n))}return out}
+const DUAL=/警|校|尉|士官|師級|士（生）級|士\(生\)級|將/;
+const DE=/內([一二三四五六七八九十\d]+)人得列(簡任|薦任)第([一二三四五六七八九十]+)職等/g;
+function splitRow(guan,zhi,n,rem){guan=(guan||'').trim();zhi=(zhi||'').trim();rem=rem||'';if(!(n>0))return{w:0,j:0,k:0,note:'員額0',in:false};
+ if(!guan||DUAL.test(guan)||DUAL.test(zhi))return{w:0,j:0,k:0,note:'非一般文職不計',in:false};
+ const d={委任:0,薦任:0,簡任:0};let up=0,upg=null;for(const m of rem.matchAll(DE)){up+=c2n(m[1]);upg=m[2]}up=Math.min(up,n);let note='';
+ if(guan in d){d[guan]=n-up;if(upg)d[upg]+=up;note=guan+n+(upg?`（內${up}人得列${upg}）`:'')}
+ else if(guan==='委任至薦任'||guan==='薦任至簡任'){const hi=guan.slice(-2);d[hi]=n;note=`全以${hi}計`}
+ else if(guan==='委任或薦任'||guan==='薦任或簡任'){const[lo,hi]=guan.split('或');const l=Math.floor(n/3);d[lo]=l;d[hi]=n-l;note=`${lo}${l}、${hi}${n-l}`}
+ else return{w:0,j:0,k:0,note:'官等無法判讀',in:false};
+ return{w:d.委任,j:d.薦任,k:d.簡任,note,in:true}}
+const MGR=/(?:長|主任|主任委員|主席|總裁|司令|委員長|執行長|主任秘書|秘書長|總工程司|主任工程司)$/;
+const isMgr=t=>MGR.test(t)&&!/主任管理員|主任管制員|主任報務員|主任航務員|主任氣象員|管理員$|護理長/.test(t);
+const pct=(a,b)=>b?Math.round(a/b*1000)/10:null;
+// 規則子集（模擬用）：R1 R2 R4 R5 R7 R3b
+function evalRows(rows,lv,K,W,J7){let w=0,j=0,k=0,tot=0;const cov=new Set();let low13=0,w45=0,base=0,jn=0,jl=0;
+ rows.forEach(r=>{const n=+r.員額||0;const s=splitRow(r.官等,r.職等,n,r.備註);r._s=s;w+=s.w;j+=s.j;k+=s.k;if(!s.in)return;tot+=n;const g=gradesOf(r.職等);const guan=(r.官等||'').trim();
+  if(!(r.職稱===rows[0].職稱&&rows.indexOf(r)===0)&&!/次長$|副主任委員$/.test(r.職稱)&&!(r.職稱==='副'+rows[0].職稱))g.forEach(x=>cov.add(x));
+  if(guan==='委任'&&g.size&&Math.max(...g)<=3)low13+=s.w;
+  if(guan==='委任'&&g.size===2&&g.has(4)&&g.has(5))w45+=n;
+  if(guan==='委任或薦任'&&g.has(5))base+=n;
+  if(!isMgr(r.職稱)){jn+=s.j;if(g.size&&Math.max(...g)<=7)jl+=s.j}});
+ const F=[];const sj=pct(k,j),sw=pct(w,tot);
+ if(tot<12){F.push(['R1','簡任比率',sj,'—','不適用','未滿12人']);F.push(['R2','委任比率',sw,'—','不適用','未滿12人'])}
+ else{if(K===''||K==null)F.push(['R1','簡任比率',sj,'—','不適用','不訂簡任比率']);else{const ok=sj!=null&&sj<=K;F.push(['R1','簡任比率',`${k}÷${j}=${sj}%`,`≤${K}%`,sj==null?'需確認':ok?'符合':'不符',ok||sj==null?'':`簡任需減${k-Math.floor(K/100*j)}人或薦任需增${Math.ceil(k/(K/100))-j}人`])}
+  const ok2=sw>=W;F.push(['R2','委任比率',`${w}÷${tot}=${sw}%`,`≥${W}%`,ok2?'符合':'不符',ok2?'':`委任需增${Math.ceil(W/100*tot)-w}人`])}
+ if(tot>=30){const need=tot<100?1:2;F.push(['R4','委任一至三職等員額',low13,`≥${need}`,low13>=need?'符合':'不符',low13>=need?'':`需增${need-low13}人`])}
+ if(tot>=12){const need=base?Math.ceil(base/12):0;F.push(['R5','委四至五職稱員額',`${w45}（委五或薦六至七 ${base}×1/12）`,`≥${need}`,w45>=need?'符合':'不符',w45>=need?'':`需增${need-w45}人`])}
+ if(tot>=20){const p=pct(jl,jn);const ok=p!=null&&p>=J7;F.push(['R7','薦七以下薦任非主管比率',`${jl}÷${jn}=${p}%`,`≥${J7}%`,p==null?'需確認':ok?'符合':'不符',ok||p==null?'':`需增${Math.ceil(J7/100*jn)-jl}人`])}
+ if(cov.size){const lo=Math.min(...cov),hi=Math.max(...cov);const gaps=[];for(let g=lo;g<=hi;g++)if(!cov.has(g))gaps.push(g);F.push(['R3b','官等職等接續',gaps.length?'缺'+gaps.join('、'):'無跳空','無跳空',gaps.length?'不符':'符合',''])}
+ return{w,j,k,tot,sj,sw,F}}
+function tagOf(res){const r=(res||'').split(' ')[0];const c=r.startsWith('不符')?'bad':r==='符合'?'ok':r==='需確認'?'warn':'na';return`<span class="tag ${c}">${esc(res)}</span>`}
+// ---------- 機關檢核
+function listAgencies(){const q=$('#q').value.trim().split(/\s+/).filter(Boolean);const lv=$('#flv').value;const fb=$('#fbad').value;
+ const L=D.results.filter(r=>(!lv||r.層級===lv)&&(!fb||(fb==='bad'?r.不符數>0:r.需確認數>0))&&q.every(t=>(r.機關+r.隸屬+r.部會+r.類別).includes(t)));
+ $('#cnt').textContent=`${L.length} 個機關`;
+ $('#aglist').innerHTML=L.map(r=>`<div data-n="${esc(r.機關)}" class="${cur&&cur.機關===r.機關?'on':''}"><span>${esc(r.機關)} <span class="small muted">${r.層級}級</span></span><span>${r.不符數?`<span class="tag bad">不符${r.不符數}</span>`:'<span class="tag ok">符合</span>'}${r.需確認數?` <span class="tag warn">確認${r.需確認數}</span>`:''}</span></div>`).join('');
+ $('#aglist').querySelectorAll('div').forEach(d=>d.onclick=()=>{showAgency(d.dataset.n);$('#aglist').querySelectorAll('div').forEach(x=>x.classList.toggle('on',x===d))})}
+function showAgency(name){const r=D.results.find(x=>x.機關===name);cur=r;const c=r.計算;
+ const rules=r.規則.map(f=>`<tr><td>${esc(f.規則)}</td><td>${esc(f.條文)}</td><td>${esc(f.項目)}</td><td>${esc(f.計算)}</td><td>${esc(f.數值)}</td><td>${esc(f.門檻)}</td><td>${tagOf(f.結果)}</td><td>${esc(f.差距)}</td><td class="small muted">${esc(f.說明)}</td></tr>`).join('');
+ const rows=r.明細.map(x=>`<tr><td>${esc(x.序)}</td><td>${esc(x.單位||'')}</td><td>${esc(x.職稱)}${x.主管?' <span class="tag na">主管</span>':''}</td><td>${esc(x.官等||'')}</td><td>${esc(x.職等||'')}</td><td class="num">${x.員額}</td><td class="num">${x.拆算.委任||''}</td><td class="num">${x.拆算.薦任||''}</td><td class="num">${x.拆算.簡任||''}</td><td class="small">${esc(x.列等狀態||'')}</td><td class="small muted">${esc(x.備註||'')}</td></tr>`).join('');
+ const bad=r.規則.filter(f=>f.結果.startsWith('不符'));
+ const expl=bad.length?`<h3>建議請機關補充說明（依準則第 12、13 條）</h3><ul class="small">${bad.map(f=>`<li><b>${esc(f.規則)} ${esc(f.項目)}</b>：${esc(f.數值)}，門檻 ${esc(f.門檻)}${f.差距?`，${esc(f.差距)}`:''}。請說明：(1) 是否為 114 年 12 月 4 日修正前已核備之配置（依第 12 條於下次修編時調整）；(2) 若屬配合政府政策組織精簡、人員移撥，或組織結構、業務性質特殊，請敘明理由與佐證（第 13 條）；(3) 修編後比率是否較修編前改善。</li>`).join('')}</ul>`:'';
+ $('#detail').innerHTML=`<div class="card"><h2>${esc(r.機關)} <span class="small muted">${r.層級}級｜隸屬 ${esc(r.隸屬)}｜${esc(r.類別)}${r.類別已確認?'':'（程式初判）'}${r.雙軌制?'｜雙軌制':''}</span></h2>
+  <div class="small"><a href="${esc(r.編制表||'#')}" target="_blank">編制表 PDF</a>｜驗算狀態：${esc(r.驗算狀態)}｜<button class="b sm sec" id="tosim">帶入模擬</button> <button class="b sm sec" id="copy">複製檢核結果</button></div>
+  <div class="kpi" style="margin-top:8px"><div><small>定有官等職等員額</small><b>${c.定有官等職等員額}</b><small>另 ${c.未計入員額} 人不計</small></div><div><small>委任／薦任／簡任</small><b>${c.委任}／${c.薦任}／${c.簡任}</b></div><div><small>簡任比率（簡任÷薦任）</small><b>${r.簡任比率==null?'—':r.簡任比率+'%'}</b><small>上限 ${r.簡任上限==null?'—':r.簡任上限+'%'}</small></div><div><small>委任比率（委任÷總數）</small><b>${r.委任比率==null?'—':r.委任比率+'%'}</b><small>下限 ${r.委任下限==null?'—':r.委任下限+'%'}</small></div><div><small>結果</small><b>${r.不符數?`<span class="tag bad">不符 ${r.不符數}</span>`:'<span class="tag ok">無不符</span>'}</b><small>需確認 ${r.需確認數}</small></div></div>
+  <h3>逐條檢核</h3><div style="overflow:auto"><table><thead><tr><th>規則</th><th>條文</th><th>項目</th><th>計算</th><th>數值</th><th>門檻</th><th>結果</th><th>差距</th><th>說明</th></tr></thead><tbody>${rules}</tbody></table></div>${expl}
+  <h3>編制表明細與拆算</h3><div style="overflow:auto;max-height:60vh"><table><thead><tr><th>序</th><th>單位</th><th>職稱</th><th>官等</th><th>職等</th><th class="num">員額</th><th class="num">委</th><th class="num">薦</th><th class="num">簡</th><th>列等對照</th><th>備註</th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
+ $('#tosim').onclick=()=>{loadSim(r);go('sim')};
+ $('#copy').onclick=()=>{const t=['規則\t條文\t項目\t計算\t數值\t門檻\t結果\t差距\t說明',...r.規則.map(f=>[f.規則,f.條文,f.項目,f.計算,f.數值,f.門檻,f.結果,f.差距,f.說明].join('\t'))].join('\n');navigator.clipboard.writeText(`${r.機關}（${r.層級}級，${r.類別}）\n`+t).then(()=>alert('已複製，可貼到 Excel 或 Word'))}}
+// ---------- 模擬
+let simBase=null;
+function simRowHtml(x){const G=['','委任','薦任','簡任','委任或薦任','委任至薦任','薦任或簡任','薦任至簡任'];const g=(x.官等||'').trim();
+ return`<tr><td><input value="${esc(x.職稱)}"></td><td><select>${G.map(o=>`<option ${o===g?'selected':''}>${o}</option>`).join('')}${G.includes(g)?'':`<option selected>${esc(g)}</option>`}</select></td><td><input value="${esc(x.職等||'')}"></td><td><input type="number" value="${x.員額}" style="width:60px"></td><td><input value="${esc(x.備註||'')}"></td><td><button class="b sm sec del">×</button></td></tr>`}
+function loadSim(r){simBase=r;$('#simname').textContent=r.機關;$('#simlv').value=r.層級==='1'?'2':r.層級;$('#simK').value=r.簡任上限==null?'':r.簡任上限;$('#simW').value=r.委任下限==null?'':r.委任下限;$('#simJ7').value=(r.層級==='1'||r.層級==='2')?40:(r.類別.includes('工程')?45:r.類別.includes('調查')?5:50);
+ $('#simtable tbody').innerHTML=r.明細.map(simRowHtml).join('');bindDel();$('#simout').innerHTML='<div class="muted">修改後按「重算」。</div>'}
+function bindDel(){$('#simtable').querySelectorAll('.del').forEach(b=>b.onclick=()=>b.closest('tr').remove())}
+function readSim(){return[...$('#simtable tbody').querySelectorAll('tr')].map(tr=>{const i=tr.querySelectorAll('input,select');return{職稱:i[0].value.trim(),官等:i[1].value,職等:i[2].value.trim(),員額:+i[3].value||0,備註:i[4].value}})}
+function runSim(){const rows=readSim();if(!rows.length){$('#simout').innerHTML='<div class="muted">沒有資料。</div>';return}
+ const K=$('#simK').value===''?null:+$('#simK').value,W=+$('#simW').value||0,J7=+$('#simJ7').value||0,lv=$('#simlv').value;
+ const after=evalRows(rows,lv,K,W,J7);const before=simBase?evalRows(simBase.明細.map(x=>({職稱:x.職稱,官等:x.官等,職等:x.職等,員額:x.員額,備註:x.備註})),lv,K,W,J7):null;
+ const trend=(b,a,hi)=>{if(b==null||a==null)return'';if(a===b)return'<span class="tag na">持平</span>';const better=hi?a<b:a>b;return better?'<span class="tag ok">改善</span>':'<span class="tag bad">惡化</span>'};
+ let h=`<h2>模擬結果</h2><div class="kpi"><div><small>定有官等職等員額</small><b>${before?before.tot+' → ':''}${after.tot}</b></div><div><small>委／薦／簡</small><b>${before?`${before.w}/${before.j}/${before.k} → `:''}${after.w}/${after.j}/${after.k}</b></div><div><small>簡任比率（上限 ${K==null?'—':K+'%'}）</small><b>${before?(before.sj==null?'—':before.sj+'%')+' → ':''}${after.sj==null?'—':after.sj+'%'}</b><small>${before?trend(before.sj,after.sj,true):''}${before&&K!=null&&after.sj!=null?` 距上限 ${Math.round((K-after.sj)*10)/10} 點`:''}</small></div><div><small>委任比率（下限 ${W}%）</small><b>${before?before.sw+'% → ':''}${after.sw}%</b><small>${before?trend(before.sw,after.sw,false):''}${after.sw!=null?` 距下限 ${Math.round((after.sw-W)*10)/10} 點`:''}</small></div></div>`;
+ h+=`<h3>規則結果（修編前 → 修編後）</h3><table><thead><tr><th>規則</th><th>項目</th><th>修編前</th><th>修編後</th><th>門檻</th><th>結果</th><th>差距</th></tr></thead><tbody>`;
+ after.F.forEach((f,i)=>{const b=before?before.F.find(x=>x[0]===f[0]):null;h+=`<tr><td>${f[0]}</td><td>${f[1]}</td><td>${b?esc(b[2])+' '+tagOf(b[4]):'—'}</td><td>${esc(f[2])}</td><td>${esc(f[3])}</td><td>${tagOf(f[4])}</td><td>${esc(f[5])}</td></tr>`});
+ h+='</tbody></table>';
+ const bad=after.F.filter(f=>f[4]==='不符');
+ if(bad.length){h+='<h3>調整方向（供參）</h3><ul class="small">';bad.forEach(f=>{if(f[0]==='R1'){const cand=rows.filter(r=>r._s&&r._s.k>0&&!isMgr(r.職稱)).sort((a,b)=>b._s.k-a._s.k).slice(0,5).map(r=>`${r.職稱}（簡任 ${r._s.k} 人）`);h+=`<li>簡任比率超過上限：${esc(f[5])}。可考慮調整的簡任非主管職稱：${cand.join('、')||'（無非主管簡任職稱，需動主管職務或增加薦任員額）'}；或改列「薦任至簡任」並以備註限制得列簡任人數。</li>`}
+  if(f[0]==='R2')h+=`<li>委任比率低於下限：${esc(f[5])}。可將部分「委任或薦任」職稱改列委任，或增置委任第三至五職等、第四至五職等職稱。</li>`;
+  if(f[0]==='R4')h+=`<li>委任一至三職等職稱不足：${esc(f[5])}（書記等）。115.9.30 銓敘部已提刪除本項之修正草案，可視發布情形處理。</li>`;
+  if(f[0]==='R5')h+=`<li>委任第四至五職等職稱不足：${esc(f[5])}（助理員、佐理員、助理工程員等）；組織結構特殊者應置委任第三至五職等職稱。</li>`;
+  if(f[0]==='R7')h+=`<li>薦任第七職等以下薦任非主管不足：${esc(f[5])}。可增置科員、技士、組員等列薦任六至七職等之職稱，或將部分專員改列科員。</li>`;
+  if(f[0]==='R3b')h+=`<li>官等職等跳空：${esc(f[2])}。請檢視是否缺少該職等之職稱，或敘明特殊原因（第 13 條）。</li>`});
+  h+='</ul><h3>建議請機關補充說明</h3><ul class="small"><li>修編前已不符者：修編後比率是否維持或改善（修正總說明：原即未符者，修編時比例維持原有或更低者始同意核備）。</li><li>不符原因屬何種情形：配合政府政策組織精簡或人員移撥；組織結構特殊（例如派駐單位多、無二級單位）；業務性質特殊（例如核心工作需高階專業人力）；並附佐證（政策依據、移撥函、業務量數據、同類機關比較）。</li><li>現職人員安置與過渡期程（得列、暫列、留用之安排）。</li></ul>'}
+ $('#simout').innerHTML=h}
+// ---------- 職稱查詢
+function showTitle(){const lv=$('#tlv').value,t=$('#tq').value.trim();const g=D.titles.data[lv]&&D.titles.data[lv][t];
+ if(!g){$('#tout').innerHTML=`<div class="muted">${lv}級機關中未見職稱「${esc(t)}」。</div>`;return}
+ $('#tout').innerHTML=`<div class="kpi"><div><small>機關數</small><b>${g.機關數}</b></div><div><small>員額合計</small><b>${g.員額}</b></div><div><small>主要列等</small><b>${esc(g.主要列等)}</b></div><div><small>職等範圍</small><b>${g.最低職等??'—'}～${g.最高職等??'—'}</b></div><div><small>暫列／法律所定機關</small><b>${g.暫列機關數}／${g.法律所定機關數}</b></div><div><small>職稱屬性</small><b style="font-size:14px">${esc(g.屬性)}</b></div></div>
+ ${Object.keys(g.得列).length?`<div class="small">得列註記：${Object.entries(g.得列).map(([k,v])=>k+'×'+v).join('；')}</div>`:''}
+ <table style="margin-top:8px"><thead><tr><th>列等</th><th>官等</th><th>職等</th><th class="num">機關數</th><th class="num">員額</th><th class="num">暫列機關</th><th>機關類型</th><th>機關</th></tr></thead><tbody>${g.列等組合.map(c=>`<tr><td><b>${esc(c.碼)}</b></td><td>${esc(c.官等)}</td><td>${esc(c.職等)}</td><td class="num">${c.機關數}</td><td class="num">${c.員額}</td><td class="num">${c.暫列機關數}</td><td class="small">${Object.entries(c.機關類型).map(([k,v])=>k+v).join('、')}</td><td class="small"><details><summary>${c.機關.length} 個機關</summary>${c.機關.map(esc).join('、')}</details></td></tr>`).join('')}</tbody></table>`}
+function fillTitleList(){const lv=$('#tlv').value;const names=Object.keys(D.titles.data[lv]||{}).sort((a,b)=>D.titles.data[lv][b].機關數-D.titles.data[lv][a].機關數);$('#tlist').innerHTML=names.map(n=>`<option value="${esc(n)}">`).join('')}
+// ---------- 說明
+function fillAbout(){$('#rules').innerHTML='<ul class="small">'+D.meta.規則清單.map(x=>`<li>${esc(x)}</li>`).join('')+'</ul>';
+ const c={};D.categories.forEach(x=>{const k=(x.人工確認類別||x.程式初判類別);c[k]=(c[k]||0)+1});
+ $('#catsum').innerHTML='<table class="small"><thead><tr><th>類別</th><th class="num">機關數</th></tr></thead><tbody>'+Object.entries(c).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<tr><td>${esc(k)}</td><td class="num">${v}</td></tr>`).join('')+'</tbody></table>';
+ $('#dlcat').onclick=()=>{const cols=Object.keys(D.categories[0]);const csv='﻿'+[cols.join(','),...D.categories.map(r=>cols.map(k=>`"${(r[k]||'').replace(/"/g,'""')}"`).join(','))].join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='agency_category.csv';a.click()}}
+function go(p){document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.p===p));document.querySelectorAll('.page').forEach(s=>s.classList.toggle('on',s.id==='p-'+p))}
+async function init(){try{const bin=Uint8Array.from(atob(B64),c=>c.charCodeAt(0));const ds=new DecompressionStream('gzip');const st=new Blob([bin]).stream().pipeThrough(ds);D=JSON.parse(await new Response(st).text())}catch(e){$('#loading').textContent='資料載入失敗：'+e;return}
+ $('#loading').style.display='none';$('#meta').textContent=`準則 ${D.meta.準則版本}｜資料 ${D.meta.總表}｜檢核 ${D.meta.機關數} 機關｜建檔 ${D.built}`;
+ document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>go(b.dataset.p));
+ ['#q','#flv','#fbad'].forEach(s=>$(s).addEventListener('input',listAgencies));listAgencies();
+ $('#simrun').onclick=runSim;$('#simadd').onclick=()=>{$('#simtable tbody').insertAdjacentHTML('beforeend',simRowHtml({職稱:'',官等:'',職等:'',員額:1,備註:''}));bindDel()};$('#simclear').onclick=()=>{simBase=null;$('#simname').textContent='（自行填表）';$('#simtable tbody').innerHTML='';$('#simout').innerHTML=''};
+ $('#tgo').onclick=showTitle;$('#tq').addEventListener('keydown',e=>{if(e.key==='Enter')showTitle()});$('#tlv').onchange=fillTitleList;fillTitleList();fillAbout();
+ const h=location.hash.replace('#','');if(h){const r=D.results.find(x=>x.機關===decodeURIComponent(h));if(r)showAgency(r.機關)}}
+init();
+</script>
+</body>
+</html>
