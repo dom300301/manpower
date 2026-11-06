@@ -35,6 +35,9 @@ def main():
         html = html.replace('/*__MODE__*/', 'gzip').replace('/*__DATA__*/', payload)
     os.makedirs(os.path.dirname(a.out), exist_ok=True)
     open(a.out, 'w', encoding='utf-8').write(html)
+    chk = os.path.join(tmp, '建檔檢核.md')
+    if os.path.exists(chk):
+        import shutil; shutil.copy(chk, os.path.join(os.path.dirname(a.out), '建檔檢核.md'))
     print(f'完成：{a.out}（{os.path.getsize(a.out)/1e6:.1f} MB；機關 {len(data["agencies"]["agencies"])}，明細 {len(data["positions"])}，條文 {len(data["articles"])}）')
 
 if __name__ == '__main__':
