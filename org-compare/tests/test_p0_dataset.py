@@ -12,15 +12,21 @@ def check(cond, msg):
 
 # P0-A 缺值語義
 unknown = [r for r in A if r['指標']['員額合計'] is None]
-check(len(unknown) == 16, f'人數類指標為 null 的機關數 = {len(unknown)}（預期 16）')
+untaken = [r for r in unknown if r['資料狀態'].startswith('未取得')]
+pending = [r for r in unknown if r['資料狀態'].startswith('待審')]
+check(len(untaken) == 16, f'「未取得」機關數 = {len(untaken)}（本次診斷 16）')
+check(len(unknown) == len(untaken) + len(pending) and all(r['資料狀態'] != '可用' for r in unknown), f'null 機關 = 未取得 {len(untaken)} + 待審 {len(pending)}（{[r["機關"] for r in pending]}）')
 check(all(r['指標']['員額合計'] != 0 for r in A), '沒有任何機關的員額合計被寫成 0')
 check(by['財政部']['指標']['員額合計'] is None and by['財政部']['資料狀態'] == '未取得（需人工輸入）', '財政部員額合計 null、資料狀態=未取得（需人工輸入）')
 for r in unknown:
     check(all(r['指標'][k] is None for k in ['簡任員額', '薦任員額', '委任員額', '主管員額', '簡任非主管比']), f'{r["機關"]} 其他人數類指標亦為 null')
     check(not r['可比較'], f'{r["機關"]} 不可比較')
 basis = [r for r in unknown if r['法定員額依據']]
-check(len(basis) >= 5 and by['行政院公共工程委員會']['法定員額依據']['條號'].startswith('第8條'), f'法定員額依據（只給條號與連結）：{len(basis)} 個機關，工程會={by["行政院公共工程委員會"]["法定員額依據"]["條號"]}')
-check(all('headcount' not in json.dumps(r['法定員額依據'] or {}) for r in unknown), '未產生區間 min/max 總額')
+basis_yes = [r for r in untaken if r['法定員額依據'] and r['法定員額依據']['有']]
+basis_no = [r for r in untaken if r['法定員額依據'] and not r['法定員額依據']['有']]
+check(len(basis_yes) == 5 and by['行政院公共工程委員會']['法定員額依據']['條號'].startswith('第8條'), f'法定員額依據「有」{len(basis_yes)} 個：{[r["機關"] for r in basis_yes]}')
+check(len(basis_no) == 7 and all('未列可結構化員額' in r['法定員額依據']['說明'] or '共用法規' in r['法定員額依據']['說明'] for r in basis_no), f'法定員額依據「無」{len(basis_no)} 個並明示原因：{[r["機關"] for r in basis_no]}')
+check(all('headcount' not in json.dumps(r['法定員額依據'] or {}) for r in untaken), '未產生區間 min/max 總額')
 # 僅兼任列保留專任 0，但整機關未知不得為 0（鐵道局北部：單列無數字 → 未取得）
 check(by['交通部鐵道局北部工程分局']['指標']['員額合計'] is None, '鐵道局北部工程分局（明細僅一列無數字）為未取得，不是 0')
 
@@ -36,7 +42,14 @@ check(all(r['可比較'] == (r['驗算結果'] == '相符' and r['資料狀態']
 pg = by['行政院人事行政總處公務人力發展學院']
 check(pg['可比較'] and '人工補登（已對源）' in pg['品質註記'] and pg['指標']['員額合計'] == 91, '公務人力發展學院：人工補登有來源／頁碼／對源且驗算相符 → 可比較')
 n_flag = sum(1 for r in A if not r['可比較'])
-notes.append(f'INFO 不可比較機關數 = {n_flag}（舊快照參考 43 = 31 + 12；本次 41：恆春旅遊醫院與藥試所經對源轉為可比較）')
+notes.append(f'INFO 不可比較機關數 = {n_flag}（由修正後資料推導，不設固定目標；舊快照 31+12=43 僅供參考）')
+# 官等異常：全庫不得有未標記的異常官等列計入
+ab = [p for p in P if p['列品質'] == '官等異常']
+check(all(not p['計入'] for p in ab), f'官等異常列 {len(ab)} 列均不計入（機關：{sorted(set(p["機關"] for p in ab))}）')
+hcr = {p['序']: p for p in P if p['機關'] == '衛生福利部恆春旅遊醫院'}
+check(hcr[27]['官等'] == '委任' and hcr[27]['原始列']['官等'] == '師委任級(或士' and hcr[28]['官等'] == '薦任', f'恆春 序27/28 官等依 PDF 校正並保留原始列：{hcr[27]["原始列"]["官等"]}→{hcr[27]["官等"]}、{hcr[28]["原始列"]["官等"]}→{hcr[28]["官等"]}')
+hcm = by['衛生福利部恆春旅遊醫院']['指標']
+check(hcm['委任員額'] == 2 and hcm['其他官等員額'] == 86 and hcm['薦任員額'] == 6, f'恆春 校正後 簡/薦/委/其他 = {hcm["簡任員額"]}/{hcm["薦任員額"]}/{hcm["委任員額"]}/{hcm["其他官等員額"]}（校正前 0/6/1/87：書記誤入其他官等）')
 
 # P0-C 藥試所
 ya = by['農業部農業藥物試驗所']; rows = [p for p in P if p['機關'] == '農業部農業藥物試驗所']
@@ -73,7 +86,7 @@ notes.append('PASS 全庫官等加總守恆（簡＋薦＋委＋其他 == 員額
 # 回歸：與修改前比較
 if a.before:
     B = {r['機關']: r for r in json.load(open(f'{a.before}/agencies.json', encoding='utf-8'))['agencies']}
-    allowed = {r['機關'] for r in unknown} | {'衛生福利部臺中醫院', '衛生福利部恆春旅遊醫院', '農業部農業藥物試驗所'}
+    allowed = {r['機關'] for r in unknown} | {'衛生福利部臺中醫院', '衛生福利部恆春旅遊醫院', '農業部農業藥物試驗所'} | {p['機關'] for p in P if p['列品質'] in ('官等異常', '錯位', '疑似控制列')}
     changed = []
     for r in A:
         b = B[r['機關']]

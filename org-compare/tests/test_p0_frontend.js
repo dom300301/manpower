@@ -6,7 +6,7 @@ const check = (c, m) => out.push((c ? 'PASS ' : 'FAIL ') + m);
   const b = await chromium.launch(); const pg = await b.newPage({ viewport: { width: 1400, height: 900 } });
   const errs = []; pg.on('pageerror', e => errs.push(String(e))); pg.on('console', m => { if (m.type() === 'error' && !/blob:x/.test(m.text())) errs.push(m.text()); }); // blob:x 為測試攔截 CSV 下載所致，非頁面錯誤
   const dialogs = []; pg.on('dialog', async d => { dialogs.push(d.message()); await d.dismiss(); });
-  await pg.goto('file:///home/user/manpower/org-compare/output/index.html'); await pg.waitForSelector('#alist .card', { timeout: 30000 });
+  await pg.goto('file://' + (process.env.INDEX_HTML || (__dirname + '/../output/index.html'))); await pg.waitForSelector('#alist .card', { timeout: 30000 });
   // 財政部查詢
   await pg.fill('#q', '財政部'); await pg.waitForTimeout(300);
   const card = await pg.$eval('#alist .card', e => e.textContent);
@@ -43,7 +43,8 @@ const check = (c, m) => out.push((c ? 'PASS ' : 'FAIL ') + m);
   await pg.click('.tabs button[data-tab=info]'); await pg.waitForTimeout(300);
   const flaggedTxt = await pg.textContent('#flagged');
   const flagRows = await pg.$$eval('#flagged tbody tr', trs => trs.map(t => t.children[0].textContent));
-  check(/共 41 個/.test(flaggedTxt) && flagRows.includes('教育部') && flagRows.includes('衛生福利部臺中醫院') && !flagRows.includes('衛生福利部恆春旅遊醫院'), `狀態頁不可比較 ${flagRows.length} 個，含教育部、臺中醫院，不含恆春`);
+  const expected = JSON.parse(require('fs').readFileSync(process.env.AGENCIES_JSON || (__dirname + '/../output/agencies_snapshot.json'), 'utf8')).agencies.filter(a => !a.可比較).length;
+  check(new RegExp(`共 ${expected} 個`).test(flaggedTxt) && flagRows.length === expected && flagRows.includes('教育部') && flagRows.includes('衛生福利部臺中醫院') && !flagRows.includes('衛生福利部恆春旅遊醫院'), `狀態頁不可比較 ${flagRows.length} 個（與資料推導 ${expected} 一致），含教育部、臺中醫院，不含恆春（已校正）`);
   // 藥試所明細與臺中醫院顯示
   await pg.click('.tabs button[data-tab=search]'); await pg.fill('#q', '農業藥物試驗所'); await pg.waitForTimeout(300); await pg.click('#alist .card'); await pg.waitForTimeout(300);
   const det = await pg.$eval('#adetail', e => e.textContent);
@@ -53,6 +54,14 @@ const check = (c, m) => out.push((c ? 'PASS ' : 'FAIL ') + m);
   await pg.fill('#q', '臺中醫院'); await pg.waitForTimeout(300); await pg.click('#alist .card'); await pg.waitForTimeout(300);
   const det2 = await pg.$eval('#adetail', e => e.textContent);
   check(/官方合計待核/.test(det2) && /控制列/.test(det2) && /217/.test(det2) && !/434/.test(det2), '臺中醫院詳情：官方合計待核、控制列說明、217 而非 434');
+  // 無編制表機關：依據「無」須明示；「有」須給條號與未加總說明
+  await pg.fill('#q', '法務部矯正署'); await pg.waitForTimeout(300);
+  const cardsZ = await pg.$$('#alist .card'); for (const c of cardsZ) { if ((await c.textContent()).startsWith('法務部矯正署') && !(await c.textContent()).includes('監獄')) { await c.click(); break; } } await pg.waitForTimeout(300);
+  const det3 = await pg.$eval('#adetail', e => e.textContent);
+  check(/未列可結構化員額/.test(det3) && /未取得（無編制表）/.test(det3), '矯正署詳情：明示「條文僅規定首長、副首長等職稱，未列可結構化員額」');
+  await pg.fill('#q', '公共工程委員會'); await pg.waitForTimeout(300); await pg.click('#alist .card'); await pg.waitForTimeout(300);
+  const det4 = await pg.$eval('#adetail', e => e.textContent);
+  check(/法定員額依據：行政院公共工程委員會組織條例第8條/.test(det4) && /未加總/.test(det4), '工程會詳情：法定員額依據條號與「未加總」說明');
   check(errs.length === 0, `無 console/page 錯誤（${errs.length}）${errs.slice(0, 2).join(' | ')}`);
   await b.close(); console.log(out.join('\n')); console.log(`\n結果：PASS ${out.filter(o => o.startsWith('PASS')).length}、FAIL ${out.filter(o => o.startsWith('FAIL')).length}`);
   process.exit(out.some(o => o.startsWith('FAIL')) ? 1 : 0);

@@ -110,16 +110,27 @@ TITLE_LIKE_RE = re.compile(r'^(主任|副主任|組員|科員|技士|技佐|書�
 CTRL_WORD_RE = re.compile(r'合計|總計|小計|共計')
 HEADER_NOISE_RE = re.compile(r'卷.{0,6}期|公報')
 
-def row_quality(r, is_last_row):
-    """回傳 (列品質, 說明)。列品質：None／'錯位'／'控制列'／'疑似控制列'／'警示：頁眉'。"""
+RANK_TOKEN_RE = re.compile(r'(?:簡任|薦任|委任|師級|士\(生\)級|士（生）級|士（生級|警監|警正|警佐|上將|中將|少將|將官|上校|中校|少校|校官|上尉|中尉|少尉|尉官|士官長|士官|士兵|關務監|關務正|關務員|高級關務員|技術監|技術正|技術員|聘任|聘用|派用|特任|雇員|教授|副教授|助理教授|講師|比照|相當|一級|二級|三級|級|或|至|、|，|及|以上|以下|\(|\)|（|）|\s)+')
+def rank_abnormal(rank):
+    """官等欄不是由已知官等詞彙組成（例：混入鄰列溢出文字、職稱、職等）。"""
+    rank = (rank or '').strip()
+    return bool(rank) and not RANK_TOKEN_RE.fullmatch(rank)
+
+def row_quality(r, pos):
+    """回傳 (列品質, 說明)。pos：{'agency_last','sub_last','page_last'} 布林。
+    列品質：None／'錯位'／'官等異常'／'控制列'／'控制列（分表）'／'控制列（跨頁小計）'／'疑似控制列'／'警示：頁眉'。"""
     nz = lambda v: '' if v is None or (isinstance(v, float) and pd.isna(v)) else str(v)
     raw = nz(r['員額原文']); rank = nz(r['官等']); title = nz(r['職稱']); unit = nz(r['單位']); note = nz(r['備註']); grade = nz(r['職等'])
     has_n = pd.notna(r['n'])
     if CTRL_WORD_RE.search(title) or CTRL_WORD_RE.search(unit):
-        # 控制列：須同時滿足 列位置（該機關最後一列）、欄位內容（官等與職等皆空）、明細結構（員額欄有數字）
-        if is_last_row and has_n and not rank.strip() and not grade.strip():
-            return '控制列', f'職稱「{title}」含合計字樣且為最後一列、官等職等空白、員額 {int(r["n"])}'
-        return '疑似控制列', f'職稱「{title}」含合計字樣但不符控制列條件（位置／欄位），待審'
+        # 控制列：欄位內容（官等與職等皆空）＋明細結構（員額欄有數字）＋列位置（機關最後一列／分表最後一列／該 PDF 頁最後一列之小計）
+        if has_n and not rank.strip() and not grade.strip():
+            if pos['agency_last']: return '控制列', f'職稱「{title}」含合計字樣、為機關最後一列、官等職等空白、員額 {int(r["n"])}'
+            if pos['sub_last']: return '控制列（分表）', f'職稱「{title}」含合計字樣、為分表 {nz(r["分表"])} 最後一列、官等職等空白、員額 {int(r["n"])}'
+            if pos['page_last'] and re.search(r'小計|本頁', title + unit): return '控制列（跨頁小計）', f'職稱「{title}」為第 {nz(r["PDF頁"])} 頁最後一列之小計，員額 {int(r["n"])}'
+        return '疑似控制列', f'職稱「{title}」含合計字樣但不符控制列條件（位置／欄位），待審，不自動刪除'
+    if rank_abnormal(rank) and not TITLE_LIKE_RE.match(rank) and not rank.endswith('室'):
+        return '官等異常', f'官等欄「{rank}」非已知官等詞彙（疑為鄰列溢出或錯欄），影響官等分類，待審'
     if '職等' in raw:
         return '錯位', f'員額原文「{raw}」含「職等」，疑為欄位右移'
     if TITLE_LIKE_RE.match(rank) or rank.endswith('室'):
@@ -127,6 +138,17 @@ def row_quality(r, is_last_row):
     if HEADER_NOISE_RE.search(note):
         return '警示：頁眉', f'備註含公報頁眉樣式：「{note[:30]}」（仍計入，請人工確認）'
     return None, None
+
+def classify_rows(det):
+    """對整個明細資料框算列品質（需有 機關名稱、序、分表、PDF頁、n、官等、職等、職稱、單位、員額原文、備註 欄）。"""
+    seq = pd.to_numeric(det['序'], errors='coerce').fillna(9999)
+    agency_last = seq == seq.groupby(det['機關名稱']).transform('max')
+    sub_key = det['機關名稱'] + '|' + det['分表'].fillna('').astype(str)
+    sub_last = det['分表'].notna() & (seq == seq.groupby(sub_key).transform('max'))
+    page_key = det['機關名稱'] + '|' + det['PDF頁'].fillna('').astype(str)
+    page_last = det['PDF頁'].notna() & (seq == seq.groupby(page_key).transform('max'))
+    out = [row_quality(r, {'agency_last': bool(agency_last.iloc[i]), 'sub_last': bool(sub_last.iloc[i]), 'page_last': bool(page_last.iloc[i])}) for i, (_, r) in enumerate(det.iterrows())]
+    return [x[0] for x in out], [x[1] for x in out]
 
 DEPUTY_MAP = {'部長': ['副部長', '政務次長', '常務次長'], '人事長': ['副人事長'], '主計長': ['副主計長'], '總裁': ['副總裁'],
               '署長或主任': ['副署長', '副主任'], '司令': ['副司令']}
@@ -170,14 +192,28 @@ def unit_structure(art, name):
         break
     return out
 
-STATUTE_HC_RE = re.compile(r'置[一-龥]{2,8}?[一二三四五六七八九十]+人(?:至[一二三四五六七八九十]+人)?')
+HC_CLAUSE_RE = re.compile(r'([\u4e00-\u9fa5]{2,8}?)([一二三四五六七八九十]+人(?:至[一二三四五六七八九十]+人)?)')
+HEAD_TITLES_RE = re.compile(r'(署長|局長|處長|所長|館長|院長|校長|主任委員|部長|委員長|總裁|司令|副署長|副局長|副處長|副所長|副館長|副院長|副校長|副主任委員|政務次長|常務次長|副部長|主任秘書|秘書長|副秘書長)$')
 def statutory_basis(art, name):
-    """無編制表機關：列出組織法規中含「置○○N人（至M人）」的條號（本批只給依據，不計區間總額）。"""
+    """無編制表機關的法定員額依據。回傳 {'有': bool, ...}：
+    有＝本機關自己的組織法規條文列有首長副首長以外的員額（含區間），給法規名稱、條號、連結，不加總；
+    無＝條文只規定首長、副首長等職稱，或組織依共用法規（法院組織法、駐外機構組織通則），明示原因。"""
     sub = art[(art['機關'] == name) & (art['法規類別'] == '組織法規')]
-    hits = [(r['法規名稱'], r['條號'], r['連結']) for _, r in sub.iterrows() if STATUTE_HC_RE.search(str(r['條文內容']).replace('\n', ''))]
-    if not hits: return None
-    law = hits[0][0]; nos = '、'.join(dict.fromkeys(h[1] for h in hits))
-    return {'法規名稱': law, '條號': nos, '連結': hits[0][2], '說明': f'{law}{nos}列有員額（區間），本系統未加總'}
+    if not len(sub): return {'有': False, '說明': '總表無此機關之組織法規條文'}
+    law = sub['法規名稱'].iloc[0]; link = sub['連結'].iloc[0]
+    if (name[:4] not in law and name[-4:] not in law) or re.search(r'通則|準則', law):
+        return {'有': False, '法規名稱': law, '連結': link, '說明': f'組織依共用法規「{law}」（通則／準則或非本機關專屬法規），其員額規定非本機關專屬，本系統未結構化'}
+    nos, nonhead = [], 0
+    for _, r in sub.iterrows():
+        txt = str(r['條文內容']).replace('\n', '')
+        for seg in txt.split('。'):
+            if '置' not in seg: continue
+            cls = HC_CLAUSE_RE.findall(seg[seg.index('置'):])
+            if cls and r['條號'] not in nos: nos.append(r['條號'])
+            nonhead += sum(1 for t, _ in cls if not HEAD_TITLES_RE.search(t))
+    if nonhead >= 2:
+        return {'有': True, '法規名稱': law, '條號': '、'.join(nos), '連結': link, '說明': f'{law}{"、".join(nos)}列有員額（含區間），本系統未加總'}
+    return {'有': False, '法規名稱': law, '連結': link, '說明': f'「{law}」條文僅規定首長、副首長等職稱，未列可結構化員額'}
 
 RESULT_ENUM = ['相符', '不相符', '找不到合計', '需人工輸入', '無編制表']
 def parse_status(s):
@@ -208,10 +244,8 @@ def build(master, out, fixes_path=None, attach_units_path=None):
     det['bracket'] = pd.to_numeric(det['括號員額_兼任'], errors='coerce')
     det['序'] = pd.to_numeric(det['序'], errors='coerce').fillna(9999)
     # 列品質（語意檢查）
-    last_seq = det.groupby('機關名稱')['序'].transform('max')
-    q = [row_quality(r, r['序'] == last_seq.iloc[i]) for i, (_, r) in enumerate(det.iterrows())]
-    det['列品質'] = [x[0] for x in q]; det['列品質說明'] = [x[1] for x in q]
-    det['計入'] = ~det['列品質'].isin(['控制列', '疑似控制列', '錯位'])
+    det['列品質'], det['列品質說明'] = classify_rows(det)
+    det['計入'] = ~det['列品質'].isin(['控制列', '控制列（分表）', '控制列（跨頁小計）', '疑似控制列', '錯位', '官等異常'])
     gr = det['職等'].map(grade_range)
     det['職等下限'] = [g[0] for g in gr]; det['職等上限'] = [g[1] for g in gr]
     det['官等'] = det['官等'].fillna('')
@@ -251,7 +285,8 @@ def build(master, out, fixes_path=None, attach_units_path=None):
         name = o['機關']
         g_all = det[det['機關名稱'] == name]
         ctrl = g_all[g_all['列品質'] == '控制列']
-        pending = g_all[g_all['列品質'].isin(['疑似控制列', '錯位'])]
+        ctrl_sub = g_all[g_all['列品質'] == '控制列（分表）']
+        pending = g_all[g_all['列品質'].isin(['疑似控制列', '錯位', '官等異常'])]
         g = g_all[g_all['計入']]
         n = g['n'].fillna(0)
         has_numbers = bool(((g['n'].fillna(0) > 0) | (g['n'].notna() & g['bracket'].notna())).any())
@@ -269,6 +304,9 @@ def build(master, out, fixes_path=None, attach_units_path=None):
                     t = mb.group(1)
                     br = int(t) if t.isdigit() else (cn2n(t) if '十' in t else int(''.join(str({'○':0,'〇':0,**CN}.get(ch, 0)) for ch in t)))
             ctrl_num = {'專任': int(c['n']), '兼任': br, '序': int(c['序']), '原文': c['員額原文']}
+        elif len(ctrl_sub):  # 只有分表合計：以各分表合計相加為表列合計
+            ctrl_num = {'專任': int(ctrl_sub['n'].sum()), '兼任': None, '序': [int(x) for x in ctrl_sub['序']], '原文': '；'.join(str(x) for x in ctrl_sub['員額原文']), '分表合計': True}
+        if ctrl_num:
             if tbl_total is None:
                 tbl_total = ctrl_num['專任']; notes.append('表內驗算相符（合計取自明細控制列）' if int(n.sum()) == tbl_total else '表內驗算不符（合計取自明細控制列）')
                 result = '相符' if int(n.sum()) == tbl_total else '不相符'
@@ -360,7 +398,7 @@ def build(master, out, fixes_path=None, attach_units_path=None):
         '表列合計': '編制表上的合計數：總表登錄者，或總表無合計時取明細內的合計控制列（此時品質註記標「表內驗算相符（合計取自明細控制列）」，僅表示表內一致，不代表官方來源已核實）',
         '來源核對狀態': '與法規資料庫官方 PDF 的核對情形，與表內驗算分開記錄',
         '驗算結果': '相符／不相符／找不到合計／需人工輸入／無編制表；人工修正或取用控制列者由程式重新驗算',
-        '品質註記': 'Codex抽樣不一致／人工補登（已對源）／人工補登（未完成對源或驗算不符）／表內驗算相符（合計取自明細控制列）／官方合計待核／列品質待審',
+        '品質註記': 'Codex抽樣不一致／人工補登（已對源）／人工補登（未完成對源或驗算不符）／表內驗算相符（合計取自明細控制列）／官方合計待核／列品質待審（錯位、官等異常、疑似控制列）',
         '可比較': '驗算結果為相符、資料狀態可用、品質註記皆屬白名單（人工補登已對源、表內驗算相符、頁眉警示）且無官方合計待核',
         '副首長數': '本機關首長之副手（署長→副署長、部長→副部長／政務次長／常務次長…）且不屬內部單位者之員額；內部單位的副處長、副主任不計',
         '簡任員額': '官等含「簡任」（含薦任至簡任）或職等上限達第十職等以上之員額，加上備註「內 N 人得列簡任」之 N（以上限計算）；不含得列者見「簡任員額_法定」',
@@ -377,7 +415,7 @@ def build(master, out, fixes_path=None, attach_units_path=None):
         '科數': '同上條文各單位「分 N 科辦事」之 N 加總；未分科者為空',
         '暫列職稱數': '備註含「暫列」（官等職等暫列）的職稱列數',
         '得列人數': '備註「內 N 人得列…」的 N 加總',
-        '法定員額依據': '無編制表機關之組織法規中列有員額的條號（只給依據，本系統未加總區間）',
+        '法定員額依據': '無編制表機關：有＝本機關組織法規條文列有首長副首長以外之員額（給條號與連結，未加總）；無＝條文僅規定首長等職稱或依共用法規，明示原因',
     }, 'agencies': agencies}, open(os.path.join(out, 'agencies.json'), 'w', encoding='utf-8'), ensure_ascii=False)
     json.dump(positions, open(os.path.join(out, 'positions.json'), 'w', encoding='utf-8'), ensure_ascii=False)
     json.dump(articles, open(os.path.join(out, 'articles.json'), 'w', encoding='utf-8'), ensure_ascii=False)
