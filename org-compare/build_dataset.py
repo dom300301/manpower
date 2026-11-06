@@ -461,8 +461,8 @@ def build(master, out, fixes_path=None, attach_units_path=None):
         conc = paren_rows[paren_rows['paren_meaning'] == '兼任']; unk = paren_rows[paren_rows['paren_meaning'] == 'unknown']
         conc_min = int(conc['concurrent_min'].fillna(0).sum()); conc_max = int(conc['concurrent_max'].fillna(0).sum())
         m = {
-            '員額合計': None if is_range_agency else tot,
-            '員額合計_min': hc_min if is_range_agency else None, '員額合計_max': hc_max if is_range_agency else None, '員額區間列': [{'序': int(x['序']), '職稱': x['職稱'], '原文': x['員額原文'], 'min': x['專任_min'], 'max': x['專任_max']} for _, x in rng_rows.iterrows()] or None,
+            '員額合計': tot,
+            '員額區間列': [{'序': int(x['序']), '職稱': x['職稱'], '原文': x['員額原文'], 'min': x['專任_min'], 'max': x['專任_max']} for _, x in rng_rows.iterrows()] or None,
             '兼任合計_已判定': conc_min if conc_min == conc_max else None, '兼任合計_min': conc_min, '兼任合計_max': conc_max,
             '兼任合計': (conc_min if (conc_min == conc_max and len(unk) == 0) else None),
             '括號待審列數': int(len(unk)), '括號列數': int(len(paren_rows)),
@@ -485,12 +485,28 @@ def build(master, out, fixes_path=None, attach_units_path=None):
             '業務單位數': units['業務單位數'], '幕僚單位數': units['幕僚單位數'], '單位數': units['單位數'], '科數': units['科數'],
             '單位清單': units['清單'], '單位依據': units['依據'],
             '主管員額': int(n[g['主管']].sum()),
-            '明細列數': int(len(g_all)), '明細列數_有效': int(len(g)), '碎片列數': int(g_all['列品質'].fillna('').str.startswith('碎片列').sum()), '員額空白列數': int(g['n'].isna().sum()),
+            '明細列數': int(len(g_all)), '明細列數_有效': int(len(g)), '碎片列數': int(g_all['列品質'].fillna('').str.startswith('碎片列').sum()), '員額空白列數': int((g['n'].isna() & ~(g['專任_is_range'] == True)).sum()),
             '職等區間待審列數': int(g['職等區間待審'].sum()),
             '暫列職稱數': int(g['備註'].fillna('').str.contains('暫列').sum()),
             '得列人數': int(sum(cn2n(x) or 0 for x in re.findall(r'內([一二三四五六七八九十]+)人得列', ' '.join(g['備註'].fillna(''))))),
         }
-        if is_range_agency: tot = 0  # 區間機關不算單一比率
+        if is_range_agency:
+            # 區間機關：只有「含區間列」的指標改以 min／max 呈現，其餘定額指標維持；比率一律留空
+            RM = {'員額合計': rng_rows.index == rng_rows.index,
+                  '副首長數': rng_rows['職稱'].isin(dep_titles) & rng_rows['單位'].isna(),
+                  '主任秘書': rng_rows['職稱'] == '主任秘書', '組長數': rng_rows['職稱'] == '組長', '副組長數': rng_rows['職稱'] == '副組長',
+                  '處長數': rng_rows['職稱'] == '處長', '副處長數': rng_rows['職稱'] == '副處長', '科長數': rng_rows['職稱'] == '科長', '股長數': rng_rows['職稱'] == '股長',
+                  '專門委員': rng_rows['職稱'] == '專門委員',
+                  '簡任員額': rng_rows['簡任'], '簡任主管': rng_rows['簡任'] & rng_rows['主管'], '簡任非主管': rng_rows['簡任'] & ~rng_rows['主管'],
+                  '簡任員額_法定': rng_rows['簡任'], '簡任非主管_法定': rng_rows['簡任'] & ~rng_rows['主管'],
+                  '薦任員額': rng_rows['薦任'], '委任員額': rng_rows['委任'], '其他官等員額': ~rng_rows['簡任'] & ~rng_rows['薦任'] & ~rng_rows['委任'],
+                  '幕僚單位員額': rng_rows['幕僚單位'], '主管員額': rng_rows['主管']}
+            for k, mask in RM.items():
+                lo = int(rng_rows.loc[mask, '專任_min'].fillna(0).sum()); hi = int(rng_rows.loc[mask, '專任_max'].fillna(0).sum())
+                if hi > 0:
+                    base = m[k] if k != '員額合計' else tot
+                    m[k + '_min'] = base + lo; m[k + '_max'] = base + hi; m[k] = None
+            tot = 0  # 比率不算
         m['簡任非主管比'] = round(m['簡任非主管'] / tot, 4) if tot else None
         m['簡任比'] = round(m['簡任員額'] / tot, 4) if tot else None
         m['主管比'] = round(m['主管員額'] / tot, 4) if tot else None
@@ -501,7 +517,7 @@ def build(master, out, fixes_path=None, attach_units_path=None):
         if data_state == '待審（官等結構）':   # 員額已知；官等結構不可用
             m['官等結構待審列'] = [{'序': int(x['序']), '職稱': x['職稱'], '員額': None if pd.isna(x['n']) else int(x['n']), '官等原文': x['官等']} for _, x in pending_rank.iterrows()]
             for k in RANK_METRICS: m[k] = None
-        elif data_state != '可用':             # 未取得或員額不完整：人數類指標一律 null；已知列小計另列、明示不完整
+        elif data_state not in ('可用', '可用（區間）'):   # 未取得或員額不完整：人數類指標一律 null；已知列小計另列、明示不完整（區間機關不在此列：定額指標維持、含區間列者另給 _min／_max）
             m['已知列小計'] = tot if has_numbers else None
             m['已知列小計說明'] = f'僅 {int(len(g))} 列員額可辨識之加總，不是完整總額' if has_numbers else None
             for k in COUNT_METRICS: m[k] = None
@@ -538,7 +554,7 @@ def build(master, out, fixes_path=None, attach_units_path=None):
         '驗算結果': '相符／不相符／找不到合計／需人工輸入／無編制表；人工修正或取用控制列者由程式重新驗算',
         '品質註記': 'Codex抽樣不一致／人工補登（已對源）／人工補登（未完成對源或驗算不符）／表內驗算相符（合計取自明細控制列）／官方合計待核／列品質待審（員額不完整：錯位、疑似控制列）／列品質待審（官等結構：官等異常，員額已知）',
         '已知列小計': '員額不完整時，僅可辨識列的加總；明示不是完整總額',
-        '員額合計_min／max': '機關內有專任區間列（如「七-九」）時，定額列加總＋區間下限／上限；此時「員額合計」為空，不以下限充當定額，預設不進距離排序、平均、中位數與 ±50%（比對頁可勾選「區間取下限」並持續標示口徑）',
+        '員額合計_min／max': '機關內有專任區間列（如「七-九」）時，定額列加總＋區間下限／上限；此時「員額合計」為空，不以下限充當定額，預設不進距離排序、平均、中位數與 ±50%（比對頁可勾選「區間取下限」並持續標示口徑）。其他人數指標只有「含區間列」者（例如其他官等員額）同樣改為 _min／_max，其餘定額指標維持；比率一律留空',
         '兼任合計': '括號語意判定為「兼任」（本列備註有兼任字樣）之括號人數加總；有 unknown 括號列時為空並另給「兼任合計_已判定」；兼任永不加回專任',
         'paren_meaning': '兼任｜上限｜unknown；只依本列備註判定，同表慣例只記為候選證據不放行；括號可同時為兼任且為區間（paren_min／max）',
         '括號待審列數': 'paren_meaning=unknown 的列數；只表示括號部分未判定，專任部分照常計入',
