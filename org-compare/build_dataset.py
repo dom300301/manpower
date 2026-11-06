@@ -130,7 +130,9 @@ def row_quality(r, pos):
             if pos['page_last'] and re.search(r'小計|本頁', title + unit): return '控制列（跨頁小計）', f'職稱「{title}」為第 {nz(r["PDF頁"])} 頁最後一列之小計，員額 {int(r["n"])}'
         return '疑似控制列', f'職稱「{title}」含合計字樣但不符控制列條件（位置／欄位），待審，不自動刪除'
     if rank_abnormal(rank) and not TITLE_LIKE_RE.match(rank) and not rank.endswith('室'):
-        return '官等異常', f'官等欄「{rank}」非已知官等詞彙（疑為鄰列溢出或錯欄），影響官等分類，待審'
+        if not has_n:
+            return '錯位', f'官等欄「{rank[:30]}」非已知官等詞彙且員額欄無數字（整列混排），員額不可信，待審'
+        return '官等異常', f'官等欄「{rank}」非已知官等詞彙（疑為鄰列溢出或錯欄）；員額 {int(r["n"])} 為原表已知數，官等分類待審'
     if '職等' in raw:
         return '錯位', f'員額原文「{raw}」含「職等」，疑為欄位右移'
     if TITLE_LIKE_RE.match(rank) or rank.endswith('室'):
@@ -202,7 +204,7 @@ def statutory_basis(art, name):
     if not len(sub): return {'有': False, '說明': '總表無此機關之組織法規條文'}
     law = sub['法規名稱'].iloc[0]; link = sub['連結'].iloc[0]
     if (name[:4] not in law and name[-4:] not in law) or re.search(r'通則|準則', law):
-        return {'有': False, '法規名稱': law, '連結': link, '說明': f'組織依共用法規「{law}」（通則／準則或非本機關專屬法規），其員額規定非本機關專屬，本系統未結構化'}
+        return {'有': False, '法規名稱': law, '連結': link, '說明': f'組織依共用法規「{law}」（通則／準則或非本機關專屬法規），本系統尚未完成其員額規定之結構化'}
     nos, nonhead = [], 0
     for _, r in sub.iterrows():
         txt = str(r['條文內容']).replace('\n', '')
@@ -213,7 +215,7 @@ def statutory_basis(art, name):
             nonhead += sum(1 for t, _ in cls if not HEAD_TITLES_RE.search(t))
     if nonhead >= 2:
         return {'有': True, '法規名稱': law, '條號': '、'.join(nos), '連結': link, '說明': f'{law}{"、".join(nos)}列有員額（含區間），本系統未加總'}
-    return {'有': False, '法規名稱': law, '連結': link, '說明': f'「{law}」條文僅規定首長、副首長等職稱，未列可結構化員額'}
+    return {'有': False, '法規名稱': law, '連結': link, '說明': f'「{law}」本系統尚未完成員額結構化（目前僅辨識出首長、副首長職稱條款，未逐條證明法規無其他員額規定）'}
 
 RESULT_ENUM = ['相符', '不相符', '找不到合計', '需人工輸入', '無編制表']
 def parse_status(s):
@@ -245,7 +247,9 @@ def build(master, out, fixes_path=None, attach_units_path=None):
     det['序'] = pd.to_numeric(det['序'], errors='coerce').fillna(9999)
     # 列品質（語意檢查）
     det['列品質'], det['列品質說明'] = classify_rows(det)
-    det['計入'] = ~det['列品質'].isin(['控制列', '控制列（分表）', '控制列（跨頁小計）', '疑似控制列', '錯位', '官等異常'])
+    # 計入（員額）：控制列不是職位；錯位／疑似控制列的員額欄不可信 → 不計；官等異常列的員額是原表已知數 → 計入員額，但不計入官等結構
+    det['計入'] = ~det['列品質'].isin(['控制列', '控制列（分表）', '控制列（跨頁小計）', '疑似控制列', '錯位'])
+    det['計入官等'] = det['計入'] & (det['列品質'] != '官等異常')
     gr = det['職等'].map(grade_range)
     det['職等下限'] = [g[0] for g in gr]; det['職等上限'] = [g[1] for g in gr]
     det['官等'] = det['官等'].fillna('')
@@ -275,7 +279,7 @@ def build(master, out, fixes_path=None, attach_units_path=None):
             '兼任': None if pd.isna(r['bracket']) else int(r['bracket']), '員額原文': r['員額原文'], 'raw原文': r['員額原文'], '備註': r['備註'],
             '職等下限': r['職等下限'], '職等上限': r['職等上限'], '簡任': bool(r['簡任']), '主管': bool(r['主管']),
             '得列簡任': int(r['得列簡任']), '得列薦任': int(r['得列薦任']), 'PDF頁': r['PDF頁'],
-            '列品質': r['列品質'], '列品質說明': r['列品質說明'], '計入': bool(r['計入']),
+            '列品質': r['列品質'], '列品質說明': r['列品質說明'], '計入': bool(r['計入']), '計入官等': bool(r['計入官等']),
             '原始列': (json.loads(r['原始列']) if isinstance(r['原始列'], str) else None), '修正紀錄': r['修正紀錄'] if isinstance(r['修正紀錄'], str) else None}.items()})
         if isinstance(r['列品質'], str) and r['列品質']:
             checklog.append((r['機關名稱'], int(r['序']) if r['序'] != 9999 else None, r['職稱'], r['列品質'], r['列品質說明']))
@@ -286,8 +290,10 @@ def build(master, out, fixes_path=None, attach_units_path=None):
         g_all = det[det['機關名稱'] == name]
         ctrl = g_all[g_all['列品質'] == '控制列']
         ctrl_sub = g_all[g_all['列品質'] == '控制列（分表）']
-        pending = g_all[g_all['列品質'].isin(['疑似控制列', '錯位', '官等異常'])]
+        pending = g_all[g_all['列品質'].isin(['疑似控制列', '錯位'])]          # 員額欄不可信 → 總額不完整
+        pending_rank = g_all[g_all['列品質'] == '官等異常']                    # 員額已知、官等分類待審
         g = g_all[g_all['計入']]
+        gr_ok = g[g['計入官等']]
         n = g['n'].fillna(0)
         has_numbers = bool(((g['n'].fillna(0) > 0) | (g['n'].notna() & g['bracket'].notna())).any())
         result, notes = parse_status(o['驗算狀態'])
@@ -317,7 +323,8 @@ def build(master, out, fixes_path=None, attach_units_path=None):
             else:
                 notes = [x for x in notes if x != '人工補登'] + ['人工補登（未完成對源或驗算不符）']
                 if tbl_total is not None and has_numbers: result = '相符' if int(n.sum()) == tbl_total else '不相符'
-        if len(pending): notes.append('列品質待審')
+        if len(pending): notes.append('列品質待審（員額不完整）')
+        if len(pending_rank): notes.append('列品質待審（官等結構）')
         # 來源核對狀態（與表內驗算分開）
         sc = log['source_check']
         src_status = sc['狀態'] if sc else '依總表（2026-10-31 自全國法規資料庫下載之編制表 PDF）'
@@ -326,7 +333,9 @@ def build(master, out, fixes_path=None, attach_units_path=None):
         if not has_numbers:
             data_state = '未取得（需人工輸入）' if result == '需人工輸入' else ('未取得（無編制表）' if result == '無編制表' else '未取得（明細無數字）')
         elif len(pending):
-            data_state = '待審（列品質）'
+            data_state = '待審（員額不完整）'
+        elif len(pending_rank):
+            data_state = '待審（官等結構）'
         else:
             data_state = '可用'
         head = g[g['首長']].sort_values('序').head(1)
@@ -334,7 +343,7 @@ def build(master, out, fixes_path=None, attach_units_path=None):
         dep_titles = deputy_titles(head_title)
         dep_rows = g[g['職稱'].isin(dep_titles) & g['單位'].isna()]
         units = unit_structure(art, name)
-        tot = int(n.sum())
+        tot = int(n.sum()); nr = gr_ok['n'].fillna(0)
         m = {
             '員額合計': tot,
             '首長職稱': head_title, '首長職等': head['職等'].iloc[0] if len(head) else None,
@@ -346,12 +355,12 @@ def build(master, out, fixes_path=None, attach_units_path=None):
             '處長數': int(n[g['職稱'] == '處長'].sum()), '副處長數': int(n[g['職稱'] == '副處長'].sum()),
             '科長數': int(n[g['職稱'] == '科長'].sum()), '股長數': int(n[g['職稱'] == '股長'].sum()),
             '專門委員': int(n[g['職稱'] == '專門委員'].sum()),
-            '簡任員額': int(n[g['簡任']].sum() + g['得列簡任'].sum()), '簡任主管': int(n[g['簡任'] & g['主管']].sum() + g.loc[g['主管'], '得列簡任'].sum()),
-            '簡任非主管': int(n[g['簡任'] & ~g['主管']].sum() + g.loc[~g['主管'], '得列簡任'].sum()),
-            '簡任員額_法定': int(n[g['簡任']].sum()), '簡任非主管_法定': int(n[g['簡任'] & ~g['主管']].sum()),
-            '得列簡任人數': int(g['得列簡任'].sum()), '得列薦任人數': int(g['得列薦任'].sum()),
-            '薦任員額': int(n[g['薦任']].sum() - g['得列簡任'].sum() + g['得列薦任'].sum()), '委任員額': int(n[g['委任']].sum() - g['得列薦任'].sum()),
-            '其他官等員額': int(n[~g['簡任'] & ~g['薦任'] & ~g['委任']].sum()),
+            '簡任員額': int(nr[gr_ok['簡任']].sum() + gr_ok['得列簡任'].sum()), '簡任主管': int(nr[gr_ok['簡任'] & gr_ok['主管']].sum() + gr_ok.loc[gr_ok['主管'], '得列簡任'].sum()),
+            '簡任非主管': int(nr[gr_ok['簡任'] & ~gr_ok['主管']].sum() + gr_ok.loc[~gr_ok['主管'], '得列簡任'].sum()),
+            '簡任員額_法定': int(nr[gr_ok['簡任']].sum()), '簡任非主管_法定': int(nr[gr_ok['簡任'] & ~gr_ok['主管']].sum()),
+            '得列簡任人數': int(gr_ok['得列簡任'].sum()), '得列薦任人數': int(gr_ok['得列薦任'].sum()),
+            '薦任員額': int(nr[gr_ok['薦任']].sum() - gr_ok['得列簡任'].sum() + gr_ok['得列薦任'].sum()), '委任員額': int(nr[gr_ok['委任']].sum() - gr_ok['得列薦任'].sum()),
+            '其他官等員額': int(nr[~gr_ok['簡任'] & ~gr_ok['薦任'] & ~gr_ok['委任']].sum()),
             '幕僚單位員額': int(n[g['幕僚單位']].sum()),
             '業務單位數': units['業務單位數'], '幕僚單位數': units['幕僚單位數'], '單位數': units['單位數'], '科數': units['科數'],
             '單位清單': units['清單'], '單位依據': units['依據'],
@@ -364,8 +373,13 @@ def build(master, out, fixes_path=None, attach_units_path=None):
         m['簡任比'] = round(m['簡任員額'] / tot, 4) if tot else None
         m['主管比'] = round(m['主管員額'] / tot, 4) if tot else None
         m['幕僚比'] = round(m['幕僚單位員額'] / tot, 4) if tot else None
-        if data_state != '可用':  # 未知或待審：人數類指標一律 null，另給部分加總供參
-            m['明細加總_部分'] = tot if has_numbers else None
+        RANK_METRICS = ['簡任員額', '簡任主管', '簡任非主管', '簡任員額_法定', '簡任非主管_法定', '得列簡任人數', '得列薦任人數', '薦任員額', '委任員額', '其他官等員額', '簡任非主管比', '簡任比']
+        if data_state == '待審（官等結構）':   # 員額已知；官等結構不可用
+            m['官等結構待審列'] = [{'序': int(x['序']), '職稱': x['職稱'], '員額': None if pd.isna(x['n']) else int(x['n']), '官等原文': x['官等']} for _, x in pending_rank.iterrows()]
+            for k in RANK_METRICS: m[k] = None
+        elif data_state != '可用':             # 未取得或員額不完整：人數類指標一律 null；已知列小計另列、明示不完整
+            m['已知列小計'] = tot if has_numbers else None
+            m['已知列小計說明'] = f'僅 {int(len(g))} 列員額可辨識之加總，不是完整總額' if has_numbers else None
             for k in COUNT_METRICS: m[k] = None
         comparable = (result == '相符' and data_state == '可用' and all(x in WHITELIST_NOTES for x in notes) and not (sc and sc.get('狀態', '').startswith('官方合計待核')))
         duties = art[(art['機關'] == name) & (art['法規類別'] == '組織法規') & (art['條文內容'].fillna('').str.contains('掌理'))]['條文內容']
@@ -398,7 +412,9 @@ def build(master, out, fixes_path=None, attach_units_path=None):
         '表列合計': '編制表上的合計數：總表登錄者，或總表無合計時取明細內的合計控制列（此時品質註記標「表內驗算相符（合計取自明細控制列）」，僅表示表內一致，不代表官方來源已核實）',
         '來源核對狀態': '與法規資料庫官方 PDF 的核對情形，與表內驗算分開記錄',
         '驗算結果': '相符／不相符／找不到合計／需人工輸入／無編制表；人工修正或取用控制列者由程式重新驗算',
-        '品質註記': 'Codex抽樣不一致／人工補登（已對源）／人工補登（未完成對源或驗算不符）／表內驗算相符（合計取自明細控制列）／官方合計待核／列品質待審（錯位、官等異常、疑似控制列）',
+        '品質註記': 'Codex抽樣不一致／人工補登（已對源）／人工補登（未完成對源或驗算不符）／表內驗算相符（合計取自明細控制列）／官方合計待核／列品質待審（員額不完整：錯位、疑似控制列）／列品質待審（官等結構：官等異常，員額已知）',
+        '已知列小計': '員額不完整時，僅可辨識列的加總；明示不是完整總額',
+        '官等結構待審列': '官等異常列（員額已知、官等分類待審）；該機關官等類指標為空、員額合計照原表列數計',
         '可比較': '驗算結果為相符、資料狀態可用、品質註記皆屬白名單（人工補登已對源、表內驗算相符、頁眉警示）且無官方合計待核',
         '副首長數': '本機關首長之副手（署長→副署長、部長→副部長／政務次長／常務次長…）且不屬內部單位者之員額；內部單位的副處長、副主任不計',
         '簡任員額': '官等含「簡任」（含薦任至簡任）或職等上限達第十職等以上之員額，加上備註「內 N 人得列簡任」之 N（以上限計算）；不含得列者見「簡任員額_法定」',
@@ -415,7 +431,7 @@ def build(master, out, fixes_path=None, attach_units_path=None):
         '科數': '同上條文各單位「分 N 科辦事」之 N 加總；未分科者為空',
         '暫列職稱數': '備註含「暫列」（官等職等暫列）的職稱列數',
         '得列人數': '備註「內 N 人得列…」的 N 加總',
-        '法定員額依據': '無編制表機關：有＝本機關組織法規條文列有首長副首長以外之員額（給條號與連結，未加總）；無＝條文僅規定首長等職稱或依共用法規，明示原因',
+        '法定員額依據': '無編制表機關：有＝本機關組織法規條文辨識出首長副首長以外之員額條款（給條號與連結，未加總）；無＝本系統尚未完成該法規員額結構化（僅辨識出首長職稱條款，或依共用法規），不代表法規無員額規定',
     }, 'agencies': agencies}, open(os.path.join(out, 'agencies.json'), 'w', encoding='utf-8'), ensure_ascii=False)
     json.dump(positions, open(os.path.join(out, 'positions.json'), 'w', encoding='utf-8'), ensure_ascii=False)
     json.dump(articles, open(os.path.join(out, 'articles.json'), 'w', encoding='utf-8'), ensure_ascii=False)

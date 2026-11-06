@@ -19,12 +19,24 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--master', required=True); ap.add_argument('--fixes', default=os.path.join(HERE, 'manual_fixes.json'))
     ap.add_argument('--out', default=os.path.join(HERE, 'output', 'index.html')); ap.add_argument('--no-compress', action='store_true')
-    ap.add_argument('--template', default=os.path.join(HERE, 'org_template.html'))
+    ap.add_argument('--template', default=os.path.join(HERE, 'org_template.html')); ap.add_argument('--source-commit', default=None)
     a = ap.parse_args()
     tmp = tempfile.mkdtemp()
     build(a.master, tmp, a.fixes, os.path.join(HERE, 'units_from_attachments.json'))
     data = {k: json.load(open(os.path.join(tmp, f'{k}.json'), encoding='utf-8')) for k in ['agencies', 'positions', 'articles', 'meta']}
     data['built'] = dt.datetime.now().strftime('%Y-%m-%d %H:%M')
+    # 來源提交：程式與總表所在的 git 提交（有未提交變更時加 +dirty）；可用 --source-commit 覆寫
+    if a.source_commit:
+        data['source_commit'] = a.source_commit
+    else:
+        try:
+            import subprocess
+            h = subprocess.run(['git', 'rev-parse', '--short', 'HEAD'], cwd=HERE, capture_output=True, text=True).stdout.strip()
+            dirty = subprocess.run(['git', 'status', '--porcelain', '--', HERE], cwd=HERE, capture_output=True, text=True).stdout.strip()
+            dirty = '\n'.join(l for l in dirty.splitlines() if 'output/' not in l)
+            data['source_commit'] = h + ('+dirty' if dirty else '') if h else None
+        except Exception:
+            data['source_commit'] = None
     raw = json.dumps(data, ensure_ascii=False, separators=(',', ':')).encode('utf-8')
     html = open(a.template, encoding='utf-8').read()
     if a.no_compress:
@@ -38,7 +50,8 @@ def main():
     chk = os.path.join(tmp, '建檔檢核.md')
     if os.path.exists(chk):
         import shutil; shutil.copy(chk, os.path.join(os.path.dirname(a.out), '建檔檢核.md'))
-    print(f'完成：{a.out}（{os.path.getsize(a.out)/1e6:.1f} MB；機關 {len(data["agencies"]["agencies"])}，明細 {len(data["positions"])}，條文 {len(data["articles"])}）')
+    import hashlib
+    print(f'完成：{a.out}（{os.path.getsize(a.out)/1e6:.1f} MB；機關 {len(data["agencies"]["agencies"])}，明細 {len(data["positions"])}，條文 {len(data["articles"])}；來源提交 {data.get("source_commit")}；SHA-256 {hashlib.sha256(open(a.out,"rb").read()).hexdigest()[:16]}…）')
 
 if __name__ == '__main__':
     main()

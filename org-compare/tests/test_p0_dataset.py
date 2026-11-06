@@ -15,7 +15,7 @@ unknown = [r for r in A if r['指標']['員額合計'] is None]
 untaken = [r for r in unknown if r['資料狀態'].startswith('未取得')]
 pending = [r for r in unknown if r['資料狀態'].startswith('待審')]
 check(len(untaken) == 16, f'「未取得」機關數 = {len(untaken)}（本次診斷 16）')
-check(len(unknown) == len(untaken) + len(pending) and all(r['資料狀態'] != '可用' for r in unknown), f'null 機關 = 未取得 {len(untaken)} + 待審 {len(pending)}（{[r["機關"] for r in pending]}）')
+check(len(unknown) == len(untaken) + len(pending) and all(r['資料狀態'] != '可用' for r in unknown), f'員額合計 null 機關 = 未取得 {len(untaken)} + 待審（員額不完整）{len(pending)}（{[r["機關"] for r in pending]}）；官等結構待審者員額合計不為 null')
 check(all(r['指標']['員額合計'] != 0 for r in A), '沒有任何機關的員額合計被寫成 0')
 check(by['財政部']['指標']['員額合計'] is None and by['財政部']['資料狀態'] == '未取得（需人工輸入）', '財政部員額合計 null、資料狀態=未取得（需人工輸入）')
 for r in unknown:
@@ -25,7 +25,7 @@ basis = [r for r in unknown if r['法定員額依據']]
 basis_yes = [r for r in untaken if r['法定員額依據'] and r['法定員額依據']['有']]
 basis_no = [r for r in untaken if r['法定員額依據'] and not r['法定員額依據']['有']]
 check(len(basis_yes) == 5 and by['行政院公共工程委員會']['法定員額依據']['條號'].startswith('第8條'), f'法定員額依據「有」{len(basis_yes)} 個：{[r["機關"] for r in basis_yes]}')
-check(len(basis_no) == 7 and all('未列可結構化員額' in r['法定員額依據']['說明'] or '共用法規' in r['法定員額依據']['說明'] for r in basis_no), f'法定員額依據「無」{len(basis_no)} 個並明示原因：{[r["機關"] for r in basis_no]}')
+check(len(basis_no) == 7 and all('尚未完成' in r['法定員額依據']['說明'] for r in basis_no), f'法定員額依據「無」{len(basis_no)} 個，措辭為「本系統尚未完成員額結構化」而非法律事實：{[r["機關"] for r in basis_no]}')
 check(all('headcount' not in json.dumps(r['法定員額依據'] or {}) for r in untaken), '未產生區間 min/max 總額')
 # 僅兼任列保留專任 0，但整機關未知不得為 0（鐵道局北部：單列無數字 → 未取得）
 check(by['交通部鐵道局北部工程分局']['指標']['員額合計'] is None, '鐵道局北部工程分局（明細僅一列無數字）為未取得，不是 0')
@@ -45,7 +45,13 @@ n_flag = sum(1 for r in A if not r['可比較'])
 notes.append(f'INFO 不可比較機關數 = {n_flag}（由修正後資料推導，不設固定目標；舊快照 31+12=43 僅供參考）')
 # 官等異常：全庫不得有未標記的異常官等列計入
 ab = [p for p in P if p['列品質'] == '官等異常']
-check(all(not p['計入'] for p in ab), f'官等異常列 {len(ab)} 列均不計入（機關：{sorted(set(p["機關"] for p in ab))}）')
+check(all(p['計入'] and not p['計入官等'] for p in ab), f'官等異常列 {len(ab)} 列：員額計入、官等不計入（機關：{sorted(set(p["機關"] for p in ab))}）')
+yl = by['臺北榮民總醫院玉里分院']; ylr = next(p for p in P if p['機關'] == '臺北榮民總醫院玉里分院' and p['序'] == 38)
+check(ylr['列品質'] == '錯位' and ylr['員額'] is None and not ylr['計入'], f'玉里分院序 38：整列混排、員額欄無數字 → 錯位（原文保留：{ylr["官等"][:20]}…）')
+check(yl['資料狀態'] == '待審（員額不完整）' and yl['指標']['員額合計'] is None and yl['指標']['已知列小計'] == 462 and '不是完整總額' in yl['指標']['已知列小計說明'] and not yl['可比較'], f'玉里分院：總額 null、已知列小計 {yl["指標"]["已知列小計"]}（{yl["指標"]["已知列小計說明"]}）、待審不可比較；表列 {yl["表列合計"]}')
+check(by['衛生福利部臺中醫院']['可比較'] is False and by['衛生福利部臺中醫院']['來源核對狀態'].startswith('官方合計待核'), '臺中醫院維持官方合計待核、不可比較')
+inc = [r for r in A if r['資料狀態'] == '待審（員額不完整）']
+check(all(r['指標']['員額合計'] is None and (r['指標'].get('已知列小計') is None or '不是完整總額' in r['指標']['已知列小計說明']) for r in inc), f'員額不完整者 {len(inc)} 個：總額 null，已知列小計明示不是完整總額')
 hcr = {p['序']: p for p in P if p['機關'] == '衛生福利部恆春旅遊醫院'}
 check(hcr[27]['官等'] == '委任' and hcr[27]['原始列']['官等'] == '師委任級(或士' and hcr[28]['官等'] == '薦任', f'恆春 序27/28 官等依 PDF 校正並保留原始列：{hcr[27]["原始列"]["官等"]}→{hcr[27]["官等"]}、{hcr[28]["原始列"]["官等"]}→{hcr[28]["官等"]}')
 hcm = by['衛生福利部恆春旅遊醫院']['指標']
@@ -79,14 +85,19 @@ check(all('官方來源已核實' not in x for r in A for x in r['品質註記']
 # 全庫守恆
 for r in A:
     m = r['指標']
-    if m['員額合計'] is None: continue
+    if m['員額合計'] is None or m['簡任員額'] is None: continue  # 未取得／員額不完整／官等結構待審者跳過
     check(m['簡任員額'] + m['薦任員額'] + m['委任員額'] + m['其他官等員額'] == m['員額合計'], f'{r["機關"]} 官等加總 == 員額合計') if (m['簡任員額'] + m['薦任員額'] + m['委任員額'] + m['其他官等員額'] != m['員額合計']) else None
-notes.append('PASS 全庫官等加總守恆（簡＋薦＋委＋其他 == 員額合計，null 機關跳過）' if not any('官等加總' in f for f in fails) else 'FAIL 守恆')
+notes.append('PASS 全庫官等加總守恆（簡＋薦＋委＋其他 == 員額合計；未取得、員額不完整、官等結構待審者跳過）' if not any('官等加總' in f for f in fails) else 'FAIL 守恆')
 
 # 回歸：與修改前比較
 if a.before:
     B = {r['機關']: r for r in json.load(open(f'{a.before}/agencies.json', encoding='utf-8'))['agencies']}
     allowed = {r['機關'] for r in unknown} | {'衛生福利部臺中醫院', '衛生福利部恆春旅遊醫院', '農業部農業藥物試驗所'} | {p['機關'] for p in P if p['列品質'] in ('官等異常', '錯位', '疑似控制列')}
+    for r in A:  # 官等結構待審者：員額合計須與修改前相同（不得因排除異常列而少算）；員額不完整者：已知列小計 == 修改前加總（未另行刪減）
+        if r['資料狀態'] == '待審（官等結構）':
+            b = B[r['機關']]; check(r['指標']['員額合計'] == b['指標']['員額合計'], f'{r["機關"]} 員額合計 {r["指標"]["員額合計"]} 與修改前 {b["指標"]["員額合計"]} 相同（官等異常列員額仍計入）')
+        if r['資料狀態'] == '待審（員額不完整）':
+            b = B[r['機關']]; check(r['指標']['已知列小計'] == b['指標']['員額合計'], f'{r["機關"]} 已知列小計 {r["指標"]["已知列小計"]} == 修改前加總 {b["指標"]["員額合計"]}（只是改標示為不完整，未少算）')
     changed = []
     for r in A:
         b = B[r['機關']]
