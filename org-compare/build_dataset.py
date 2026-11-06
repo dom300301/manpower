@@ -21,7 +21,66 @@
 import argparse, json, os, re, datetime as dt
 import pandas as pd
 
+import unicodedata
 CN = {'一': 1, '二': 2, '三': 3, '四': 4, '五': 5, '六': 6, '七': 7, '八': 8, '九': 9}
+def nfkc(s):
+    """解析副本用：NFKC 正規化（相容字 六 U+F9D1→六、全形括號／數字→半形）。顯示與匯出一律用 raw。"""
+    return unicodedata.normalize('NFKC', s) if isinstance(s, str) else s
+def cn_int(t):
+    """中文數字字串 → 整數。支援 十七、二十、一○三、一一八四、一Ｏ一、阿拉伯數字；不可解析回 None。"""
+    if t is None: return None
+    t = nfkc(str(t)).replace('O', '○').replace('o', '○').replace('〇', '○').replace('零', '○').strip()
+    if not t: return None
+    if t.isdigit(): return int(t)
+    if re.search(r'[一二三四五六七八九十百千]', t) and '0' in t and not re.search(r'[1-9]', t): t = t.replace('0', '○')
+    if not re.fullmatch(r'[○一二三四五六七八九十百千]+', t): return None
+    if '十' not in t and '百' not in t and '千' not in t:
+        return int(''.join(str({'○': 0, **CN}[c]) for c in t))
+    total, num = 0, 0
+    for c in t:
+        if c in CN: num = CN[c]
+        elif c == '十': total += (num or 1) * 10; num = 0
+        elif c == '百': total += (num or 1) * 100; num = 0
+        elif c == '千': total += (num or 1) * 1000; num = 0
+    return total + num
+NUM_TOK = r'[○〇零一二三四五六七八九十百千0-9Oo]+'
+RANGE_SEP = r'[－—–\-～~至]'
+def parse_headcount(raw):
+    """員額原文 → 結構化（專任部分與括號部分各自上下限）。
+    回傳 dict：專任_min, 專任_max, 專任_is_range, paren_raw, paren_min, paren_max, paren_is_range, 可解析(bool)
+    例：'七'→(7,7)；'七-九'→(7,9,區間)；'三（六－八）'→專任(3,3)，括號(6,8,區間)；'（一）'→專任(0,0)，括號(1,1)；'(三~五)'→專任(0,0)，括號(3,5,區間)。"""
+    out = {'專任_min': None, '專任_max': None, '專任_is_range': False, 'paren_raw': None, 'paren_min': None, 'paren_max': None, 'paren_is_range': False, '可解析': False}
+    if raw is None or (isinstance(raw, float) and raw != raw): return out
+    s = nfkc(str(raw)); s = re.sub(r'\s', '', s)
+    if not s: return out
+    m = re.fullmatch(r'(' + NUM_TOK + r'(?:' + RANGE_SEP + NUM_TOK + r')?)?(?:[（(](' + NUM_TOK + r'(?:' + RANGE_SEP + NUM_TOK + r')?)[）)])?', s)
+    if not m: return out
+    def span(x):
+        if x is None: return None, None, False
+        parts = re.split(RANGE_SEP, x)
+        lo = cn_int(parts[0]); hi = cn_int(parts[-1]) if len(parts) > 1 else lo
+        if lo is None or hi is None: return None, None, False
+        return lo, hi, len(parts) > 1
+    fmin, fmax, frange = span(m.group(1)); pmin, pmax, prange = span(m.group(2))
+    if m.group(1) is None and m.group(2) is None: return out
+    if m.group(1) is None: fmin, fmax = 0, 0  # 純括號：專任 0（原表無專任）
+    if (m.group(1) is not None and fmin is None) or (m.group(2) is not None and pmin is None): return out
+    out.update({'專任_min': fmin, '專任_max': fmax, '專任_is_range': frange, 'paren_raw': m.group(2) and raw[raw.find('(') if '(' in raw else raw.find('（'):],
+                'paren_min': pmin, 'paren_max': pmax, 'paren_is_range': prange, '可解析': True})
+    return out
+
+CONC_RE = re.compile(r'兼任|兼辦|兼理|兼充|派員兼|由.{1,14}兼')
+UPPER_RE = re.compile(r'上限|不得高於|不得超過|最高')
+def paren_meaning(row_note, table_has_conc_evidence):
+    """括號語意判定（只用本列備註；同表慣例僅記為候選證據，不自動放行）。
+    回傳 (meaning, evidence)：meaning ∈ 兼任｜上限｜unknown。"""
+    note = str(row_note or '')
+    m = CONC_RE.search(note)
+    if m: return '兼任', f'本列備註「{m.group(0)}」'
+    if UPPER_RE.search(note): return '上限', f'本列備註「{UPPER_RE.search(note).group(0)}」'
+    if table_has_conc_evidence: return 'unknown', '本列無備註；同表其他列有兼任備註（候選證據，未放行）'
+    return 'unknown', '本列無備註，同表亦無兼任證據'
+
 def cn2n(t):
     if t == '十': return 10
     if t.startswith('十'): return 10 + CN[t[1]]
@@ -29,7 +88,7 @@ def cn2n(t):
         a, b = t.split('十'); return CN[a] * 10 + (CN[b] if b else 0)
     return CN.get(t)
 def grade_range(s):
-    m = re.findall(r'第([一二三四五六七八九十]+)職等', str(s))
+    m = re.findall(r'第([一二三四五六七八九十]+)職等', nfkc(str(s)))
     v = [cn2n(t) for t in m]
     return (min(v), max(v)) if v else (None, None)
 
@@ -141,6 +200,18 @@ def row_quality(r, pos):
         return '警示：頁眉', f'備註含公報頁眉樣式：「{note[:30]}」（仍計入，請人工確認）'
     return None, None
 
+FRAG_TOKENS = {'職稱', '官等', '職等', '員額', '備考', '備註', '單位', '簡任', '薦任', '委任', '委任或薦任', '薦任至簡任', '委任至薦任', '師級'}
+def fragment_kind(r, seen_titles):
+    """碎片列：證據明確者才標（表頭殘留／附註拆列／重複擷取）。員額、官等、職等皆空才可能是碎片。"""
+    nz = lambda v: '' if v is None or (isinstance(v, float) and pd.isna(v)) else str(v).strip()
+    title, rank, grade, raw = nz(r['職稱']), nz(r['官等']), nz(r['職等']), nz(r['員額原文'])
+    if pd.notna(r['n']) or rank or grade or raw: return None
+    if title.endswith('編制表'): return '碎片列（表頭殘留）'
+    if title.startswith('附註') or re.search(r'本編制表|編制表所列|職務列等表|生效|之規定|出缺後改置|^[一二三四五六七八九十]、', title) or (len(title) > 16 and re.search(r'[，。；]', title)): return '碎片列（附註拆列）'
+    if title in FRAG_TOKENS or re.fullmatch(r'[○〇一二三四五六七八九十百0-9]+', title) or re.fullmatch(r'第[一二三四五六七八九十]+職等(?:至第[一二三四五六七八九十]+職等)?', nfkc(title)) or (title in seen_titles):
+        return '碎片列（重複擷取）'
+    return None
+
 def classify_rows(det):
     """對整個明細資料框算列品質（需有 機關名稱、序、分表、PDF頁、n、官等、職等、職稱、單位、員額原文、備註 欄）。"""
     seq = pd.to_numeric(det['序'], errors='coerce').fillna(9999)
@@ -149,7 +220,15 @@ def classify_rows(det):
     sub_last = det['分表'].notna() & (seq == seq.groupby(sub_key).transform('max'))
     page_key = det['機關名稱'] + '|' + det['PDF頁'].fillna('').astype(str)
     page_last = det['PDF頁'].notna() & (seq == seq.groupby(page_key).transform('max'))
-    out = [row_quality(r, {'agency_last': bool(agency_last.iloc[i]), 'sub_last': bool(sub_last.iloc[i]), 'page_last': bool(page_last.iloc[i])}) for i, (_, r) in enumerate(det.iterrows())]
+    out, seen = [], {}
+    for i, (_, r) in enumerate(det.iterrows()):
+        ag = r['機關名稱']; st = seen.setdefault(ag, set())
+        q = row_quality(r, {'agency_last': bool(agency_last.iloc[i]), 'sub_last': bool(sub_last.iloc[i]), 'page_last': bool(page_last.iloc[i])})
+        if q[0] is None:
+            fk = fragment_kind(r, st)
+            if fk: q = (fk, f'職稱「{str(r["職稱"])[:30]}」且員額、官等、職等皆空：{fk[4:-1]}')
+        if pd.notna(r['n']): st.add(str(r['職稱']).strip())
+        out.append(q)
     return [x[0] for x in out], [x[1] for x in out]
 
 DEPUTY_MAP = {'部長': ['副部長', '政務次長', '常務次長'], '人事長': ['副人事長'], '主計長': ['副主計長'], '總裁': ['副總裁'],
@@ -243,15 +322,42 @@ def build(master, out, fixes_path=None, attach_units_path=None):
     info = pd.read_excel(master, '說明', header=None, dtype=str).iloc[0, 0]
     ov, det, fixlog = apply_fixes(ov, det, fixes_path)
     det['n'] = pd.to_numeric(det['員額'], errors='coerce')
-    det['bracket'] = pd.to_numeric(det['括號員額_兼任'], errors='coerce')
+    det['bracket'] = pd.to_numeric(det['括號員額_兼任'], errors='coerce')   # 既有欄原值（只有阿拉伯數字者可轉）
     det['序'] = pd.to_numeric(det['序'], errors='coerce').fillna(9999)
+    # P1-A/B：員額原文結構化（專任與括號分欄）；人工補登列（原文空）以員額欄為專任定額
+    hc = det['員額原文'].map(parse_headcount)
+    for k in ['專任_min', '專任_max', '專任_is_range', 'paren_raw', 'paren_min', 'paren_max', 'paren_is_range', '可解析']:
+        det[k] = [h[k] for h in hc]
+    noraw = det['員額原文'].isna() & det['n'].notna()
+    det.loc[noraw, '專任_min'] = det.loc[noraw, 'n']; det.loc[noraw, '專任_max'] = det.loc[noraw, 'n']; det.loc[noraw, '可解析'] = True
+    # 專任區間列：員額（定額）留空，只給上下限；專任定額列：以原文解析為準（與員額欄不一致者記差異）
+    det['員額定額'] = det['n']
+    rng_mask = det['專任_is_range'] == True
+    det.loc[rng_mask, '員額定額'] = float('nan')
+    det['專任差異'] = det['可解析'] & ~rng_mask & det['n'].notna() & (det['專任_min'] != det['n'])
+    # 括號語意（只用本列備註；同表慣例為候選證據）
+    conc_tbl = det.groupby('機關名稱')['備註'].apply(lambda s: bool(s.fillna('').str.contains(CONC_RE).any())).to_dict()
+    pm = [paren_meaning(r['備註'], conc_tbl.get(r['機關名稱'], False)) if pd.notna(r['paren_min']) else (None, None) for _, r in det.iterrows()]
+    det['paren_meaning'] = [x[0] for x in pm]; det['paren_evidence'] = [x[1] for x in pm]
+    det['concurrent_min'] = [r['paren_min'] if r['paren_meaning'] == '兼任' else None for _, r in det.iterrows()]
+    det['concurrent_max'] = [r['paren_max'] if r['paren_meaning'] == '兼任' else None for _, r in det.iterrows()]
+    # 既有「括號員額_兼任」欄原值保留；新解析值與原值（中文或數字）比對，不一致者列入差異清單（不批次覆寫）
+    det['括號原值_數值'] = det['括號員額_兼任'].map(lambda v: cn_int(v) if isinstance(v, str) and not re.search(RANGE_SEP, v) else None)
+    det['括號差異'] = det['括號員額_兼任'].notna() & (det['paren_min'].isna() | det['括號原值_數值'].isna() | (det['paren_min'] != det['括號原值_數值']))
+    det['職等_norm'] = det['職等'].map(nfkc)
     # 列品質（語意檢查）
     det['列品質'], det['列品質說明'] = classify_rows(det)
     # 計入（員額）：控制列不是職位；錯位／疑似控制列的員額欄不可信 → 不計；官等異常列的員額是原表已知數 → 計入員額，但不計入官等結構
-    det['計入'] = ~det['列品質'].isin(['控制列', '控制列（分表）', '控制列（跨頁小計）', '疑似控制列', '錯位'])
+    det['計入'] = ~det['列品質'].isin(['控制列', '控制列（分表）', '控制列（跨頁小計）', '疑似控制列', '錯位']) & ~det['列品質'].fillna('').str.startswith('碎片列')
+    # 計入員額的列：加總用「員額定額」（專任區間列不入定額加總，另入上下限）
+    det['n'] = det['員額定額']
     det['計入官等'] = det['計入'] & (det['列品質'] != '官等異常')
-    gr = det['職等'].map(grade_range)
+    gr = det['職等'].map(grade_range)   # grade_range 內部已用 NFKC 副本；raw 職等不變
     det['職等下限'] = [g[0] for g in gr]; det['職等上限'] = [g[1] for g in gr]
+    # raw 含「至」但 NFKC 後 min==max → 職等區間待審（儲存格截斷等），不猜補
+    trunc = det['職等'].fillna('').str.contains('至') & det['職等下限'].notna() & (det['職等下限'] == det['職等上限'])
+    det.loc[trunc, '職等下限'] = None; det.loc[trunc, '職等上限'] = None
+    det['職等區間待審'] = trunc
     det['官等'] = det['官等'].fillna('')
     det['簡任'] = det['官等'].str.contains('簡任') | (det['職等上限'].fillna(0) >= 10)
     det['薦任'] = ~det['簡任'] & det['官等'].str.contains('薦任')
@@ -277,7 +383,11 @@ def build(master, out, fixes_path=None, attach_units_path=None):
             '機關': r['機關名稱'], '分表': r['分表'], '序': int(r['序']) if r['序'] != 9999 else None, '單位': r['單位'], '職稱': r['職稱'],
             '官等': r['官等'] or None, '職等': r['職等'], '員額': None if pd.isna(r['n']) else int(r['n']),
             '兼任': None if pd.isna(r['bracket']) else int(r['bracket']), '員額原文': r['員額原文'], 'raw原文': r['員額原文'], '備註': r['備註'],
-            '職等下限': r['職等下限'], '職等上限': r['職等上限'], '簡任': bool(r['簡任']), '主管': bool(r['主管']),
+            '職等下限': r['職等下限'], '職等上限': r['職等上限'], '職等_norm': r['職等_norm'], '職等區間待審': bool(r['職等區間待審']), '簡任': bool(r['簡任']), '主管': bool(r['主管']),
+            '專任_min': r['專任_min'], '專任_max': r['專任_max'], '專任_is_range': bool(r['專任_is_range']),
+            'paren_raw': r['paren_raw'], 'paren_min': r['paren_min'], 'paren_max': r['paren_max'], 'paren_is_range': bool(r['paren_is_range']),
+            'paren_meaning': r['paren_meaning'], 'paren_evidence': r['paren_evidence'], 'concurrent_min': r['concurrent_min'], 'concurrent_max': r['concurrent_max'],
+            '括號員額_兼任_原值': r['括號員額_兼任'], '括號差異': bool(r['括號差異']), '專任差異': bool(r['專任差異']),
             '得列簡任': int(r['得列簡任']), '得列薦任': int(r['得列薦任']), 'PDF頁': r['PDF頁'],
             '列品質': r['列品質'], '列品質說明': r['列品質說明'], '計入': bool(r['計入']), '計入官等': bool(r['計入官等']),
             '原始列': (json.loads(r['原始列']) if isinstance(r['原始列'], str) else None), '修正紀錄': r['修正紀錄'] if isinstance(r['修正紀錄'], str) else None}.items()})
@@ -344,12 +454,22 @@ def build(master, out, fixes_path=None, attach_units_path=None):
         dep_rows = g[g['職稱'].isin(dep_titles) & g['單位'].isna()]
         units = unit_structure(art, name)
         tot = int(n.sum()); nr = gr_ok['n'].fillna(0)
+        rng_rows = g[g['專任_is_range'] == True]
+        hc_min = tot + int(rng_rows['專任_min'].fillna(0).sum()); hc_max = tot + int(rng_rows['專任_max'].fillna(0).sum())
+        is_range_agency = len(rng_rows) > 0
+        paren_rows = g_all[g_all['paren_min'].notna()]
+        conc = paren_rows[paren_rows['paren_meaning'] == '兼任']; unk = paren_rows[paren_rows['paren_meaning'] == 'unknown']
+        conc_min = int(conc['concurrent_min'].fillna(0).sum()); conc_max = int(conc['concurrent_max'].fillna(0).sum())
         m = {
-            '員額合計': tot,
+            '員額合計': None if is_range_agency else tot,
+            '員額合計_min': hc_min if is_range_agency else None, '員額合計_max': hc_max if is_range_agency else None, '員額區間列': [{'序': int(x['序']), '職稱': x['職稱'], '原文': x['員額原文'], 'min': x['專任_min'], 'max': x['專任_max']} for _, x in rng_rows.iterrows()] or None,
+            '兼任合計_已判定': conc_min if conc_min == conc_max else None, '兼任合計_min': conc_min, '兼任合計_max': conc_max,
+            '兼任合計': (conc_min if (conc_min == conc_max and len(unk) == 0) else None),
+            '括號待審列數': int(len(unk)), '括號列數': int(len(paren_rows)),
             '首長職稱': head_title, '首長職等': head['職等'].iloc[0] if len(head) else None,
-            '首長兼任': bool(len(head) and pd.notna(head['bracket'].iloc[0])),
+            '首長兼任': (True if (len(head) and head['paren_meaning'].iloc[0] == '兼任') else (None if (len(head) and head['paren_meaning'].iloc[0] == 'unknown') else False)),
             '副首長職稱': '、'.join(sorted(set(dep_rows['職稱']))) or ('／'.join(dep_titles) + '（無）' if dep_titles else None),
-            '副首長數': int(dep_rows['n'].fillna(0).sum()), '副首長兼任數': int(dep_rows['bracket'].fillna(0).sum()),
+            '副首長數': int(dep_rows['n'].fillna(0).sum()), '副首長兼任數': (int(dep_rows['concurrent_min'].fillna(0).sum()) if not (dep_rows['paren_meaning'] == 'unknown').any() else None),
             '主任秘書': int(n[g['職稱'] == '主任秘書'].sum()),
             '組長數': int(n[g['職稱'] == '組長'].sum()), '副組長數': int(n[g['職稱'] == '副組長'].sum()),
             '處長數': int(n[g['職稱'] == '處長'].sum()), '副處長數': int(n[g['職稱'] == '副處長'].sum()),
@@ -365,15 +485,19 @@ def build(master, out, fixes_path=None, attach_units_path=None):
             '業務單位數': units['業務單位數'], '幕僚單位數': units['幕僚單位數'], '單位數': units['單位數'], '科數': units['科數'],
             '單位清單': units['清單'], '單位依據': units['依據'],
             '主管員額': int(n[g['主管']].sum()),
-            '明細列數': int(len(g_all)), '員額空白列數': int(g['n'].isna().sum()),
+            '明細列數': int(len(g_all)), '明細列數_有效': int(len(g)), '碎片列數': int(g_all['列品質'].fillna('').str.startswith('碎片列').sum()), '員額空白列數': int(g['n'].isna().sum()),
+            '職等區間待審列數': int(g['職等區間待審'].sum()),
             '暫列職稱數': int(g['備註'].fillna('').str.contains('暫列').sum()),
             '得列人數': int(sum(cn2n(x) or 0 for x in re.findall(r'內([一二三四五六七八九十]+)人得列', ' '.join(g['備註'].fillna(''))))),
         }
+        if is_range_agency: tot = 0  # 區間機關不算單一比率
         m['簡任非主管比'] = round(m['簡任非主管'] / tot, 4) if tot else None
         m['簡任比'] = round(m['簡任員額'] / tot, 4) if tot else None
         m['主管比'] = round(m['主管員額'] / tot, 4) if tot else None
         m['幕僚比'] = round(m['幕僚單位員額'] / tot, 4) if tot else None
         RANK_METRICS = ['簡任員額', '簡任主管', '簡任非主管', '簡任員額_法定', '簡任非主管_法定', '得列簡任人數', '得列薦任人數', '薦任員額', '委任員額', '其他官等員額', '簡任非主管比', '簡任比']
+        if data_state == '可用' and is_range_agency: data_state = '可用（區間）'
+        if len(unk): notes.append(f'括號語意待審（{len(unk)} 列）')
         if data_state == '待審（官等結構）':   # 員額已知；官等結構不可用
             m['官等結構待審列'] = [{'序': int(x['序']), '職稱': x['職稱'], '員額': None if pd.isna(x['n']) else int(x['n']), '官等原文': x['官等']} for _, x in pending_rank.iterrows()]
             for k in RANK_METRICS: m[k] = None
@@ -381,7 +505,7 @@ def build(master, out, fixes_path=None, attach_units_path=None):
             m['已知列小計'] = tot if has_numbers else None
             m['已知列小計說明'] = f'僅 {int(len(g))} 列員額可辨識之加總，不是完整總額' if has_numbers else None
             for k in COUNT_METRICS: m[k] = None
-        comparable = (result == '相符' and data_state == '可用' and all(x in WHITELIST_NOTES for x in notes) and not (sc and sc.get('狀態', '').startswith('官方合計待核')))
+        comparable = (result == '相符' and data_state in ('可用', '可用（區間）') and all(x in WHITELIST_NOTES or x.startswith('括號語意待審') for x in notes) and not (sc and sc.get('狀態', '').startswith('官方合計待核')))
         duties = art[(art['機關'] == name) & (art['法規類別'] == '組織法規') & (art['條文內容'].fillna('').str.contains('掌理'))]['條文內容']
         kind = next((k for k in ['分署', '分局', '分院', '分所', '分處', '署', '局', '處', '所', '館', '院', '中心', '園', '場', '隊', '監獄', '學校', '會', '部', '行'] if name.endswith(k)), '其他')
         agencies.append({
@@ -414,6 +538,12 @@ def build(master, out, fixes_path=None, attach_units_path=None):
         '驗算結果': '相符／不相符／找不到合計／需人工輸入／無編制表；人工修正或取用控制列者由程式重新驗算',
         '品質註記': 'Codex抽樣不一致／人工補登（已對源）／人工補登（未完成對源或驗算不符）／表內驗算相符（合計取自明細控制列）／官方合計待核／列品質待審（員額不完整：錯位、疑似控制列）／列品質待審（官等結構：官等異常，員額已知）',
         '已知列小計': '員額不完整時，僅可辨識列的加總；明示不是完整總額',
+        '員額合計_min／max': '機關內有專任區間列（如「七-九」）時，定額列加總＋區間下限／上限；此時「員額合計」為空，不以下限充當定額，預設不進距離排序、平均、中位數與 ±50%（比對頁可勾選「區間取下限」並持續標示口徑）',
+        '兼任合計': '括號語意判定為「兼任」（本列備註有兼任字樣）之括號人數加總；有 unknown 括號列時為空並另給「兼任合計_已判定」；兼任永不加回專任',
+        'paren_meaning': '兼任｜上限｜unknown；只依本列備註判定，同表慣例只記為候選證據不放行；括號可同時為兼任且為區間（paren_min／max）',
+        '括號待審列數': 'paren_meaning=unknown 的列數；只表示括號部分未判定，專任部分照常計入',
+        '職等_norm': '職等的 NFKC 解析副本（相容字 六 U+F9D1→六）；顯示與匯出用 raw',
+        '碎片列數': '證據明確之表頭殘留／附註拆列／重複擷取列，保留原列、標記不計入，不刪除',
         '官等結構待審列': '官等異常列（員額已知、官等分類待審）；該機關官等類指標為空、員額合計照原表列數計',
         '可比較': '驗算結果為相符、資料狀態可用、品質註記皆屬白名單（人工補登已對源、表內驗算相符、頁眉警示）且無官方合計待核',
         '副首長數': '本機關首長之副手（署長→副署長、部長→副部長／政務次長／常務次長…）且不屬內部單位者之員額；內部單位的副處長、副主任不計',
@@ -439,6 +569,10 @@ def build(master, out, fixes_path=None, attach_units_path=None):
               open(os.path.join(out, 'meta.json'), 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
     lines = ['# 建檔檢核（語意檢查命中列）', f'整備時間：{dt.datetime.now():%Y-%m-%d %H:%M}', '',
              '| 機關 | 序 | 職稱 | 列品質 | 說明 |', '|---|---|---|---|---|'] + [f'| {a} | {b} | {c} | {d} | {e} |' for a, b, c, d, e in checklog]
+    lines += ['', '## 括號語意待審列（unknown：括號部分未判定，專任照常計入）', '', '| 機關 | 序 | 職稱 | 員額原文 | 括號 | 證據 |', '|---|---|---|---|---|---|'] + \
+             [f"| {p['機關']} | {p['序']} | {p['職稱']} | {p['raw原文']} | {p['paren_min']}–{p['paren_max']} | {p['paren_evidence']} |" for p in positions if p['paren_meaning'] == 'unknown']
+    lines += ['', '## 職等區間待審列（raw 含「至」但 NFKC 後 min==max）', '', '| 機關 | 序 | 職稱 | 職等 raw |', '|---|---|---|---|'] + \
+             [f"| {p['機關']} | {p['序']} | {p['職稱']} | {p['職等']} |" for p in positions if p['職等區間待審']]
     lines += ['', '## 機關層級', '', '| 機關 | 資料狀態 | 驗算結果 | 品質註記 | 可比較 | 來源核對狀態 |', '|---|---|---|---|---|---|'] + \
              [f"| {a['機關']} | {a['資料狀態']} | {a['驗算結果']} | {'；'.join(a['品質註記'])} | {'是' if a['可比較'] else '否'} | {a['來源核對狀態']} |" for a in agencies if not a['可比較']]
     open(os.path.join(out, '建檔檢核.md'), 'w', encoding='utf-8').write('\n'.join(lines))

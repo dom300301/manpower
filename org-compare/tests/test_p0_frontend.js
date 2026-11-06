@@ -81,6 +81,20 @@ const check = (c, m) => out.push((c ? 'PASS ' : 'FAIL ') + m);
   const det5 = await pg.$eval('#adetail', e => e.textContent);
   check(/待審（員額不完整）/.test(det5) && /已知列小計 462/.test(det5) && /不是完整總額/.test(det5) && !/^462/.test(det5), '玉里分院：顯示待審（員額不完整）、已知列小計 462 並標示不是完整總額');
   const bi = await pg.textContent('#buildinfo'); check(/來源提交 [0-9a-f]{7}/.test(bi), `建檔資訊含來源提交：${bi}`);
+  // P1：行政院區間
+  await pg.fill('#q', '行政院'); await pg.waitForTimeout(300); const c0 = await pg.$$('#alist .card'); for (const c of c0) { if ((await c.textContent()).startsWith('行政院1級')) { await c.click(); break; } } await pg.waitForTimeout(300);
+  const detE = await pg.$eval('#adetail', e => e.textContent);
+  check(/635–637（區間）/.test(detE) && /不以下限充當定額/.test(detE), '行政院詳情：員額合計以區間 635–637 呈現');
+  await pg.click('#toCompare'); await pg.waitForTimeout(400);
+  dialogs.length = 0; await pg.click('#nearBtn'); await pg.waitForTimeout(300);
+  check(dialogs.length === 1 && /區間/.test(dialogs[0]), `區間目標未勾選取下限時 ±50% 阻擋：${dialogs[0]}`);
+  await pg.check('#rangeLower'); await pg.waitForTimeout(300);
+  const st2 = await pg.$eval('#ctable tr.stat td', t => t.textContent); check(/口徑：區間取下限/.test(st2), `勾選後統計列標示口徑：${st2}`);
+  await pg.uncheck('#rangeLower'); await pg.waitForTimeout(200);
+  // P1：括號語意顯示
+  await pg.click('.tabs button[data-tab=search]'); await pg.fill('#q', '海洋委員會海巡署'); await pg.waitForTimeout(300); const c1 = await pg.$$('#alist .card'); for (const c of c1) { if ((await c.textContent()).startsWith('海洋委員會海巡署3級')) { await c.click(); break; } } await pg.waitForTimeout(300);
+  const detH = await pg.$eval('#adetail tbody tr', e => e.textContent);
+  check(/兼任/.test(detH) && /1/.test(detH), `海巡署署長列顯示括號語意兼任：${detH.slice(0, 60)}`);
   await pg.fill('#q', '公共工程委員會'); await pg.waitForTimeout(300); await pg.click('#alist .card'); await pg.waitForTimeout(300);
   const det4 = await pg.$eval('#adetail', e => e.textContent);
   check(/法定員額依據：行政院公共工程委員會組織條例第8條/.test(det4) && /未加總/.test(det4), '工程會詳情：法定員額依據條號與「未加總」說明');

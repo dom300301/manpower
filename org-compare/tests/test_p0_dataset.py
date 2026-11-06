@@ -11,7 +11,7 @@ def check(cond, msg):
     (notes if cond else fails).append(('PASS ' if cond else 'FAIL ') + msg)
 
 # P0-A 缺值語義
-unknown = [r for r in A if r['指標']['員額合計'] is None]
+unknown = [r for r in A if r['指標']['員額合計'] is None and r['指標'].get('員額合計_min') is None]  # 區間機關（可用（區間））不算未知
 untaken = [r for r in unknown if r['資料狀態'].startswith('未取得')]
 pending = [r for r in unknown if r['資料狀態'].startswith('待審')]
 check(len(untaken) == 16, f'「未取得」機關數 = {len(untaken)}（本次診斷 16）')
@@ -38,7 +38,7 @@ dept_group = [r['機關'] for r in A if r['層級'] == 2 and r['類型'] == '部
 check('教育部' not in dept_group and '財政部' not in dept_group and '農業部' in dept_group, f'農業部預設部級群組不含教育部、財政部：{dept_group}')
 check(all(r['驗算結果'] in ('相符', '不相符', '找不到合計', '需人工輸入', '無編制表') for r in A), '驗算結果皆為列舉值')
 check(all(isinstance(r['可比較'], bool) for r in A), '可比較為布林')
-check(all(r['可比較'] == (r['驗算結果'] == '相符' and r['資料狀態'] == '可用' and all(x in {'人工補登（已對源）', '表內驗算相符（合計取自明細控制列）', '警示：頁眉'} for x in r['品質註記']) and not r['來源核對狀態'].startswith('官方合計待核')) for r in A), '可比較 == 規則重算結果（驗算相符 ∧ 可用 ∧ 註記皆白名單 ∧ 非官方合計待核）')
+check(all(r['可比較'] == (r['驗算結果'] == '相符' and r['資料狀態'] in ('可用', '可用（區間）') and all(x in {'人工補登（已對源）', '表內驗算相符（合計取自明細控制列）', '警示：頁眉'} or x.startswith('括號語意待審') for x in r['品質註記']) and not r['來源核對狀態'].startswith('官方合計待核')) for r in A), '可比較 == 規則重算結果（驗算相符 ∧ 可用／可用（區間） ∧ 註記皆白名單或括號語意待審 ∧ 非官方合計待核）')
 pg = by['行政院人事行政總處公務人力發展學院']
 check(pg['可比較'] and '人工補登（已對源）' in pg['品質註記'] and pg['指標']['員額合計'] == 91, '公務人力發展學院：人工補登有來源／頁碼／對源且驗算相符 → 可比較')
 n_flag = sum(1 for r in A if not r['可比較'])
@@ -92,18 +92,46 @@ notes.append('PASS 全庫官等加總守恆（簡＋薦＋委＋其他 == 員額
 # 回歸：與修改前比較
 if a.before:
     B = {r['機關']: r for r in json.load(open(f'{a.before}/agencies.json', encoding='utf-8'))['agencies']}
-    allowed = {r['機關'] for r in unknown} | {'衛生福利部臺中醫院', '衛生福利部恆春旅遊醫院', '農業部農業藥物試驗所'} | {p['機關'] for p in P if p['列品質'] in ('官等異常', '錯位', '疑似控制列')}
+    allowed = {r['機關'] for r in unknown} | {'衛生福利部臺中醫院', '衛生福利部恆春旅遊醫院', '農業部農業藥物試驗所'} | {p['機關'] for p in P if p['列品質'] in ('官等異常', '錯位', '疑似控制列')} | {r['機關'] for r in A if r['指標'].get('員額合計_min') is not None}
+    # P1 資料回歸
+    ey = by['行政院']; check(ey['指標']['員額合計'] is None and ey['指標']['員額合計_min'] == 635 and ey['指標']['員額合計_max'] == 637 and ey['資料狀態'] == '可用（區間）', f'行政院：員額合計空、區間 {ey["指標"]["員額合計_min"]}–{ey["指標"]["員額合計_max"]}（不以下限充當定額）')
+    for n, exp in [('不當黨產處理委員會', 9), ('國家運輸安全調查委員會', None), ('核能安全委員會', 331), ('中央選舉委員會', 60)]:
+        if exp is not None: check(by[n]['指標']['員額合計'] == exp and by[n]['指標']['員額合計'] == B[n]['指標']['員額合計'], f'{n} 專任合計 {by[n]["指標"]["員額合計"]} 不變（括號區間另列）')
+    bk = [p for p in P if p['機關'] == '不當黨產處理委員會' and p['序'] == 3][0]
+    check(bk['專任_min'] == 3 and bk['paren_min'] == 6 and bk['paren_max'] == 8 and bk['paren_meaning'] == 'unknown' and bk['員額'] == 3, f'黨產會委員「三（六－八）」：專任 3 保留、括號區間 6–8 待審不加回：{bk["paren_evidence"]}')
+    hj = [p for p in P if p['機關'] == '海洋委員會海巡署' and p['序'] == 1][0]
+    check(hj['paren_meaning'] == '兼任' and hj['concurrent_min'] == 1 and hj['員額'] == 0, '海巡署署長「（一）」＋備註兼任 → 兼任 1、專任 0')
+    ya2 = [p for p in P if p['機關'] == '農業部農業藥物試驗所' and p['paren_min'] is not None]
+    check(all(p['paren_meaning'] == '兼任' for p in ya2) and sum(p['concurrent_min'] for p in ya2) == 7 and by['農業部農業藥物試驗所']['指標']['員額合計'] == 79, '農藥所括號 3 列皆兼任（備註由研究員兼任）合計 7；專任 79 不變')
+    unk = [p for p in P if p['paren_meaning'] == 'unknown']
+    check(all(p['concurrent_min'] is None for p in unk) and all(p['員額'] == (p['專任_min'] if not p['專任_is_range'] else None) for p in unk if p['專任_min'] is not None), f'unknown 括號 {len(unk)} 列：concurrent 空、專任部分照常計入')
+    check(all(p['兼任'] == (int(p['括號員額_兼任_原值']) if (p['括號員額_兼任_原值'] or '').isdigit() else None) for p in P), '既有「兼任」欄維持原值（只有阿拉伯數字原值可轉），未批次覆寫')
+    nf = [p for p in P if p['職等'] and '\uf9d1' in p['職等']]
+    check(len(nf) == 52 and all(p['職等_norm'] == p['職等'].replace('\uf9d1', '六') for p in nf), f'相容字 U+F9D1 列 {len(nf)}（另 1 列僅含全形括號相容字）：raw 不變、職等_norm 為 NFKC 副本')
+    fp = [p for p in P if p['機關'] == '公平交易委員會' and p['職稱'] == '設計師'][0]
+    check(fp['職等下限'] == 6 and fp['職等上限'] == 8 and '\uf9d1' in fp['職等'], f'公平會設計師：區間 {fp["職等下限"]}–{fp["職等上限"]}，raw 逐字不變')
+    tr = [p for p in P if p['職等區間待審']]
+    check(len(tr) == 4 and all(p['職等下限'] is None for p in tr), f'職等區間待審 {len(tr)} 列（截斷），下限上限留空不猜補：{[(p["機關"], p["序"]) for p in tr]}')
+    fr = [p for p in P if p['列品質'] and p['列品質'].startswith('碎片列')]
+    check(all(not p['計入'] and p['員額'] is None for p in fr) and len(fr) > 0, f'碎片列 {len(fr)} 列：保留、不計入、員額皆空')
+    wm = by['交通部公路局工程材料技術所']['指標']; check(wm['明細列數_有效'] == 15 and wm['員額合計'] == 39, f'工程材料技術所 有效列 {wm["明細列數_有效"]}、加總 {wm["員額合計"]}（碎片列不計入）')
+    med = [p for p in P if p['機關'] == '臺北榮民總醫院' and p['職稱'] == '中醫師'][0]; check(med['列品質'] is None and med['員額'] is None, '醫療合併計算列「中醫師」不標碎片、不拆分')
     for r in A:  # 官等結構待審者：員額合計須與修改前相同（不得因排除異常列而少算）；員額不完整者：已知列小計 == 修改前加總（未另行刪減）
         if r['資料狀態'] == '待審（官等結構）':
             b = B[r['機關']]; check(r['指標']['員額合計'] == b['指標']['員額合計'], f'{r["機關"]} 員額合計 {r["指標"]["員額合計"]} 與修改前 {b["指標"]["員額合計"]} 相同（官等異常列員額仍計入）')
         if r['資料狀態'] == '待審（員額不完整）':
-            b = B[r['機關']]; check(r['指標']['已知列小計'] == b['指標']['員額合計'], f'{r["機關"]} 已知列小計 {r["指標"]["已知列小計"]} == 修改前加總 {b["指標"]["員額合計"]}（只是改標示為不完整，未少算）')
+            b = B[r['機關']]; base = b['指標']['員額合計'] if b['指標']['員額合計'] is not None else b['指標'].get('已知列小計'); check(r['指標']['已知列小計'] == base, f'{r["機關"]} 已知列小計 {r["指標"]["已知列小計"]} == 修改前 {base}（只是改標示為不完整，未少算）')
     changed = []
+    P1_KEYS = {'副首長兼任數', '首長兼任', '明細列數'}  # P1：括號語意改依證據判定、碎片列數另列；其餘指標不得變動
+    FRAG_KEYS = {'首長職稱', '首長職等', '副首長職稱', '副首長數', '員額空白列數'}  # 碎片列（表頭殘留等）排除後，首長判定與空白列數預期變動
+    frag_ag = {r['機關'] for r in A if r['指標'].get('碎片列數')}
     for r in A:
         b = B[r['機關']]
         for k, v in r['指標'].items():
-            if k in b['指標'] and b['指標'][k] != v and r['機關'] not in allowed:
+            if k in b['指標'] and b['指標'][k] != v and r['機關'] not in allowed and k not in P1_KEYS and not (r['機關'] in frag_ag and k in FRAG_KEYS):
                 changed.append((r['機關'], k, b['指標'][k], v))
+    frag_changes = [(r['機關'], k, B[r['機關']]['指標'][k], v) for r in A if r['機關'] in frag_ag for k, v in r['指標'].items() if k in FRAG_KEYS and k in B[r['機關']]['指標'] and B[r['機關']]['指標'][k] != v]
+    notes.append(f'INFO 碎片列排除後的預期變動 {len(frag_changes)} 筆（首長判定／空白列數）：' + '；'.join(f'{a} {k} {x}→{y}' for a, k, x, y in frag_changes))
     check(not changed, f'回歸：允許清單外的機關指標無變動（變動 {len(changed)} 筆）' + ('' if not changed else '：' + str(changed[:5])))
     diffs = []
     for r in A:
