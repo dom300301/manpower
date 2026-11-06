@@ -39,6 +39,24 @@ const check = (c, m) => out.push((c ? 'PASS ' : 'FAIL ') + m);
   await pg.fill('#cq', '農業部'); await pg.press('#cq', 'Enter'); await pg.waitForTimeout(400);
   const grp = await pg.$$eval('#ctable tbody tr:not(.stat)', trs => trs.map(t => t.children[0].textContent));
   check(!grp.some(g => g.startsWith('教育部')) && !grp.some(g => g.startsWith('財政部')), `農業部預設群組（${grp.length} 列）不含教育部、財政部`);
+  // B1 回歸：範圍篩選 null 安全（取消排除後）
+  for (const c of await pg.$$('#cExcl .chip')) { if ((await c.textContent()).includes('不可比較')) await c.click(); }
+  await pg.waitForTimeout(200);
+  const names = async () => pg.$$eval('#ctable tbody tr:not(.stat)', trs => trs.map(t => t.children[0].textContent.replace(/\s*不可比較$/, '')));
+  const noLimit = await names();
+  check(noLimit.includes('財政部'), `B1-4 無上下限、取消排除：null 機關可留在列表（財政部在列，顯示未取得）`);
+  const statN = Number(((await pg.$eval('#ctable tr.stat td', t => t.textContent)).match(/n＝(\d+)/) || [])[1]);
+  const numericN = await pg.$$eval('#ctable tbody tr:not(.stat):not(.target)', trs => trs.filter(t => /^\d+$/.test(t.children[3].textContent)).length);  // 群組統計不含目標列
+  check(statN === numericN, `B1-4 統計列 n＝${statN} 等於數值列數 ${numericN}（不含 null）`);
+  await pg.fill('#nmax', '100'); await pg.waitForTimeout(300); const upper = await names();
+  check(!upper.includes('財政部') && upper.every(n => n !== '財政部'), `B1-1 上限 100、下限空：null 機關不在清單（${upper.length} 列）`);
+  await pg.fill('#nmin', '0'); await pg.waitForTimeout(300); const both = await names();
+  check(!both.includes('財政部'), `B1-2 範圍 0–100：null 機關不在清單（${both.length} 列）`);
+  await pg.fill('#nmin', ''); await pg.fill('#nmax', ''); await pg.waitForTimeout(200);
+  dialogs.length = 0; await pg.fill('#cq', '財政部'); await pg.press('#cq', 'Enter'); await pg.waitForTimeout(300); await pg.click('#nearBtn'); await pg.waitForTimeout(300);
+  check(dialogs.length === 1 && (await pg.inputValue('#nmin')) === '' && (await pg.inputValue('#nmax')) === '', 'B1-3 財政部為目標按 ±50% 仍被阻擋，不形成 [0,0]');
+  for (const c of await pg.$$('#cExcl .chip')) { if ((await c.textContent()).includes('不可比較')) await c.click(); }
+  await pg.waitForTimeout(200);
   // 狀態頁
   await pg.click('.tabs button[data-tab=info]'); await pg.waitForTimeout(300);
   const flaggedTxt = await pg.textContent('#flagged');
@@ -58,7 +76,7 @@ const check = (c, m) => out.push((c ? 'PASS ' : 'FAIL ') + m);
   await pg.fill('#q', '法務部矯正署'); await pg.waitForTimeout(300);
   const cardsZ = await pg.$$('#alist .card'); for (const c of cardsZ) { if ((await c.textContent()).startsWith('法務部矯正署') && !(await c.textContent()).includes('監獄')) { await c.click(); break; } } await pg.waitForTimeout(300);
   const det3 = await pg.$eval('#adetail', e => e.textContent);
-  check(/尚未完成員額結構化/.test(det3) && /法定員額依據：無/.test(det3) && /未取得（無編制表）/.test(det3), '矯正署詳情：法定員額依據「無」且措辭為「本系統尚未完成員額結構化」');
+  check(/法定員額依據：尚未完成結構化（待確認）（/.test(det3) && /尚未完成員額結構化/.test(det3) && !/法定員額依據：無/.test(det3) && !/，條文）/.test(det3) && /未取得（無編制表）/.test(det3), '矯正署詳情：主文案「尚未完成結構化（待確認）」，括號內有說明與法規連結，無粗體「無」、無「，條文）」');
   await pg.fill('#q', '玉里分院'); await pg.waitForTimeout(300); await pg.click('#alist .card'); await pg.waitForTimeout(300);
   const det5 = await pg.$eval('#adetail', e => e.textContent);
   check(/待審（員額不完整）/.test(det5) && /已知列小計 462/.test(det5) && /不是完整總額/.test(det5) && !/^462/.test(det5), '玉里分院：顯示待審（員額不完整）、已知列小計 462 並標示不是完整總額');
