@@ -1,0 +1,29 @@
+PASS '七' → 專任 7 定額：{'專任_min': 7, '專任_max': 7, '專任_is_range': False, 'paren_raw': None, 'paren_min': None, 'paren_max': None, 'paren_is_range': False, '可解析': True}
+PASS '七-九' → 專任區間 7–9（不以下限充當定額）：{'專任_min': 7, '專任_max': 9, '專任_is_range': True, 'paren_raw': None, 'paren_min': None, 'paren_max': None, 'paren_is_range': False, '可解析': True}
+PASS '三（六－八）' → 專任 3 定額、括號區間 6–8：{'專任_min': 3, '專任_max': 3, '專任_is_range': False, 'paren_raw': '（六－八）', 'paren_min': 6, 'paren_max': 8, 'paren_is_range': True, '可解析': True}
+PASS '（七-九）' → 專任 0、括號區間 7–9：{'專任_min': 0, '專任_max': 0, '專任_is_range': False, 'paren_raw': '（七-九）', 'paren_min': 7, 'paren_max': 9, 'paren_is_range': True, '可解析': True}
+PASS '(三~五)' → 專任 0、括號 3–5：{'專任_min': 0, '專任_max': 0, '專任_is_range': False, 'paren_raw': '(三~五)', 'paren_min': 3, 'paren_max': 5, 'paren_is_range': True, '可解析': True}
+PASS '七（一）' → 專任 7、括號 1（非區間）：{'專任_min': 7, '專任_max': 7, '專任_is_range': False, 'paren_raw': '（一）', 'paren_min': 1, 'paren_max': 1, 'paren_is_range': False, '可解析': True}
+PASS '二十（八）' → 專任 20、括號 8：{'專任_min': 20, '專任_max': 20, '專任_is_range': False, 'paren_raw': '（八）', 'paren_min': 8, 'paren_max': 8, 'paren_is_range': False, '可解析': True}
+PASS '(一Ｏ一)' → 括號 101（全形 O）：{'專任_min': 0, '專任_max': 0, '專任_is_range': False, 'paren_raw': '(一Ｏ一)', 'paren_min': 101, 'paren_max': 101, 'paren_is_range': False, '可解析': True}
+PASS '一○三' → 103：{'專任_min': 103, '專任_max': 103, '專任_is_range': False, 'paren_raw': None, 'paren_min': None, 'paren_max': None, 'paren_is_range': False, '可解析': True}
+PASS '二一七（六十九）' → 217、括號 69：{'專任_min': 217, '專任_max': 217, '專任_is_range': False, 'paren_raw': '（六十九）', 'paren_min': 69, 'paren_max': 69, 'paren_is_range': False, '可解析': True}
+PASS None → 不可解析
+PASS 錯位文字 → 不可解析，不猜數字
+PASS 海巡署署長備註兼任 → 兼任（本列備註「由海洋委員會副主任委員其中一人兼」）
+PASS 農藥所「由研究員兼任」→ 兼任
+PASS 無備註、同表有兼任證據 → unknown（本列無備註；同表其他列有兼任備註（候選證據，未放行））
+PASS 無備註、同表無證據 → unknown
+PASS 黨產會「專（兼）任」非兼任定語 → unknown（待審，不放行）
+PASS 備註上限 → 上限
+PASS 測試樣本確為 U+F9D1 六，NFKC → 六（U+516D）
+PASS '第六職等至第八職等' → (6, 8)（期望 (6, 8)）
+PASS 含相容字但 min/max 由其他數字決定者不變 (5,7)
+PASS raw 字串未被改動（NFKC 只用於副本）
+PASS 截斷「第三職等至第五職」解析 (3,3) → 由 build 標職等區間待審，不猜補
+PASS 表頭／附註碎片：碎片列（表頭殘留）, 碎片列（附註拆列）, 碎片列（附註拆列）
+PASS 重複擷取碎片：碎片列（重複擷取）, 碎片列（重複擷取）
+PASS 合併計算列「中醫師」不標碎片（None）
+PASS 控制列維持，碎片列未被刪除（仍 8 列）
+
+結果：PASS 27、FAIL 0
