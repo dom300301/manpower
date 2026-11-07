@@ -14,7 +14,7 @@ def check(cond, msg):
 unknown = [r for r in A if r['指標']['員額合計'] is None and r['指標'].get('員額合計_min') is None]  # 區間機關（可用（區間））不算未知
 untaken = [r for r in unknown if r['資料狀態'].startswith('未取得')]
 pending = [r for r in unknown if r['資料狀態'].startswith('待審')]
-check(len(untaken) == 12, f'「未取得」機關數 = {len(untaken)}（P0 診斷 16；財政部、國教院、鐵道局北部／南部 4 份經人工轉錄確認後補登 → 12）')
+check(len(untaken) == 10, f'「未取得」機關數 = {len(untaken)}（P0 診斷 16；財政部、國教院、鐵道局北部／南部 4 份人工轉錄補登，藝教館、海生館 2 份自教育部法規網 HTML 編制表補登 → 10）')
 check(len(unknown) == len(untaken) + len(pending) and all(r['資料狀態'] != '可用' for r in unknown), f'員額合計 null 機關 = 未取得 {len(untaken)} + 待審（員額不完整）{len(pending)}（{[r["機關"] for r in pending]}）；官等結構待審者員額合計不為 null')
 check(all(r['指標']['員額合計'] != 0 for r in A), '沒有任何機關的員額合計被寫成 0')
 check(by['財政部']['指標']['員額合計'] == 213 and by['財政部']['驗算結果'] == '相符' and '人工補登（已對源）' in by['財政部']['品質註記'] and by['財政部']['可比較'], '財政部：人工轉錄 49 列經確認補登，合計 213 相符、已對源、可比較')
@@ -27,14 +27,14 @@ basis = [r for r in unknown if r['法定員額依據']]
 basis_yes = [r for r in untaken if r['法定員額依據'] and r['法定員額依據']['有']]
 basis_no = [r for r in untaken if r['法定員額依據'] and not r['法定員額依據']['有']]
 check(len(basis_yes) == 5 and by['行政院公共工程委員會']['法定員額依據']['條號'].startswith('第8條'), f'法定員額依據「有」{len(basis_yes)} 個：{[r["機關"] for r in basis_yes]}')
-check(len(basis_no) == 7 and all('尚未完成' in r['法定員額依據']['說明'] for r in basis_no), f'法定員額依據「無」{len(basis_no)} 個，措辭為「本系統尚未完成員額結構化」而非法律事實：{[r["機關"] for r in basis_no]}')
+check(len(basis_no) == 5 and all('尚未完成' in r['法定員額依據']['說明'] for r in basis_no), f'法定員額依據「無」{len(basis_no)} 個，措辭為「本系統尚未完成員額結構化」而非法律事實：{[r["機關"] for r in basis_no]}')
 check(all('headcount' not in json.dumps(r['法定員額依據'] or {}) for r in untaken), '未產生區間 min/max 總額')
 # 僅兼任列保留專任 0，但整機關未知不得為 0（鐵道局北部：單列無數字 → 未取得）
 check([p for p in P if p['機關'] == '交通部鐵道局北部工程分局' and p['序'] == 1][0]['列品質'] == '碎片列（原表無法讀取，已人工轉錄）' and by['交通部鐵道局北部工程分局']['指標']['兼任合計'] == 36, '鐵道局北部：原表殘留空列標轉錄取代不計入；兼任（括號）36 保留')
 
 # P0-B 品質旗標
 mixed = [r for r in A if 'Codex抽樣不一致' in r['品質註記']]
-check(len(mixed) == 14 and all(not r['可比較'] for r in mixed), f'Codex抽樣不一致 {len(mixed)} 個機關全部不可比較（12 相符混合 + 工程材料技術所 + 疾管署）')
+check(len(mixed) == 13 and all(not r['可比較'] for r in mixed), f'Codex抽樣不一致 {len(mixed)} 個機關全部不可比較（12 相符混合 + 疾管署；工程材料技術所之 Codex 差異為碎片列，已於改合計時由人工校正狀態取代）')
 check(not by['教育部']['可比較'] and by['教育部']['驗算結果'] == '相符', '教育部：驗算結果相符但品質註記 Codex → 不可比較')
 dept_group = [r['機關'] for r in A if r['層級'] == 2 and r['類型'] == '部' and r['可比較']]
 check('教育部' not in dept_group and '財政部' in dept_group and '農業部' in dept_group, f'農業部預設部級群組不含教育部（Codex 註記）、含財政部（已補登）：{dept_group}')
@@ -49,8 +49,9 @@ notes.append(f'INFO 不可比較機關數 = {n_flag}（由修正後資料推導�
 ab = [p for p in P if p['列品質'] == '官等異常']
 check(all(p['計入'] and not p['計入官等'] for p in ab), f'官等異常列 {len(ab)} 列：員額計入、官等不計入（機關：{sorted(set(p["機關"] for p in ab))}）')
 yl = by['臺北榮民總醫院玉里分院']; ylr = next(p for p in P if p['機關'] == '臺北榮民總醫院玉里分院' and p['序'] == 38)
-check(ylr['列品質'] == '錯位' and ylr['員額'] is None and not ylr['計入'], f'玉里分院序 38：整列混排、員額欄無數字 → 錯位（原文保留：{ylr["官等"][:20]}…）')
-check(yl['資料狀態'] == '待審（員額不完整）' and yl['指標']['員額合計'] is None and yl['指標']['已知列小計'] == 462 and '不是完整總額' in yl['指標']['已知列小計說明'] and not yl['可比較'], f'玉里分院：總額 null、已知列小計 {yl["指標"]["已知列小計"]}（{yl["指標"]["已知列小計說明"]}）、待審不可比較；表列 {yl["表列合計"]}')
+check(ylr['列品質'] is None and ylr['員額'] == 3 and ylr['計入'] and ylr['修正紀錄'] and ylr['原始列'] and ylr['原始列'].get('員額') is None, f'玉里分院序 38：原錯位列經人工確認改列（員額 3、官等 委任或薦任），原始列保留：{ylr["原始列"]}')
+check(yl['資料狀態'] == '可用' and yl['指標']['員額合計'] == 465 and yl['驗算結果'] == '相符' and yl['可比較'] and '人工補登（已對源）' in yl['品質註記'], f'玉里分院：改列後 465 相符、已對源、可比較（表列 {yl["表列合計"]}）')
+check(len(pending) == 0, f'待審（員額不完整）機關目前 {len(pending)} 個（錯位列均已人工確認改列）；錯位→待審機制由 tests/test_control_rows.py 單元測試保護')
 check(by['衛生福利部臺中醫院']['可比較'] is False and by['衛生福利部臺中醫院']['來源核對狀態'].startswith('官方合計待核'), '臺中醫院維持官方合計待核、不可比較')
 inc = [r for r in A if r['資料狀態'] == '待審（員額不完整）']
 check(all(r['指標']['員額合計'] is None and (r['指標'].get('已知列小計') is None or '不是完整總額' in r['指標']['已知列小計說明']) for r in inc), f'員額不完整者 {len(inc)} 個：總額 null，已知列小計明示不是完整總額')

@@ -80,7 +80,7 @@ const check = (c, m) => out.push((c ? 'PASS ' : 'FAIL ') + m);
   check(/法定員額依據：尚未完成結構化（待確認）（/.test(det3) && /尚未完成員額結構化/.test(det3) && !/法定員額依據：無/.test(det3) && !/，條文）/.test(det3) && /未取得（無編制表）/.test(det3), '矯正署詳情：主文案「尚未完成結構化（待確認）」，括號內有說明與法規連結，無粗體「無」、無「，條文）」');
   await pg.fill('#q', '玉里分院'); await pg.waitForTimeout(300); await pg.click('#alist .card'); await pg.waitForTimeout(300);
   const det5 = await pg.$eval('#adetail', e => e.textContent);
-  check(/待審（員額不完整）/.test(det5) && /已知列小計 462/.test(det5) && /不是完整總額/.test(det5) && !/^462/.test(det5), '玉里分院：顯示待審（員額不完整）、已知列小計 462 並標示不是完整總額');
+  check(/465/.test(det5) && /人工修正/.test(det5) && !/待審（員額不完整）/.test(det5), '玉里分院：改列後顯示 465 與人工修正標記，不再顯示待審');
   const bi = await pg.textContent('#buildinfo'); check(/來源提交 [0-9a-f]{7}/.test(bi), `建檔資訊含來源提交：${bi}`);
   // P1：行政院區間
   await pg.fill('#q', '行政院'); await pg.waitForTimeout(300); const c0 = await pg.$$('#alist .card'); for (const c of c0) { if ((await c.textContent()).startsWith('行政院1級')) { await c.click(); break; } } await pg.waitForTimeout(300);

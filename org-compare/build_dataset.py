@@ -143,7 +143,8 @@ def apply_fixes(ov, det, fixes_path):
             newv = f['新值'] if act == '改列' else {'備註': f.get('備註')}
             for k, v in newv.items():
                 det.at[i, k] = None if v is None else str(v)
-            det.at[i, '原始列'] = json.dumps(orig, ensure_ascii=False); det.at[i, '修正紀錄'] = note
+            if not isinstance(det.at[i, '原始列'], str): det.at[i, '原始列'] = json.dumps(orig, ensure_ascii=False)   # 同列多筆修正：原始列只記第一次修正前的值
+            det.at[i, '修正紀錄'] = (det.at[i, '修正紀錄'] + '；' + note) if isinstance(det.at[i, '修正紀錄'], str) else note
             log['entries'].append(f)
         elif act == '改合計':
             i = ov.index[ov['機關'] == ag]
