@@ -22,6 +22,8 @@ import argparse, json, os, re, datetime as dt
 import pandas as pd
 
 import unicodedata
+import os as _os, sys as _sys; _sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))   # python -I 下仍可匯入同目錄模組
+from statutory_headcount import parse_agency as statutory_parse, summarize as statutory_summary, scan_contract_clauses
 CN = {'一': 1, '二': 2, '三': 3, '四': 4, '五': 5, '六': 6, '七': 7, '八': 8, '九': 9}
 def nfkc(s):
     """解析副本用：NFKC 正規化（相容字 六 U+F9D1→六、全形括號／數字→半形）。顯示與匯出一律用 raw。"""
@@ -403,7 +405,7 @@ def statutory_basis(art, name):
         return {'有': True, '法規名稱': law, '條號': '、'.join(nos), '連結': link, '說明': f'{law}{"、".join(nos)}列有員額（含區間），本系統未加總'}
     return {'有': False, '法規名稱': law, '連結': link, '說明': f'「{law}」本系統尚未完成員額結構化（目前僅辨識出首長、副首長職稱條款，未逐條證明法規無其他員額規定）'}
 
-RESULT_ENUM = ['相符', '不相符', '找不到合計', '需人工輸入', '無編制表']
+RESULT_ENUM = ['相符', '不相符', '找不到合計', '需人工輸入', '無編制表', '條文解析（無編制表）']
 def parse_status(s):
     """驗算狀態字串 → (驗算結果, 品質註記[])。不以前綴猜測：逐一比對列舉值。"""
     s = str(s or '')
@@ -418,7 +420,7 @@ COUNT_METRICS = ['員額合計', '副首長數', '副首長兼任數', '主任�
                  '簡任員額', '簡任主管', '簡任非主管', '簡任員額_法定', '簡任非主管_法定', '得列簡任人數', '得列薦任人數', '薦任員額', '委任員額',
                  '其他官等員額', '幕僚單位員額', '主管員額', '暫列職稱數', '得列人數', '簡任非主管比', '簡任比', '主管比', '幕僚比']
 WHITELIST_NOTES = {'人工補登（已對源）', '表內驗算相符（合計取自明細控制列）', '警示：頁眉'}
-WHITELIST_PREFIX = ('括號語意待審', '員額回填（原文字形解析')
+WHITELIST_PREFIX = ('括號語意待審', '員額回填（原文字形解析', '法定員額（條文區間）')
 
 def build(master, out, fixes_path=None, attach_units_path=None):
     global ATTACH_UNITS
@@ -429,6 +431,37 @@ def build(master, out, fixes_path=None, attach_units_path=None):
     art = pd.read_excel(master, '條文', dtype=str)
     info = pd.read_excel(master, '說明', header=None, dtype=str).iloc[0, 0]
     ov, det, fixlog = apply_fixes(ov, det, fixes_path)
+    # 舊體例組織法規（無編制表、員額列於條文）：依條文合成明細列（分表「條文」），區間以 lo-hi 原文表示；
+    # 警備隊／聘用約僱／兼任列保留為參考列（不計入專任）。全機關另掃描「聘用／約僱」人數條文。
+    det['法定類別'] = None; det['條號'] = None
+    STATUTORY_AGENCIES = {}
+    add_rows = []
+    for _, o in ov.iterrows():
+        name = o['機關']
+        if not str(o['驗算狀態']).startswith('無編制表'): continue
+        own_laws = [x for x in str(o['組織法規名稱']).split('；') if name in x and not re.search(r'(通則|準則)', x)]   # 只解析機關專屬組織法規（共用法規／通則不解析）
+        if not own_laws: continue
+        rows = [r for r in statutory_parse(art, name) if r['法規'] in own_laws]
+        if len(rows) < 5: continue
+        STATUTORY_AGENCIES[name] = statutory_summary(rows)
+        link = str(o['組織法規連結']).split('；')[0]
+        for i, r in enumerate(rows, 1):
+            ranks = list(dict.fromkeys(re.findall(r'簡任|薦任|委任|特任|警監|警正|警佐|聘任', r['官等職等'])))
+            rank = ('或' if '或' in r['官等職等'] else '至').join(ranks) if ranks else None
+            grades = '；'.join(re.findall(r'第[一二三四五六七八九十]+職等(?:至第[一二三四五六七八九十]+職等)?', r['官等職等'])) or None
+            counted = r['類別'] in ('文官', '警察官', '教育人員', '未註明')
+            conc = r['類別'] == '兼任'   # 兼任列比照編制表慣例：專任 0、括號為兼任人數（備註含「兼任」）
+            note = '；'.join(x for x in [f"{r['條號']}", r['其中條款'], ('兼任（條文定由他職兼任或無給職，不計入專任）' if conc else ''), ('' if (counted or conc) else f"{r['類別']}（獨立參考，不計入專任）")] if x)
+            add_rows.append({'批次': o['批次'] if '批次' in o else None, '部會': o['部會'], '機關名稱': name, '附件': None, '分表': '條文', '序': str(i), '單位': r['單位'], '職稱': r['職稱'],
+                             '官等': rank, '職等': grades, '員額': (str(r['下限']) if (counted and r['下限'] == r['上限']) else ('0' if conc else None)),
+                             '員額上限': str(r['上限']), '員額原文': (f"{r['下限']}-{r['上限']}" if (counted and r['下限'] != r['上限']) else (str(r['下限']) if counted else (f"0（{r['下限']}{'-' + str(r['上限']) if r['下限'] != r['上限'] else ''}）" if conc else None))),
+                             '括號員額_兼任': None, '備註': note, '同職稱續列': None, 'PDF頁': None, '來源': link, '預算員額': None, '現有員額': None,
+                             '原始列': None, '修正紀錄': None, '法定類別': r['類別'], '條號': r['條號'], '轉錄取代': False,
+                             '法定下限': r['下限'], '法定上限': r['上限']})
+    if add_rows:
+        det = pd.concat([det, pd.DataFrame(add_rows)], ignore_index=True)
+        print(f'法定員額（條文）合成明細：{len(STATUTORY_AGENCIES)} 個機關、{len(add_rows)} 列')
+    CONTRACT_CLAUSES = scan_contract_clauses(art)
     det['n'] = pd.to_numeric(det['員額'], errors='coerce')
     det['bracket'] = pd.to_numeric(det['括號員額_兼任'], errors='coerce')   # 既有欄原值（只有阿拉伯數字者可轉）
     det['序'] = pd.to_numeric(det['序'], errors='coerce').fillna(9999)
@@ -462,7 +495,8 @@ def build(master, out, fixes_path=None, attach_units_path=None):
     # 列品質（語意檢查；單位標題列已預設）
     det['列品質'], det['列品質說明'] = classify_rows(det)
     # 計入（員額）：控制列不是職位；錯位／疑似控制列的員額欄不可信 → 不計；官等異常列的員額是原表已知數 → 計入員額，但不計入官等結構
-    det['計入'] = ~det['列品質'].isin(['控制列', '控制列（分表）', '控制列（跨頁小計）', '疑似控制列', '錯位', '單位標題列']) & ~det['列品質'].fillna('').str.startswith('碎片列')
+    det['計入'] = ~det['列品質'].isin(['控制列', '控制列（分表）', '控制列（跨頁小計）', '疑似控制列', '錯位', '單位標題列']) & ~det['列品質'].fillna('').str.startswith('碎片列') & ~det['法定類別'].isin(['警備隊', '聘用約僱'])
+    ref = det['法定類別'].isin(['警備隊', '聘用約僱']); det.loc[ref, '列品質'] = '法定參考列（' + det.loc[ref, '法定類別'] + '）'; det.loc[ref, '列品質說明'] = '組織法規條文所列之警備隊／聘用約僱員額，獨立參考，不計入專任合計'
     # 計入員額的列：加總用「員額定額」（專任區間列不入定額加總，另入上下限）
     det['n'] = det['員額定額']
     det['計入官等'] = det['計入'] & (det['列品質'] != '官等異常')
@@ -506,6 +540,8 @@ def build(master, out, fixes_path=None, attach_units_path=None):
             '括號員額_兼任_原值': r['括號員額_兼任'], '括號差異': bool(r['括號差異']), '專任差異': bool(r['專任差異']),
             '得列簡任': int(r['得列簡任']), '得列薦任': int(r['得列薦任']), 'PDF頁': r['PDF頁'],
             '列品質': r['列品質'], '列品質說明': r['列品質說明'], '計入': bool(r['計入']), '計入官等': bool(r['計入官等']),
+            '法定類別': r['法定類別'] if isinstance(r['法定類別'], str) else None, '條號': r['條號'] if isinstance(r['條號'], str) else None,
+            '法定下限': (int(r['法定下限']) if pd.notna(r.get('法定下限')) else None), '法定上限': (int(r['法定上限']) if pd.notna(r.get('法定上限')) else None),
             '單位_原值': r['單位_原值'] if isinstance(r['單位_原值'], str) else None, '單位重組說明': r['單位重組說明'] if isinstance(r['單位重組說明'], str) else None,
             '合併計列_併入序': (int(r['合併計列_併入序']) if pd.notna(r['合併計列_併入序']) else None),
             '原始列': (json.loads(r['原始列']) if isinstance(r['原始列'], str) else None), '修正紀錄': r['修正紀錄'] if isinstance(r['修正紀錄'], str) else None}.items()})
@@ -635,15 +671,22 @@ def build(master, out, fixes_path=None, attach_units_path=None):
         m['幕僚比'] = round(m['幕僚單位員額'] / tot, 4) if tot else None
         RANK_METRICS = ['簡任員額', '簡任主管', '簡任非主管', '簡任員額_法定', '簡任非主管_法定', '得列簡任人數', '得列薦任人數', '薦任員額', '委任員額', '其他官等員額', '簡任非主管比', '簡任比']
         if data_state == '可用' and is_range_agency: data_state = '可用（區間）'
+        stat = STATUTORY_AGENCIES.get(name)
+        if stat and result == '無編制表':
+            result = '條文解析（無編制表）'; notes.append('法定員額（條文區間）')
+            data_state = '可用（條文區間）' if has_numbers else data_state
+            m['法定員額_條文'] = {**stat, '法規': o['組織法規名稱'], '連結': str(o['組織法規連結']).split('；')[0]}
+        cc = CONTRACT_CLAUSES.get(name)
+        m['聘用約僱條文'] = cc; m['聘用約僱上限_條文'] = (max(x['上限'] for x in cc) if cc else None)
         if len(unk): notes.append(f'括號語意待審（{len(unk)} 列）')
         if data_state == '待審（官等結構）':   # 員額已知；官等結構不可用
             m['官等結構待審列'] = [{'序': int(x['序']), '職稱': x['職稱'], '員額': None if pd.isna(x['n']) else int(x['n']), '官等原文': x['官等']} for _, x in pending_rank.iterrows()]
             for k in RANK_METRICS: m[k] = None
-        elif data_state not in ('可用', '可用（區間）'):   # 未取得或員額不完整：人數類指標一律 null；已知列小計另列、明示不完整（區間機關不在此列：定額指標維持、含區間列者另給 _min／_max）
+        elif data_state not in ('可用', '可用（區間）', '可用（條文區間）'):   # 未取得或員額不完整：人數類指標一律 null；已知列小計另列、明示不完整（區間機關不在此列：定額指標維持、含區間列者另給 _min／_max）
             m['已知列小計'] = tot if has_numbers else None
             m['已知列小計說明'] = f'僅 {int(len(g))} 列員額可辨識之加總，不是完整總額' if has_numbers else None
             for k in COUNT_METRICS: m[k] = None
-        comparable = (result == '相符' and data_state in ('可用', '可用（區間）') and all(x in WHITELIST_NOTES or x.startswith(WHITELIST_PREFIX) for x in notes) and not (sc and sc.get('狀態', '').startswith('官方合計待核')))
+        comparable = (result in ('相符', '條文解析（無編制表）') and data_state in ('可用', '可用（區間）', '可用（條文區間）') and all(x in WHITELIST_NOTES or x.startswith(WHITELIST_PREFIX) for x in notes) and not (sc and sc.get('狀態', '').startswith('官方合計待核')))
         duties = art[(art['機關'] == name) & (art['法規類別'] == '組織法規') & (art['條文內容'].fillna('').str.contains('掌理'))]['條文內容']
         kind = next((k for k in ['分署', '分局', '分院', '分所', '分處', '署', '局', '處', '所', '館', '院', '中心', '園', '場', '隊', '監獄', '學校', '會', '部', '行'] if name.endswith(k)), '其他')
         agencies.append({
@@ -653,7 +696,7 @@ def build(master, out, fixes_path=None, attach_units_path=None):
             '表列合計': tbl_total, '控制數': ctrl_num,
             '驗算狀態': o['驗算狀態'], '驗算結果': result, '品質註記': notes, '可比較': bool(comparable),
             '資料狀態': data_state, '來源核對狀態': src_status, '來源核對說明': (sc or {}).get('說明'),
-            '法定員額依據': statutory_basis(art, name) if (not has_numbers and result == '無編制表') else None,
+            '法定員額依據': statutory_basis(art, name) if (result in ('無編制表', '條文解析（無編制表）')) else None,
             '修正紀錄': [f"{e['動作']}{'序'+str(e['序']) if e.get('序') else ''}：{e.get('對源') or e.get('來源') or ''}（PDF 第{e.get('PDF頁','?')}頁）" for e in log['entries']] or None,
             '分表說明': o['分表說明'] if pd.notna(o['分表說明']) else None,
             '組織法規最新異動日': (art[(art['機關'] == name) & (art['法規類別'] == '組織法規')]['最新異動日'].iloc[0] if ((art['機關'] == name) & (art['法規類別'] == '組織法規')).any() else None),
@@ -676,6 +719,9 @@ def build(master, out, fixes_path=None, attach_units_path=None):
         '驗算結果': '相符／不相符／找不到合計／需人工輸入／無編制表；人工修正或取用控制列者由程式重新驗算',
         '品質註記': 'Codex抽樣不一致／人工補登（已對源）／人工補登（未完成對源或驗算不符）／表內驗算相符（合計取自明細控制列）／官方合計待核／列品質待審（員額不完整：錯位、疑似控制列）／列品質待審（官等結構：官等異常，員額已知）',
         '已知列小計': '員額不完整時，僅可辨識列的加總；明示不是完整總額',
+        '法定員額_條文': '舊體例組織法規（無編制表）：依條文逐職稱解析之專任下限／上限（文官＋警察官＋教育人員），警備隊、聘用約僱、兼任另列、不計入；員額合計以區間呈現，不以下限充當定額',
+        '聘用約僱條文': '組織法規條文明定聘用／約僱／僱用人數之條款（條號、類型、下限、上限、原句）；一般機關不在組織法列聘用人數，有列者為特例',
+        '聘用約僱上限_條文': '上列條款之人數上限（最大值）；空＝組織法規未明定',
         '員額合計_min／max': '機關內有專任區間列（如「七-九」）時，定額列加總＋區間下限／上限；此時「員額合計」為空，不以下限充當定額，預設不進距離排序、平均、中位數與 ±50%（比對頁可勾選「區間取下限」並持續標示口徑）。其他人數指標只有「含區間列」者（例如其他官等員額）同樣改為 _min／_max，其餘定額指標維持；比率一律留空',
         '兼任合計': '括號語意判定為「兼任」（本列備註有兼任字樣）之括號人數加總；有 unknown 括號列時為空並另給「兼任合計_已判定」；兼任永不加回專任',
         'paren_meaning': '兼任｜上限｜unknown；只依本列備註判定，同表慣例只記為候選證據不放行；括號可同時為兼任且為區間（paren_min／max）',
