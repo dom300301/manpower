@@ -1,0 +1,18 @@
+PASS 開放資料無差異 → 停在第一層，無下載、無受影響機關
+PASS 共用法規異動 → 受影響只有相符掛接之甲醫院（['甲醫院']），待審掛接之乙老人之家不列入
+PASS 已公布未施行（施行 2027-01-01）→ 列待施行，不提前生效
+PASS 附件重傳同檔（byte 相同）→ 只更新 manifest，override 不受影響
+PASS byte 不同、語意相同（版面重排）→ 只更新 manifest，override 維持
+PASS 語意變更 → 重解析待審；override mf-0001 因 hash／FileId 不符列待審
+PASS 文字層無法解析 → 標需人工轉錄／OCR，不自動處理
+PASS 離線無附件 → 不猜，標人工取得
+PASS 法規廢止 → 列廢止並只影響採用機關
+PASS 沿革解析：公布 2023-06-07、施行 2023-09-15、修正 None（分欄，不合成）
+PASS 施行日由行政院定之且無後續令 → 施行日留空並標待核
+PASS manifest：585 機關、機關代碼格式一致
+PASS manifest：每部法規一個 pcode
+PASS 臺中醫院：manifest FileId 0000427371（hash 一致），0000368769 為 superseded
+PASS manifest：override 數＝manual_fixes 列層級修正數，且皆有綁定（FileId／semantic hash）
+PASS manifest：法規日期為 ISO 或空（不合成）
+PASS manifest：有明細之機關皆有 semantic hash
+結果：PASS 17、FAIL 0

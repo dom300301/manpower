@@ -1,0 +1,67 @@
+{
+ "checked_at": "2026-11-07T18:42:49+00:00",
+ "today": "2026-11-07",
+ "offline": true,
+ "layer1_changes": [
+  {
+   "agency_id": "A21003600P",
+   "name": "衛生福利部臺中醫院",
+   "pcode": "L0000076",
+   "kind": "attachment_fileid",
+   "old": "0000427371",
+   "new": "0000368769",
+   "candidates": [
+    "0000368769"
+   ]
+  }
+ ],
+ "layer2": [
+  {
+   "agency_id": "A21003600P",
+   "file_id": "0000368769",
+   "byte_sha256": "0c6adab373da2c681a9b2c2e8c3f4504463675841cb2c7f2dcf479249d41a15c",
+   "byte_changed": true
+  }
+ ],
+ "layer3": [
+  {
+   "agency_id": "A21003600P",
+   "file_id": "0000368769",
+   "semantic_sha256": "8efd69db9b2a9adb5618d42da643b20dcff73912813562fb836b51b8f1b96ce9",
+   "semantic_changed": true,
+   "row_count_new": 23,
+   "row_count_old": 40
+  }
+ ],
+ "affected_agencies": [
+  {
+   "agency_id": "A21003600P",
+   "name": "衛生福利部臺中醫院",
+   "reasons": [
+    "attachment_fileid:0000427371→0000368769"
+   ],
+   "action": "reparse_and_review"
+  }
+ ],
+ "override_pending": [
+  {
+   "agency_id": "A21003600P",
+   "name": "衛生福利部臺中醫院",
+   "fix_id": "mf-0223",
+   "action": "改列",
+   "scope": {
+    "序": 29,
+    "欄位": [
+     "職稱"
+    ]
+   },
+   "bound_file_id": "0000427371",
+   "new_file_id": "0000368769"
+  }
+ ],
+ "needs_ocr_or_transcription": [],
+ "published_not_effective": [],
+ "abolished": [],
+ "stopped_at": "layer3",
+ "would_rebuild": true
+}

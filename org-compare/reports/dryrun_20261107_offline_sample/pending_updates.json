@@ -1,0 +1,16 @@
+{
+ "_說明": "由 update_dryrun.py 產生（尚未核准）：受影響機關；核准後執行 add_agencies.py --config pending_updates.json --replace",
+ "agencies": [
+  {
+   "機關": "衛生福利部臺中醫院",
+   "機關代碼": "A21003600P",
+   "層級": 4,
+   "隸屬": "衛生福利部",
+   "部會": "衛生福利部",
+   "組織法規": "L0000053",
+   "處務規程": "L0010058",
+   "編制表": "L0000076",
+   "備註": "attachment_fileid:0000427371→0000368769｜reparse_and_review"
+  }
+ ]
+}
