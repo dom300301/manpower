@@ -34,7 +34,7 @@ check([p for p in P if p['機關'] == '交通部鐵道局北部工程分局' and
 
 # P0-B 品質旗標
 mixed = [r for r in A if 'Codex抽樣不一致' in r['品質註記']]
-check(len(mixed) == 13 and all(not r['可比較'] for r in mixed), f'Codex抽樣不一致 {len(mixed)} 個機關全部不可比較（12 相符混合 + 疾管署；工程材料技術所之 Codex 差異為碎片列，已於改合計時由人工校正狀態取代）')
+check(len(mixed) == 12 and all(not r['可比較'] for r in mixed), f'Codex抽樣不一致 {len(mixed)} 個機關全部不可比較（11 相符混合 + 疾管署；工程材料技術所（碎片列）與軍備局（審查指示只採文職表）之 Codex 差異已由人工校正狀態取代）')
 check(not by['教育部']['可比較'] and by['教育部']['驗算結果'] == '相符', '教育部：驗算結果相符但品質註記 Codex → 不可比較')
 dept_group = [r['機關'] for r in A if r['層級'] == 2 and r['類型'] == '部' and r['可比較']]
 check('教育部' not in dept_group and '財政部' in dept_group and '農業部' in dept_group, f'農業部預設部級群組不含教育部（Codex 註記）、含財政部（已補登）：{dept_group}')
@@ -52,7 +52,7 @@ yl = by['臺北榮民總醫院玉里分院']; ylr = next(p for p in P if p['機�
 check(ylr['列品質'] is None and ylr['員額'] == 3 and ylr['計入'] and ylr['修正紀錄'] and ylr['原始列'] and ylr['原始列'].get('員額') is None, f'玉里分院序 38：原錯位列經人工確認改列（員額 3、官等 委任或薦任），原始列保留：{ylr["原始列"]}')
 check(yl['資料狀態'] == '可用' and yl['指標']['員額合計'] == 465 and yl['驗算結果'] == '相符' and yl['可比較'] and '人工補登（已對源）' in yl['品質註記'], f'玉里分院：改列後 465 相符、已對源、可比較（表列 {yl["表列合計"]}）')
 check(len(pending) == 0, f'待審（員額不完整）機關目前 {len(pending)} 個（錯位列均已人工確認改列）；錯位→待審機制由 tests/test_control_rows.py 單元測試保護')
-check(by['衛生福利部臺中醫院']['可比較'] is False and by['衛生福利部臺中醫院']['來源核對狀態'].startswith('官方合計待核'), '臺中醫院維持官方合計待核、不可比較')
+check(by['衛生福利部臺中醫院']['可比較'] is True and by['衛生福利部臺中醫院']['來源核對狀態'].startswith('已對源（官方附件 FileId 0000427371'), '臺中醫院：官方附件 115-10-30 生效版已線上取得並逐列比對相同 → 已對源、可比較（2026-11-07）')
 inc = [r for r in A if r['資料狀態'] == '待審（員額不完整）']
 check(all(r['指標']['員額合計'] is None and (r['指標'].get('已知列小計') is None or '不是完整總額' in r['指標']['已知列小計說明']) for r in inc), f'員額不完整者 {len(inc)} 個：總額 null，已知列小計明示不是完整總額')
 hcr = {p['序']: p for p in P if p['機關'] == '衛生福利部恆春旅遊醫院'}
@@ -81,7 +81,7 @@ check(not any(re.search(r'合計|總計|小計|共計', str(p['職稱'])) and p[
 tc = by['衛生福利部臺中醫院']; hc = by['衛生福利部恆春旅遊醫院']
 check(tc['指標']['員額合計'] == 217 and tc['控制數']['專任'] == 217 and tc['控制數']['兼任'] == 69, f'臺中醫院 員額合計 {tc["指標"]["員額合計"]}、控制數 {tc["控制數"]}（不再翻倍 434）')
 check(hc['指標']['員額合計'] == 94 and hc['控制數']['專任'] == 94 and hc['控制數']['兼任'] == 27, f'恆春旅遊醫院 員額合計 {hc["指標"]["員額合計"]}、控制數 {hc["控制數"]}（不再翻倍 188）')
-check(not tc['可比較'] and tc['來源核對狀態'].startswith('官方合計待核') and '表內驗算相符（合計取自明細控制列）' in tc['品質註記'], '臺中醫院：表內驗算相符但官方合計待核 → 不可比較')
+check(tc['可比較'] and tc['來源核對狀態'].startswith('已對源') and '表內驗算相符（合計取自明細控制列）' in tc['品質註記'] and [p for p in P if p['機關'] == '衛生福利部臺中醫院' and p['序'] == 29][0]['職稱'] == '技術員', '臺中醫院：表內驗算相符且官方附件已對源 → 可比較；序29 職稱依官方附件改為技術員')
 check(hc['可比較'] and hc['來源核對狀態'].startswith('官方PDF核對一致'), '恆春旅遊醫院：官方 PDF 11/06 重抓核對一致 → 可比較')
 check(all('官方來源已核實' not in x for r in A for x in r['品質註記']), '品質註記不出現「官方來源已核實」字樣（表內驗算與來源核對分開）')
 

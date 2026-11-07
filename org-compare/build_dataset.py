@@ -114,11 +114,12 @@ def apply_fixes(ov, det, fixes_path):
     被修改的列保留 '原始列'（修改前欄位）與 '修正紀錄'。"""
     fixlog = {}
     if not fixes_path or not os.path.exists(fixes_path):
-        return ov, det, fixlog
+        det = det.copy(); det['分表排除'] = False; return ov, det, fixlog
     fixes = json.load(open(fixes_path, encoding='utf-8'))['fixes']
     det = det.copy()
     for col in ('原始列', '修正紀錄'):
         if col not in det.columns: det[col] = None
+    det['分表排除'] = False
     add = []
     for f in fixes:
         ag = f['機關']; log = fixlog.setdefault(ag, {'entries': [], 'source_check': None})
@@ -152,6 +153,9 @@ def apply_fixes(ov, det, fixes_path):
             i = ov.index[ov['機關'] == ag]
             ov.loc[i, '編制員額合計'] = str(f['編制員額合計']); ov.loc[i, '驗算狀態'] = f.get('驗算狀態', ov.loc[i, '驗算狀態'])
             log['entries'].append(f)
+        elif act == '排除分表':   # 審查指示：某分表（如軍職表）不計入法定編制總額；列保留、標記不計入
+            mask = (det['機關名稱'] == ag) & (det['分表'].astype(str) == str(f['分表']))
+            det.loc[mask, '分表排除'] = True; det.loc[mask, '修正紀錄'] = note; log['entries'].append(f)
         elif act == '來源核對':
             log['source_check'] = f
         else:
@@ -333,6 +337,7 @@ def classify_rows(det):
         q = row_quality(r, {'agency_last': bool(agency_last.iloc[i]), 'sub_last': bool(sub_last.iloc[i]), 'page_last': bool(page_last.iloc[i])})
         if r.get('列品質_預設'): q = (r['列品質_預設'], r['單位重組說明'])
         if r.get('轉錄取代') is True: q = ('碎片列（原表無法讀取，已人工轉錄）', '原表殘留之空列（職稱空、員額原文「()」），該機關明細已依人工轉錄補登，此列不計入')
+        if r.get('分表排除') is True: q = ('分表排除（不計入法定編制總額）', f'分表 {r["分表"]} 依審查指示不計入法定編制總額（{r["修正紀錄"]}）')
         if q[0] is None:
             fk = fragment_kind(r, st)
             if fk: q = (fk, f'職稱「{str(r["職稱"])[:30]}」且員額、官等、職等皆空：{fk[4:-1]}')
@@ -457,7 +462,7 @@ def build(master, out, fixes_path=None, attach_units_path=None):
                              '員額上限': str(r['上限']), '員額原文': (f"{r['下限']}-{r['上限']}" if (counted and r['下限'] != r['上限']) else (str(r['下限']) if counted else (f"0（{r['下限']}{'-' + str(r['上限']) if r['下限'] != r['上限'] else ''}）" if conc else None))),
                              '括號員額_兼任': None, '備註': note, '同職稱續列': None, 'PDF頁': None, '來源': link, '預算員額': None, '現有員額': None,
                              '原始列': None, '修正紀錄': None, '法定類別': r['類別'], '條號': r['條號'], '轉錄取代': False,
-                             '法定下限': r['下限'], '法定上限': r['上限']})
+                             '法定下限': r['下限'], '法定上限': r['上限'], '分表排除': False})
     if add_rows:
         det = pd.concat([det, pd.DataFrame(add_rows)], ignore_index=True)
         print(f'法定員額（條文）合成明細：{len(STATUTORY_AGENCIES)} 個機關、{len(add_rows)} 列')
@@ -495,7 +500,7 @@ def build(master, out, fixes_path=None, attach_units_path=None):
     # 列品質（語意檢查；單位標題列已預設）
     det['列品質'], det['列品質說明'] = classify_rows(det)
     # 計入（員額）：控制列不是職位；錯位／疑似控制列的員額欄不可信 → 不計；官等異常列的員額是原表已知數 → 計入員額，但不計入官等結構
-    det['計入'] = ~det['列品質'].isin(['控制列', '控制列（分表）', '控制列（跨頁小計）', '疑似控制列', '錯位', '單位標題列']) & ~det['列品質'].fillna('').str.startswith('碎片列') & ~det['法定類別'].isin(['警備隊', '聘用約僱'])
+    det['計入'] = ~det['列品質'].isin(['控制列', '控制列（分表）', '控制列（跨頁小計）', '疑似控制列', '錯位', '單位標題列', '分表排除（不計入法定編制總額）']) & ~det['列品質'].fillna('').str.startswith('碎片列') & ~det['法定類別'].isin(['警備隊', '聘用約僱'])
     ref = det['法定類別'].isin(['警備隊', '聘用約僱']); det.loc[ref, '列品質'] = '法定參考列（' + det.loc[ref, '法定類別'] + '）'; det.loc[ref, '列品質說明'] = '組織法規條文所列之警備隊／聘用約僱員額，獨立參考，不計入專任合計'
     # 計入員額的列：加總用「員額定額」（專任區間列不入定額加總，另入上下限）
     det['n'] = det['員額定額']

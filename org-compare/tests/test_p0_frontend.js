@@ -63,7 +63,7 @@ const check = (c, m) => out.push((c ? 'PASS ' : 'FAIL ') + m);
   const flaggedTxt = await pg.textContent('#flagged');
   const flagRows = await pg.$$eval('#flagged tbody tr', trs => trs.map(t => t.children[0].textContent));
   const expected = JSON.parse(require('fs').readFileSync(process.env.AGENCIES_JSON || (__dirname + '/../output/agencies_snapshot.json'), 'utf8')).agencies.filter(a => !a.可比較).length;
-  check(new RegExp(`共 ${expected} 個`).test(flaggedTxt) && flagRows.length === expected && flagRows.includes('教育部') && flagRows.includes('衛生福利部臺中醫院') && !flagRows.includes('衛生福利部恆春旅遊醫院'), `狀態頁不可比較 ${flagRows.length} 個（與資料推導 ${expected} 一致），含教育部、臺中醫院，不含恆春（已校正）`);
+  check(new RegExp(`共 ${expected} 個`).test(flaggedTxt) && flagRows.length === expected && flagRows.includes('教育部') && !flagRows.includes('衛生福利部臺中醫院') && !flagRows.includes('衛生福利部恆春旅遊醫院'), `狀態頁不可比較 ${flagRows.length} 個（與資料推導 ${expected} 一致），含教育部，不含臺中醫院（已對源）與恆春（已校正）`);
   // 藥試所明細與臺中醫院顯示
   await pg.click('.tabs button[data-tab=search]'); await pg.fill('#q', '農業藥物試驗所'); await pg.waitForTimeout(300); await pg.click('#alist .card'); await pg.waitForTimeout(300);
   const det = await pg.$eval('#adetail', e => e.textContent);
@@ -72,7 +72,7 @@ const check = (c, m) => out.push((c ? 'PASS ' : 'FAIL ') + m);
   check(/表列合計 79/.test(det) && fixBadges === 6 && !noteCells.some(n => /卷/.test(n)), `藥試所詳情：表列合計 79、人工修正標示 ${fixBadges} 列、備註欄無頁眉文字`);
   await pg.fill('#q', '臺中醫院'); await pg.waitForTimeout(300); await pg.click('#alist .card'); await pg.waitForTimeout(300);
   const det2 = await pg.$eval('#adetail', e => e.textContent);
-  check(/官方合計待核/.test(det2) && /控制列/.test(det2) && /217/.test(det2) && !/434/.test(det2), '臺中醫院詳情：官方合計待核、控制列說明、217 而非 434');
+  check(/已對源（官方附件 FileId 0000427371/.test(det2) && /控制列/.test(det2) && /217/.test(det2) && !/434/.test(det2), '臺中醫院詳情：已對源（官方附件 0000427371）、控制列說明、217 而非 434');
   // 無編制表機關：依據「無」須明示；「有」須給條號與未加總說明
   await pg.fill('#q', '法務部矯正署'); await pg.waitForTimeout(300);
   const cardsZ = await pg.$$('#alist .card'); for (const c of cardsZ) { if ((await c.textContent()).startsWith('法務部矯正署') && !(await c.textContent()).includes('監獄')) { await c.click(); break; } } await pg.waitForTimeout(300);
