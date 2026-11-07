@@ -707,9 +707,23 @@ def build(master, out, fixes_path=None, attach_units_path=None):
         comparable = (result in ('相符', '條文解析（無編制表）', '員額表區間') and not cat_pending and data_state in ('可用', '可用（區間）', '可用（條文區間）') and all(x in WHITELIST_NOTES or x.startswith(WHITELIST_PREFIX) for x in notes) and not (sc and sc.get('狀態', '').startswith('官方合計待核')))
         duties = art[(art['機關'] == name) & (art['法規類別'] == '組織法規') & (art['條文內容'].fillna('').str.contains('掌理'))]['條文內容']
         kind = next((k for k in ['分署', '分局', '分院', '分所', '分處', '署', '局', '處', '所', '館', '院', '中心', '園', '場', '隊', '監獄', '學校', '會', '部', '行'] if name.endswith(k)), '其他')
+        # 法規來源：一法規一 URL（總表以全形「；」串接名稱與連結，逐一拆分配對；數量不符者標待審、不猜配）
+        law_names = [x.strip() for x in str(o['組織法規名稱']).split('；')] if pd.notna(o['組織法規名稱']) else []
+        law_links = [x.strip() for x in str(o['組織法規連結']).split('；')] if pd.notna(o['組織法規連結']) else []
+        law_pending = bool(law_links) and len(law_links) != len(law_names)
+        law_sources = ([{'名稱': n_, '連結': (l_ if l_.startswith('http') else None)} for n_, l_ in zip(law_names, law_links)] if (law_links and not law_pending)
+                       else [{'名稱': n_, '連結': None} for n_ in law_names])
+        # 軍事／國防：以部會欄（機關代碼 A05 系統）判定，不以名稱含「軍」為準；退輔會不屬之
+        special = ['軍事／國防'] if o['部會'] == '國防部' else []
+        # 編制表來源：來源核對明示取代者（如臺中醫院新版附件），現行來源改為核定之新附件，總表舊來源保留為歷史被取代來源
+        src_now, src_hist = o['編制表來源'], None
+        if sc and sc.get('取代編制表來源') and sc.get('來源'):
+            src_now, src_hist = sc['來源'], {'連結': o['編制表來源'], '說明': sc.get('歷史來源說明') or '原總表來源，已被新版附件取代'}
         agencies.append({
             '機關': name, '機關代碼': o['機關代碼'], '部會': o['部會'], '層級': int(o['層級']), '隸屬': o['隸屬'], '類型': kind,
-            '組織法規名稱': o['組織法規名稱'], '組織法規連結': o['組織法規連結'], '編制表來源': o['編制表來源'],
+            '組織法規名稱': o['組織法規名稱'], '組織法規連結': o['組織法規連結'], '組織法規來源': law_sources, '法規連結待審': law_pending,
+            '特殊類別': special, '特殊類別依據': ('部會欄＝國防部（機關代碼 ' + str(o['機關代碼'])[:3] + '…）' if special else None),
+            '編制表來源': src_now, '編制表來源_現行說明': ((sc.get('現行來源說明') or sc.get('狀態')) if src_hist else None), '編制表來源_歷史': src_hist,
             '編制員額合計_總表': None if pd.isna(o['編制員額合計']) else int(float(o['編制員額合計'])),
             '表列合計': tbl_total, '控制數': ctrl_num,
             '驗算狀態': o['驗算狀態'], '驗算結果': result, '品質註記': notes, '可比較': bool(comparable),
