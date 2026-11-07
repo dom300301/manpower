@@ -114,6 +114,11 @@ const check = (c, m) => out.push((c ? 'PASS ' : 'FAIL ') + m);
   check(grpV.some(g => g.includes('新北市榮民服務處')) && grpV.some(g => g.includes('高雄市榮民服務處')), `退輔會榮民服務處群組在軍事／國防排除開啟下仍完整（${grpV.length} 列，退輔會不因名稱含「軍」被排除）`);
   for (const c of await pg.$$('#cExcl .chip')) { if ((await c.textContent()).includes('軍事／國防')) await c.click(); } await pg.waitForTimeout(200);
   await pg.click('.tabs button[data-tab=search]'); await pg.waitForTimeout(200);
+  // 更新作業面板（只提示與複製指令，不執行更新）
+  await pg.click('.tabs button[data-tab=info]'); await pg.waitForTimeout(300);
+  const updTxt = await pg.$eval('#updPrompt', e => e.value); const updBtn = await pg.$('#copyUpd'); const verTxt = await pg.textContent('#version');
+  check(updBtn && /update_dryrun\.py/.test(updTxt) && /不合併、不部署/.test(updTxt) && /manifest：/.test(verTxt) && /dryrun\.yml/.test(await pg.$eval('#version', e => e.innerHTML)), '狀態頁「資料更新作業」面板：顯示 manifest 摘要、可複製標準指令、連到 dry-run 工作流程');
+  await pg.click('.tabs button[data-tab=search]'); await pg.waitForTimeout(200);
   const bi = await pg.textContent('#buildinfo'); check(/來源提交 [0-9a-f]{7}/.test(bi), `建檔資訊含來源提交：${bi}`);
   // P1：行政院區間
   await pg.fill('#q', '行政院'); await pg.waitForTimeout(300); const c0 = await pg.$$('#alist .card'); for (const c of c0) { if ((await c.textContent()).startsWith('行政院1級')) { await c.click(); break; } } await pg.waitForTimeout(300);
