@@ -151,7 +151,8 @@ def apply_fixes(ov, det, fixes_path):
             log['entries'].append(f)
         elif act == '改合計':
             i = ov.index[ov['機關'] == ag]
-            ov.loc[i, '編制員額合計'] = str(f['編制員額合計']); ov.loc[i, '驗算狀態'] = f.get('驗算狀態', ov.loc[i, '驗算狀態'])
+            if f.get('編制員額合計') is not None: ov.loc[i, '編制員額合計'] = str(f['編制員額合計'])
+            ov.loc[i, '驗算狀態'] = f.get('驗算狀態', ov.loc[i, '驗算狀態'])
             log['entries'].append(f)
         elif act == '排除分表':   # 審查指示：某分表（如軍職表）不計入法定編制總額；列保留、標記不計入
             mask = (det['機關名稱'] == ag) & (det['分表'].astype(str) == str(f['分表']))
@@ -410,7 +411,7 @@ def statutory_basis(art, name):
         return {'有': True, '法規名稱': law, '條號': '、'.join(nos), '連結': link, '說明': f'{law}{"、".join(nos)}列有員額（含區間），本系統未加總'}
     return {'有': False, '法規名稱': law, '連結': link, '說明': f'「{law}」本系統尚未完成員額結構化（目前僅辨識出首長、副首長職稱條款，未逐條證明法規無其他員額規定）'}
 
-RESULT_ENUM = ['相符', '不相符', '找不到合計', '需人工輸入', '無編制表', '條文解析（無編制表）']
+RESULT_ENUM = ['相符', '不相符', '找不到合計', '需人工輸入', '無編制表', '條文解析（無編制表）', '員額表區間']
 def parse_status(s):
     """驗算狀態字串 → (驗算結果, 品質註記[])。不以前綴猜測：逐一比對列舉值。"""
     s = str(s or '')
@@ -425,7 +426,7 @@ COUNT_METRICS = ['員額合計', '副首長數', '副首長兼任數', '主任�
                  '簡任員額', '簡任主管', '簡任非主管', '簡任員額_法定', '簡任非主管_法定', '得列簡任人數', '得列薦任人數', '薦任員額', '委任員額',
                  '其他官等員額', '幕僚單位員額', '主管員額', '暫列職稱數', '得列人數', '簡任非主管比', '簡任比', '主管比', '幕僚比']
 WHITELIST_NOTES = {'人工補登（已對源）', '表內驗算相符（合計取自明細控制列）', '警示：頁眉'}
-WHITELIST_PREFIX = ('括號語意待審', '員額回填（原文字形解析', '法定員額（條文區間）', 'Codex差異已釐清', '驗算結果由程式重算')
+WHITELIST_PREFIX = ('括號語意待審', '員額回填（原文字形解析', '法定員額（條文區間）', 'Codex差異已釐清', '驗算結果由程式重算', '法定員額（附表區間）')
 
 def build(master, out, fixes_path=None, attach_units_path=None):
     global ATTACH_UNITS
@@ -591,8 +592,8 @@ def build(master, out, fixes_path=None, attach_units_path=None):
             if tbl_total is not None and has_numbers: result = '相符' if int(n.sum()) == tbl_total else '不相符'
         # 人工修正後重新驗算
         if log['entries']:
-            if fix_documented(log['entries']) and tbl_total is not None and has_numbers and int(n.sum()) == tbl_total and len(pending) == 0:
-                notes = [x for x in notes if x != '人工補登'] + ['人工補登（已對源）']; result = '相符'
+            if fix_documented(log['entries']) and ((tbl_total is not None and has_numbers and int(n.sum()) == tbl_total and len(pending) == 0) or (result == '員額表區間' and has_numbers)):
+                notes = [x for x in notes if x != '人工補登'] + ['人工補登（已對源）']; result = result if result == '員額表區間' else '相符'
             else:
                 notes = [x for x in notes if x != '人工補登'] + ['人工補登（未完成對源或驗算不符）']
                 if tbl_total is not None and has_numbers: result = '相符' if int(n.sum()) == tbl_total else '不相符'
@@ -602,6 +603,9 @@ def build(master, out, fixes_path=None, attach_units_path=None):
         sc = log['source_check']
         src_status = sc['狀態'] if sc else '依總表（2026-10-31 自全國法規資料庫下載之編制表 PDF）'
         if sc and sc.get('狀態', '').startswith('官方合計待核'): notes.append('官方合計待核')
+        # 審查指示排除（例：駐外機構依通則設置、無固定員額編制、多屬密件）：資料狀態「不適用」、不入比較，保留註記
+        if sc and sc.get('狀態', '').startswith('不適用'):
+            notes.append('依審查指示排除：' + sc.get('說明', sc['狀態'])[:60])
         # Codex 抽樣差異已逐筆釐清（來源核對狀態記載原因）→ 註記改為「已釐清」（白名單）
         if sc and sc.get('狀態', '').startswith('已對源') and 'Codex' in sc.get('狀態', '') and 'Codex抽樣不一致' in notes:
             notes = [x for x in notes if x != 'Codex抽樣不一致'] + ['Codex差異已釐清（已對源）']
@@ -682,6 +686,7 @@ def build(master, out, fixes_path=None, attach_units_path=None):
         m['幕僚比'] = round(m['幕僚單位員額'] / tot, 4) if tot else None
         RANK_METRICS = ['簡任員額', '簡任主管', '簡任非主管', '簡任員額_法定', '簡任非主管_法定', '得列簡任人數', '得列薦任人數', '薦任員額', '委任員額', '其他官等員額', '簡任非主管比', '簡任比']
         if data_state == '可用' and is_range_agency: data_state = '可用（區間）'
+        if sc and sc.get('狀態', '').startswith('不適用'): data_state = '不適用（依審查指示排除）'   # 例：駐外機構
         stat = STATUTORY_AGENCIES.get(name)
         if stat and result == '無編制表':
             result = '條文解析（無編制表）'; notes.append('法定員額（條文區間）')
@@ -697,7 +702,9 @@ def build(master, out, fixes_path=None, attach_units_path=None):
             m['已知列小計'] = tot if has_numbers else None
             m['已知列小計說明'] = f'僅 {int(len(g))} 列員額可辨識之加總，不是完整總額' if has_numbers else None
             for k in COUNT_METRICS: m[k] = None
-        comparable = (result in ('相符', '條文解析（無編制表）') and data_state in ('可用', '可用（區間）', '可用（條文區間）') and all(x in WHITELIST_NOTES or x.startswith(WHITELIST_PREFIX) for x in notes) and not (sc and sc.get('狀態', '').startswith('官方合計待核')))
+        cat_pending = bool(sc and '類別' in sc.get('狀態', '') and '請確認' in sc.get('狀態', ''))
+        if result == '員額表區間': notes.append('法定員額（附表區間）' + ('，類別待確認' if cat_pending else ''))
+        comparable = (result in ('相符', '條文解析（無編制表）', '員額表區間') and not cat_pending and data_state in ('可用', '可用（區間）', '可用（條文區間）') and all(x in WHITELIST_NOTES or x.startswith(WHITELIST_PREFIX) for x in notes) and not (sc and sc.get('狀態', '').startswith('官方合計待核')))
         duties = art[(art['機關'] == name) & (art['法規類別'] == '組織法規') & (art['條文內容'].fillna('').str.contains('掌理'))]['條文內容']
         kind = next((k for k in ['分署', '分局', '分院', '分所', '分處', '署', '局', '處', '所', '館', '院', '中心', '園', '場', '隊', '監獄', '學校', '會', '部', '行'] if name.endswith(k)), '其他')
         agencies.append({
@@ -707,7 +714,7 @@ def build(master, out, fixes_path=None, attach_units_path=None):
             '表列合計': tbl_total, '控制數': ctrl_num,
             '驗算狀態': o['驗算狀態'], '驗算結果': result, '品質註記': notes, '可比較': bool(comparable),
             '資料狀態': data_state, '來源核對狀態': src_status, '來源核對說明': (sc or {}).get('說明'),
-            '法定員額依據': statutory_basis(art, name) if (result in ('無編制表', '條文解析（無編制表）')) else None,
+            '法定員額依據': statutory_basis(art, name) if (result in ('無編制表', '條文解析（無編制表）', '員額表區間')) else None,
             '修正紀錄': [f"{e['動作']}{'序'+str(e['序']) if e.get('序') else ''}：{e.get('對源') or e.get('來源') or ''}（PDF 第{e.get('PDF頁','?')}頁）" for e in log['entries']] or None,
             '分表說明': o['分表說明'] if pd.notna(o['分表說明']) else None,
             '組織法規最新異動日': (art[(art['機關'] == name) & (art['法規類別'] == '組織法規')]['最新異動日'].iloc[0] if ((art['機關'] == name) & (art['法規類別'] == '組織法規')).any() else None),

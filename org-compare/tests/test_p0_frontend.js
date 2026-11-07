@@ -7,17 +7,17 @@ const check = (c, m) => out.push((c ? 'PASS ' : 'FAIL ') + m);
   const errs = []; pg.on('pageerror', e => errs.push(String(e))); pg.on('console', m => { if (m.type() === 'error' && !/blob:x/.test(m.text())) errs.push(m.text()); }); // blob:x 為測試攔截 CSV 下載所致，非頁面錯誤
   const dialogs = []; pg.on('dialog', async d => { dialogs.push(d.message()); await d.dismiss(); });
   await pg.goto('file://' + (process.env.INDEX_HTML || (__dirname + '/../output/index.html'))); await pg.waitForSelector('#alist .card', { timeout: 30000 });
-  // 行政執行署查詢
-  await pg.fill('#q', '法務部行政執行署'); await pg.waitForTimeout(300);
+  // 駐外機構查詢
+  await pg.fill('#q', '駐外機構'); await pg.waitForTimeout(300);
   const card = await pg.$eval('#alist .card', e => e.textContent);
-  check(/員額 未取得（無編制表）/.test(card) && !/員額 0/.test(card), `行政執行署卡片：${card.replace(/\s+/g, ' ').slice(0, 80)}`);
+  check(/員額 不適用（依審查指示排除）/.test(card) && !/員額 0/.test(card), `駐外機構卡片：${card.replace(/\s+/g, ' ').slice(0, 80)}`);
   await pg.click('#alist .card'); await pg.waitForTimeout(300);
   const kp = await pg.$$eval('.kpi', els => els.map(e => e.textContent.replace(/\s+/g, ' ')));
-  check(kp[0].includes('未取得') && !/^0編制/.test(kp[0]), `行政執行署 KPI 員額：${kp[0]}`);
-  check(kp.every(k => !/^0/.test(k) || /兼/.test(k)), '行政執行署 KPI 無 0 值');
-  // 以行政執行署為目標：±50%
+  check(kp[0].includes('不適用') && !/^0編制/.test(kp[0]), `駐外機構 KPI 員額：${kp[0]}`);
+  check(kp.every(k => !/^0/.test(k) || /兼/.test(k)), '駐外機構 KPI 無 0 值');
+  // 以駐外機構為目標：±50%
   await pg.click('#toCompare'); await pg.waitForTimeout(400);
-  check(/員額 未取得/.test(await pg.textContent('#ctarget')), '目標列顯示員額未取得');
+  check(/員額 不適用/.test(await pg.textContent('#ctarget')), '目標列顯示員額未取得');
   await pg.click('#nearBtn'); await pg.waitForTimeout(300);
   check(dialogs.length === 1 && (await pg.inputValue('#nmin')) === '' && (await pg.inputValue('#nmax')) === '', `±50% 被擋下並提示（nmin='${await pg.inputValue('#nmin')}', nmax='${await pg.inputValue('#nmax')}'）`);
   // 取消排除後，未知值不進平均／中位
@@ -25,15 +25,15 @@ const check = (c, m) => out.push((c ? 'PASS ' : 'FAIL ') + m);
   await pg.waitForTimeout(300);
   const stat = await pg.$$eval('#ctable tr.stat td', tds => tds.map(t => t.textContent));
   const rowsAll = await pg.$$eval('#ctable tbody tr', trs => trs.map(t => t.children[0].textContent));
-  check(rowsAll.some(r => r.includes('法務部行政執行署')) && /n＝/.test(stat[0]), `取消排除後行政執行署在表內；統計列顯示樣本數：${stat[0]}`);
+  check(rowsAll.some(r => r.includes('駐外機構')) && /n＝/.test(stat[0]), `取消排除後駐外機構在表內；統計列顯示樣本數：${stat[0]}`);
   const hcIdx = await pg.$$eval('#ctable thead th', ths => ths.findIndex(t => t.textContent.startsWith('員額合計')));
   const medianCell = stat[hcIdx]; const nCount = Number((stat[0].match(/n＝(\d+)/) || [])[1]);
   const numericRows = await pg.$$eval('#ctable tbody tr:not(.stat)', (trs, i) => trs.map(t => t.children[i].textContent).filter(v => /^\d+$/.test(v)).length, hcIdx);
   check(nCount === numericRows && medianCell !== '0', `中位數有效樣本 n=${nCount} 等於數值列數 ${numericRows}，中位數=${medianCell}`);
-  // 匯出 CSV 內容：行政執行署員額空白
+  // 匯出 CSV 內容：駐外機構員額空白
   const csvRows = await pg.evaluate(() => { const a = document.createElement('a'); let s = ''; const orig = URL.createObjectURL; URL.createObjectURL = (blob) => { blob.text().then(t => window.__csv = t); return 'blob:x'; }; document.getElementById('csvBtn').click(); URL.createObjectURL = orig; return new Promise(r => setTimeout(() => r(window.__csv), 300)); });
-  const fin = (csvRows || '').split(/\r?\n/).find(l => l.startsWith('"法務部行政執行署"'));
-  check(fin && fin.split(',')[1 + (await pg.$$eval('#colPick label.on', ls => ls.map(l => l.textContent))).indexOf('員額合計') + 0] !== '"0"' && !/,"0",/.test(fin.slice(0, 40)), `CSV 行政執行署列：${(fin || '').slice(0, 60)}`);
+  const fin = (csvRows || '').split(/\r?\n/).find(l => l.startsWith('"駐外機構"'));
+  check(fin && fin.split(',')[1 + (await pg.$$eval('#colPick label.on', ls => ls.map(l => l.textContent))).indexOf('員額合計') + 0] !== '"0"' && !/,"0",/.test(fin.slice(0, 40)), `CSV 駐外機構列：${(fin || '').slice(0, 60)}`);
   // 恢復預設排除後：農業部預設群組不含教育部
   for (const c of await pg.$$('#cExcl .chip')) { if ((await c.textContent()).includes('不可比較')) await c.click(); }
   await pg.fill('#cq', '農業部'); await pg.press('#cq', 'Enter'); await pg.waitForTimeout(400);
@@ -74,10 +74,10 @@ const check = (c, m) => out.push((c ? 'PASS ' : 'FAIL ') + m);
   const det2 = await pg.$eval('#adetail', e => e.textContent);
   check(/已對源（官方附件 FileId 0000427371/.test(det2) && /控制列/.test(det2) && /217/.test(det2) && !/434/.test(det2), '臺中醫院詳情：已對源（官方附件 0000427371）、控制列說明、217 而非 434');
   // 無編制表機關：依據「無」須明示；「有」須給條號與未加總說明
-  await pg.fill('#q', '法務部矯正署'); await pg.waitForTimeout(300);
-  const cardsZ = await pg.$$('#alist .card'); for (const c of cardsZ) { if ((await c.textContent()).startsWith('法務部矯正署') && !(await c.textContent()).includes('監獄')) { await c.click(); break; } } await pg.waitForTimeout(300);
+  await pg.fill('#q', '駐外機構'); await pg.waitForTimeout(300);
+  const cardsZ = await pg.$$('#alist .card'); for (const c of cardsZ) { if ((await c.textContent()).startsWith('駐外機構') && !(await c.textContent()).includes('監獄')) { await c.click(); break; } } await pg.waitForTimeout(300);
   const det3 = await pg.$eval('#adetail', e => e.textContent);
-  check(/法定員額依據：尚未完成結構化（待確認）（/.test(det3) && /尚未完成員額結構化/.test(det3) && !/法定員額依據：無/.test(det3) && !/，條文）/.test(det3) && /未取得（無編制表）/.test(det3), '矯正署詳情：主文案「尚未完成結構化（待確認）」，括號內有說明與法規連結，無粗體「無」、無「，條文）」');
+  check(/法定員額依據：尚未完成結構化（待確認）（/.test(det3) && /尚未完成其員額規定之結構化/.test(det3) && !/法定員額依據：無/.test(det3) && !/，條文）/.test(det3) && /不適用（依審查指示排除）/.test(det3) && /依審查指示排除/.test(det3), '駐外機構詳情：主文案「尚未完成結構化（待確認）」，括號內有說明與法規連結，無粗體「無」、無「，條文）」');
   await pg.fill('#q', '玉里分院'); await pg.waitForTimeout(300); await pg.click('#alist .card'); await pg.waitForTimeout(300);
   const det5 = await pg.$eval('#adetail', e => e.textContent);
   check(/465/.test(det5) && /人工修正/.test(det5) && !/待審（員額不完整）/.test(det5), '玉里分院：改列後顯示 465 與人工修正標記，不再顯示待審');
