@@ -28,6 +28,7 @@ def main():
     # 來源提交：程式與總表所在的 git 提交（有未提交變更時加 +dirty）；可用 --source-commit 覆寫
     if a.source_commit:
         data['source_commit'] = a.source_commit
+
     else:
         try:
             import subprocess
@@ -37,6 +38,13 @@ def main():
             data['source_commit'] = h + ('+dirty' if dirty else '') if h else None
         except Exception:
             data['source_commit'] = None
+    mp = os.path.join(HERE, 'manifest', 'sources.json')
+    if os.path.exists(mp):   # manifest 摘要（更新作業面板用）
+        import hashlib as _h
+        _m = json.load(open(mp, encoding='utf-8'))
+        data['manifest_info'] = {'generated_at': _m.get('generated_at'), 'agencies': len(_m.get('agencies', [])), 'laws': sum(len(x['laws']) for x in _m.get('agencies', [])),
+                                 'shared_laws': len(_m.get('shared_laws', {})), 'overrides': sum(len(x['overrides']) for x in _m.get('agencies', [])),
+                                 'sha256': _h.sha256(open(mp, 'rb').read()).hexdigest()[:12], 'master_sha256': (_m.get('master') or {}).get('sha256', '')[:12]}
     raw = json.dumps(data, ensure_ascii=False, separators=(',', ':')).encode('utf-8')
     html = open(a.template, encoding='utf-8').read()
     if a.no_compress:

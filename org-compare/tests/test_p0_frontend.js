@@ -91,6 +91,34 @@ const check = (c, m) => out.push((c ? 'PASS ' : 'FAIL ') + m);
   await pg.fill('#q', '數位發展部'); await pg.waitForTimeout(300); const cD = await pg.$$('#alist .card'); for (const c of cD) { if ((await c.textContent()).startsWith('數位發展部2級')) { await c.click(); break; } } await pg.waitForTimeout(300);
   const detD = await pg.$eval('#adetail', e => e.textContent);
   check(/聘用／約僱人數（特例）/.test(detD) && /不得超過一百人/.test(detD), '數位發展部詳情：組織法第7條聘用上限 100 列為特例');
+  // 三項修正：軍事／國防排除、法規來源 anchor、臺中 PDF 按鈕
+  await pg.click('.tabs button[data-tab=search]'); await pg.fill('#q', '臺中醫院'); await pg.waitForTimeout(300); await pg.click('#alist .card'); await pg.waitForTimeout(300);
+  const lawA = await pg.$$eval('#adetail .muted a', as => as.map(a => [a.getAttribute('href'), a.textContent]));
+  check(lawA.every(([h]) => h && !h.includes('；') && (h.match(/https?:\/\//g) || []).length === 1), `臺中醫院詳情每個 anchor 僅一個 URL（${lawA.length} 個）`);
+  check(lawA.filter(([h, t]) => /pcode=L0000053|pcode=D0000155/.test(h)).length === 2, '臺中醫院：兩部共用準則各自獨立 href');
+  const pdfA = lawA.find(([h, t]) => t === '編制表 PDF'); const detT = await pg.$eval('#adetail', e => e.textContent);
+  check(pdfA && /FileId=0000427371$/.test(pdfA[0]) && /115 年 10 月 30 日/.test(detT) && /0000368769/.test(detT) && !lawA.some(([h]) => /0000368769/.test(h)), '臺中醫院：PDF 按鈕指向新附件 0000427371、文字含 115-10-30；舊 0000368769 僅文字、無按鈕');
+  await pg.fill('#q', '國防部'); await pg.waitForTimeout(300); const cN = await pg.$$('#alist .card'); for (const c of cN) { if ((await c.textContent()).startsWith('國防部2級')) { await c.click(); break; } } await pg.waitForTimeout(300);
+  const lawN = await pg.$$eval('#adetail .muted a', as => as.map(a => a.getAttribute('href'))); check(lawN.filter(h => /pcode=F0000001$/.test(h)).length === 1, '國防部（單法）：組織法 anchor 一個、URL 單一');
+  await pg.fill('#q', '行政院公共工程委員會'); await pg.waitForTimeout(300); await pg.click('#alist .card'); await pg.waitForTimeout(300);
+  const lawG = await pg.$$eval('#adetail .muted a', as => as.map(a => a.getAttribute('href'))); check(lawG.every(h => !h.includes('；')) && lawG.some(h => /pcode=A0010037$/.test(h)), '工程會（條文解析）：法規 anchor URL 單一');
+  await pg.click('#toCompare'); await pg.waitForTimeout(300); await pg.fill('#cq', '農業部'); await pg.press('#cq', 'Enter'); await pg.waitForTimeout(400);
+  const milChip = await pg.$$eval('#cExcl .chip', cs => cs.filter(c => c.textContent.includes('軍事／國防')).map(c => c.className));
+  const grpOff = await pg.$$eval('#ctable tbody tr:not(.stat)', trs => trs.map(t => t.children[0].textContent));
+  check(milChip.length === 1 && !/\bon\b/.test(milChip[0]) && grpOff.some(g => g.startsWith('國防部')), `農業部群組（軍事／國防排除預設關閉，比較定義未改）：含國防部本部（${grpOff.length} 列）`);
+  for (const c of await pg.$$('#cExcl .chip')) { if ((await c.textContent()).includes('軍事／國防')) await c.click(); } await pg.waitForTimeout(300);
+  const grpOn = await pg.$$eval('#ctable tbody tr:not(.stat)', trs => trs.map(t => t.children[0].textContent));
+  check(!grpOn.some(g => g.startsWith('國防部')) && grpOn.length === grpOff.length - 1, '開啟軍事／國防排除後國防部本部移出群組（依部會欄，僅 −1）');
+  await pg.fill('#cq', '國軍退除役官兵輔導委員會臺北市榮民服務處'); await pg.press('#cq', 'Enter'); await pg.waitForTimeout(400);
+  const grpV = await pg.$$eval('#ctable tbody tr:not(.stat)', trs => trs.map(t => t.children[0].textContent));
+  check(grpV.some(g => g.includes('新北市榮民服務處')) && grpV.some(g => g.includes('高雄市榮民服務處')), `退輔會榮民服務處群組在軍事／國防排除開啟下仍完整（${grpV.length} 列，退輔會不因名稱含「軍」被排除）`);
+  for (const c of await pg.$$('#cExcl .chip')) { if ((await c.textContent()).includes('軍事／國防')) await c.click(); } await pg.waitForTimeout(200);
+  await pg.click('.tabs button[data-tab=search]'); await pg.waitForTimeout(200);
+  // 更新作業面板（只提示與複製指令，不執行更新）
+  await pg.click('.tabs button[data-tab=info]'); await pg.waitForTimeout(300);
+  const updTxt = await pg.$eval('#updPrompt', e => e.value); const updBtn = await pg.$('#copyUpd'); const verTxt = await pg.textContent('#version');
+  check(updBtn && /update_dryrun\.py/.test(updTxt) && /不合併、不部署/.test(updTxt) && /manifest：/.test(verTxt) && /dryrun\.yml/.test(await pg.$eval('#version', e => e.innerHTML)), '狀態頁「資料更新作業」面板：顯示 manifest 摘要、可複製標準指令、連到 dry-run 工作流程');
+  await pg.click('.tabs button[data-tab=search]'); await pg.waitForTimeout(200);
   const bi = await pg.textContent('#buildinfo'); check(/來源提交 [0-9a-f]{7}/.test(bi), `建檔資訊含來源提交：${bi}`);
   // P1：行政院區間
   await pg.fill('#q', '行政院'); await pg.waitForTimeout(300); const c0 = await pg.$$('#alist .card'); for (const c of c0) { if ((await c.textContent()).startsWith('行政院1級')) { await c.click(); break; } } await pg.waitForTimeout(300);

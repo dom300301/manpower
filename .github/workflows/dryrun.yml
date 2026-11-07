@@ -1,0 +1,25 @@
+# 更新 dry-run（只產報告，不改資料、不發布）。手動觸發：GitHub → Actions → 「檢查更新（dry-run）」→ Run workflow。
+# 產出 artifact：reports/dryrun_<日期>/summary.json、diff.md、pending_updates.json。核准後再依操作手冊第四節在本機或請 Claude 執行更新。
+name: 檢查更新（dry-run）
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  dryrun:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install pandas openpyxl pdfplumber
+      - name: 下載開放資料並比對 manifest
+        working-directory: org-compare
+        run: |
+          mkdir -p moj_cache
+          python3 update_dryrun.py --manifest manifest/sources.json --cache moj_cache --out reports/dryrun_$(date +%Y%m%d)
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dryrun-report
+          path: org-compare/reports/
