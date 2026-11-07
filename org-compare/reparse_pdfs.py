@@ -62,10 +62,14 @@ def parse_pdf(path):
                         continue  # 公報頁首／頁碼雜訊列
                     if all(c in HEADER_SET for c in nonempty):
                         continue  # 表頭列
-                    if nonempty[0].startswith('合計'):
-                        nums = [cn_num(c) for c in cells[1:] if re.match(r'^[○〇零一二三四五六七八九十百千0-9]', c) and cn_num(c) is not None]
-                        if nums: total = nums[-1]
-                        continue
+                    # 合計列：非員額／備考儲存格含「合計」字樣（可能因上一列溢出而非列首），且員額欄有數字、官等職等欄空白
+                    ctrl_cells = [c for c in cells[:-1] if re.search(r'合計|總計|小計|共計', c)]
+                    if ctrl_cells:
+                        num_cells = [c for c in cells[1:] if re.match(r'^[○〇零一二三四五六七八九十百千0-9]', c) and cn_num(c) is not None]
+                        other = [c for c in cells if c and c not in ctrl_cells and c not in num_cells and not re.fullmatch(r'[（(][^）)]*[）)]', c)]
+                        if num_cells and not other:
+                            total = cn_num(num_cells[-1]); continue
+                        # 不確定（還有其他內容）：不當合計、也不當職位，留給人工審（以職稱帶合計字樣進入明細，建檔時標疑似控制列）
                     n_idx = None
                     for i in range(len(cells) - 1, 0, -1):
                         if NUM_RE.match(cells[i]):
