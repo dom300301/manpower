@@ -7,15 +7,15 @@ const check = (c, m) => out.push((c ? 'PASS ' : 'FAIL ') + m);
   const errs = []; pg.on('pageerror', e => errs.push(String(e))); pg.on('console', m => { if (m.type() === 'error' && !/blob:x/.test(m.text())) errs.push(m.text()); }); // blob:x 為測試攔截 CSV 下載所致，非頁面錯誤
   const dialogs = []; pg.on('dialog', async d => { dialogs.push(d.message()); await d.dismiss(); });
   await pg.goto('file://' + (process.env.INDEX_HTML || (__dirname + '/../output/index.html'))); await pg.waitForSelector('#alist .card', { timeout: 30000 });
-  // 財政部查詢
-  await pg.fill('#q', '財政部'); await pg.waitForTimeout(300);
+  // 工程會查詢
+  await pg.fill('#q', '行政院公共工程委員會'); await pg.waitForTimeout(300);
   const card = await pg.$eval('#alist .card', e => e.textContent);
-  check(/員額 未取得（需人工輸入）/.test(card) && !/員額 0/.test(card), `財政部卡片：${card.replace(/\s+/g, ' ').slice(0, 80)}`);
+  check(/員額 未取得（無編制表）/.test(card) && !/員額 0/.test(card), `工程會卡片：${card.replace(/\s+/g, ' ').slice(0, 80)}`);
   await pg.click('#alist .card'); await pg.waitForTimeout(300);
   const kp = await pg.$$eval('.kpi', els => els.map(e => e.textContent.replace(/\s+/g, ' ')));
-  check(kp[0].includes('未取得') && !/^0編制/.test(kp[0]), `財政部 KPI 員額：${kp[0]}`);
-  check(kp.every(k => !/^0/.test(k) || /兼/.test(k)), '財政部 KPI 無 0 值');
-  // 以財政部為目標：±50%
+  check(kp[0].includes('未取得') && !/^0編制/.test(kp[0]), `工程會 KPI 員額：${kp[0]}`);
+  check(kp.every(k => !/^0/.test(k) || /兼/.test(k)), '工程會 KPI 無 0 值');
+  // 以工程會為目標：±50%
   await pg.click('#toCompare'); await pg.waitForTimeout(400);
   check(/員額 未取得/.test(await pg.textContent('#ctarget')), '目標列顯示員額未取得');
   await pg.click('#nearBtn'); await pg.waitForTimeout(300);
@@ -25,36 +25,37 @@ const check = (c, m) => out.push((c ? 'PASS ' : 'FAIL ') + m);
   await pg.waitForTimeout(300);
   const stat = await pg.$$eval('#ctable tr.stat td', tds => tds.map(t => t.textContent));
   const rowsAll = await pg.$$eval('#ctable tbody tr', trs => trs.map(t => t.children[0].textContent));
-  check(rowsAll.some(r => r.includes('財政部')) && /n＝/.test(stat[0]), `取消排除後財政部在表內；統計列顯示樣本數：${stat[0]}`);
+  check(rowsAll.some(r => r.includes('行政院公共工程委員會')) && /n＝/.test(stat[0]), `取消排除後工程會在表內；統計列顯示樣本數：${stat[0]}`);
   const hcIdx = await pg.$$eval('#ctable thead th', ths => ths.findIndex(t => t.textContent.startsWith('員額合計')));
   const medianCell = stat[hcIdx]; const nCount = Number((stat[0].match(/n＝(\d+)/) || [])[1]);
   const numericRows = await pg.$$eval('#ctable tbody tr:not(.stat)', (trs, i) => trs.map(t => t.children[i].textContent).filter(v => /^\d+$/.test(v)).length, hcIdx);
   check(nCount === numericRows && medianCell !== '0', `中位數有效樣本 n=${nCount} 等於數值列數 ${numericRows}，中位數=${medianCell}`);
-  // 匯出 CSV 內容：財政部員額空白
+  // 匯出 CSV 內容：工程會員額空白
   const csvRows = await pg.evaluate(() => { const a = document.createElement('a'); let s = ''; const orig = URL.createObjectURL; URL.createObjectURL = (blob) => { blob.text().then(t => window.__csv = t); return 'blob:x'; }; document.getElementById('csvBtn').click(); URL.createObjectURL = orig; return new Promise(r => setTimeout(() => r(window.__csv), 300)); });
-  const fin = (csvRows || '').split(/\r?\n/).find(l => l.startsWith('"財政部"'));
-  check(fin && fin.split(',')[1 + (await pg.$$eval('#colPick label.on', ls => ls.map(l => l.textContent))).indexOf('員額合計') + 0] !== '"0"' && !/,"0",/.test(fin.slice(0, 40)), `CSV 財政部列：${(fin || '').slice(0, 60)}`);
+  const fin = (csvRows || '').split(/\r?\n/).find(l => l.startsWith('"行政院公共工程委員會"'));
+  check(fin && fin.split(',')[1 + (await pg.$$eval('#colPick label.on', ls => ls.map(l => l.textContent))).indexOf('員額合計') + 0] !== '"0"' && !/,"0",/.test(fin.slice(0, 40)), `CSV 工程會列：${(fin || '').slice(0, 60)}`);
   // 恢復預設排除後：農業部預設群組不含教育部
   for (const c of await pg.$$('#cExcl .chip')) { if ((await c.textContent()).includes('不可比較')) await c.click(); }
   await pg.fill('#cq', '農業部'); await pg.press('#cq', 'Enter'); await pg.waitForTimeout(400);
   const grp = await pg.$$eval('#ctable tbody tr:not(.stat)', trs => trs.map(t => t.children[0].textContent));
-  check(!grp.some(g => g.startsWith('教育部')) && !grp.some(g => g.startsWith('財政部')), `農業部預設群組（${grp.length} 列）不含教育部、財政部`);
-  // B1 回歸：範圍篩選 null 安全（取消排除後）
+  check(!grp.some(g => g.startsWith('教育部')) && grp.some(g => g.startsWith('財政部')), `農業部預設群組（${grp.length} 列）不含教育部（Codex 註記）、含財政部（已人工補登）`);
+  // B1 回歸：範圍篩選 null 安全（取消排除後；以國家發展委員會為目標，工程會為 null 機關）
+  await pg.fill('#cq', '國家發展委員會'); await pg.press('#cq', 'Enter'); await pg.waitForTimeout(400);
   for (const c of await pg.$$('#cExcl .chip')) { if ((await c.textContent()).includes('不可比較')) await c.click(); }
   await pg.waitForTimeout(200);
   const names = async () => pg.$$eval('#ctable tbody tr:not(.stat)', trs => trs.map(t => t.children[0].textContent.replace(/\s*不可比較$/, '')));
   const noLimit = await names();
-  check(noLimit.includes('財政部'), `B1-4 無上下限、取消排除：null 機關可留在列表（財政部在列，顯示未取得）`);
+  check(noLimit.includes('行政院公共工程委員會'), `B1-4 無上下限、取消排除：null 機關可留在列表（工程會在列，顯示未取得）`);
   const statN = Number(((await pg.$eval('#ctable tr.stat td', t => t.textContent)).match(/n＝(\d+)/) || [])[1]);
   const numericN = await pg.$$eval('#ctable tbody tr:not(.stat):not(.target)', trs => trs.filter(t => /^\d+$/.test(t.children[3].textContent)).length);  // 群組統計不含目標列
   check(statN === numericN, `B1-4 統計列 n＝${statN} 等於數值列數 ${numericN}（不含 null）`);
   await pg.fill('#nmax', '100'); await pg.waitForTimeout(300); const upper = await names();
-  check(!upper.includes('財政部') && upper.every(n => n !== '財政部'), `B1-1 上限 100、下限空：null 機關不在清單（${upper.length} 列）`);
+  check(!upper.includes('行政院公共工程委員會') && upper.every(n => n !== '行政院公共工程委員會'), `B1-1 上限 100、下限空：null 機關不在清單（${upper.length} 列）`);
   await pg.fill('#nmin', '0'); await pg.waitForTimeout(300); const both = await names();
-  check(!both.includes('財政部'), `B1-2 範圍 0–100：null 機關不在清單（${both.length} 列）`);
+  check(!both.includes('行政院公共工程委員會'), `B1-2 範圍 0–100：null 機關不在清單（${both.length} 列）`);
   await pg.fill('#nmin', ''); await pg.fill('#nmax', ''); await pg.waitForTimeout(200);
-  dialogs.length = 0; await pg.fill('#cq', '財政部'); await pg.press('#cq', 'Enter'); await pg.waitForTimeout(300); await pg.click('#nearBtn'); await pg.waitForTimeout(300);
-  check(dialogs.length === 1 && (await pg.inputValue('#nmin')) === '' && (await pg.inputValue('#nmax')) === '', 'B1-3 財政部為目標按 ±50% 仍被阻擋，不形成 [0,0]');
+  dialogs.length = 0; await pg.fill('#cq', '行政院公共工程委員會'); await pg.press('#cq', 'Enter'); await pg.waitForTimeout(300); await pg.click('#nearBtn'); await pg.waitForTimeout(300);
+  check(dialogs.length === 1 && (await pg.inputValue('#nmin')) === '' && (await pg.inputValue('#nmax')) === '', 'B1-3 工程會為目標按 ±50% 仍被阻擋，不形成 [0,0]');
   for (const c of await pg.$$('#cExcl .chip')) { if ((await c.textContent()).includes('不可比較')) await c.click(); }
   await pg.waitForTimeout(200);
   // 狀態頁

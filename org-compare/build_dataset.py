@@ -125,9 +125,10 @@ def apply_fixes(ov, det, fixes_path):
         if act == '新增列':
             sub = det[det['機關名稱'] == ag]
             base = sub.iloc[0].to_dict() if len(sub) else {c: None for c in det.columns}
-            row = dict(base); row.update({'序': str(int(pd.to_numeric(sub['序'], errors='coerce').max() or 0) + 1 + len([a for a in add if a['機關名稱'] == ag])),
+            mx = pd.to_numeric(sub['序'], errors='coerce').max(); mx = 0 if pd.isna(mx) else int(mx)   # 無任何明細列（需人工輸入）之機關自序 1 起
+            row = dict(base); row.update({'機關名稱': ag, '序': str(mx + 1 + len([a for a in add if a['機關名稱'] == ag])),
                        '單位': f.get('單位'), '職稱': f['職稱'], '官等': f.get('官等'), '職等': f.get('職等'), '員額': str(f['員額']),
-                       '員額原文': None, '括號員額_兼任': None, '備註': f.get('備註'), '原始列': None, '修正紀錄': '人工補登：' + note, 'PDF頁': f.get('PDF頁')})
+                       '員額原文': f.get('員額原文'), '括號員額_兼任': f.get('括號員額_兼任'), '備註': f.get('備註'), '原始列': None, '修正紀錄': '人工補登：' + note, 'PDF頁': f.get('PDF頁')})
             add.append(row); log['entries'].append(f)
         elif act == '刪除列':
             mask = (det['機關名稱'] == ag) & (det['職稱'] == f['職稱']) & (det['單位'].fillna('') == (f.get('單位') or ''))
@@ -152,8 +153,15 @@ def apply_fixes(ov, det, fixes_path):
             log['source_check'] = f
         else:
             print(f'【警告】不認識的動作 {act}')
+    # 原表無法程式讀取（僅空列／「()」）而已人工轉錄補登之機關：原表殘留列標記為轉錄取代，不計入
+    det['轉錄取代'] = False
+    for ag in {a['機關名稱'] for a in add}:
+        if any(f['機關'] == ag and f['動作'] == '改合計' for f in fixes):
+            m = (det['機關名稱'] == ag) & det['職稱'].isna() & (det['員額原文'].isna() | det['員額原文'].isin(['()', '（）']))
+            det.loc[m, '轉錄取代'] = True
     if add:
         det = pd.concat([det, pd.DataFrame(add)], ignore_index=True)
+        det['轉錄取代'] = det['轉錄取代'].fillna(False)
     print(f'套用人工修正 {len(fixes)} 筆（{len(fixlog)} 個機關）')
     return ov, det, fixlog
 
@@ -321,6 +329,7 @@ def classify_rows(det):
         ag = r['機關名稱']; st = seen.setdefault(ag, set())
         q = row_quality(r, {'agency_last': bool(agency_last.iloc[i]), 'sub_last': bool(sub_last.iloc[i]), 'page_last': bool(page_last.iloc[i])})
         if r.get('列品質_預設'): q = (r['列品質_預設'], r['單位重組說明'])
+        if r.get('轉錄取代') is True: q = ('碎片列（原表無法讀取，已人工轉錄）', '原表殘留之空列（職稱空、員額原文「()」），該機關明細已依人工轉錄補登，此列不計入')
         if q[0] is None:
             fk = fragment_kind(r, st)
             if fk: q = (fk, f'職稱「{str(r["職稱"])[:30]}」且員額、官等、職等皆空：{fk[4:-1]}')
