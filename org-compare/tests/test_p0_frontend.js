@@ -38,7 +38,7 @@ const check = (c, m) => out.push((c ? 'PASS ' : 'FAIL ') + m);
   for (const c of await pg.$$('#cExcl .chip')) { if ((await c.textContent()).includes('不可比較')) await c.click(); }
   await pg.fill('#cq', '農業部'); await pg.press('#cq', 'Enter'); await pg.waitForTimeout(400);
   const grp = await pg.$$eval('#ctable tbody tr:not(.stat)', trs => trs.map(t => t.children[0].textContent));
-  check(!grp.some(g => g.startsWith('教育部')) && grp.some(g => g.startsWith('財政部')), `農業部預設群組（${grp.length} 列）不含教育部（Codex 註記）、含財政部（已人工補登）`);
+  check(grp.some(g => g.startsWith('教育部')) && grp.some(g => g.startsWith('財政部')), `農業部預設群組（${grp.length} 列）含教育部（Codex 已釐清）、財政部（已人工補登）`);
   // B1 回歸：範圍篩選 null 安全（取消排除後；以國家發展委員會為目標，工程會為 null 機關）
   await pg.fill('#cq', '國家發展委員會'); await pg.press('#cq', 'Enter'); await pg.waitForTimeout(400);
   for (const c of await pg.$$('#cExcl .chip')) { if ((await c.textContent()).includes('不可比較')) await c.click(); }
@@ -63,7 +63,7 @@ const check = (c, m) => out.push((c ? 'PASS ' : 'FAIL ') + m);
   const flaggedTxt = await pg.textContent('#flagged');
   const flagRows = await pg.$$eval('#flagged tbody tr', trs => trs.map(t => t.children[0].textContent));
   const expected = JSON.parse(require('fs').readFileSync(process.env.AGENCIES_JSON || (__dirname + '/../output/agencies_snapshot.json'), 'utf8')).agencies.filter(a => !a.可比較).length;
-  check(new RegExp(`共 ${expected} 個`).test(flaggedTxt) && flagRows.length === expected && flagRows.includes('教育部') && !flagRows.includes('衛生福利部臺中醫院') && !flagRows.includes('衛生福利部恆春旅遊醫院'), `狀態頁不可比較 ${flagRows.length} 個（與資料推導 ${expected} 一致），含教育部，不含臺中醫院（已對源）與恆春（已校正）`);
+  check(new RegExp(`共 ${expected} 個`).test(flaggedTxt) && flagRows.length === expected && !flagRows.includes('教育部') && !flagRows.includes('衛生福利部臺中醫院') && !flagRows.includes('衛生福利部恆春旅遊醫院'), `狀態頁不可比較 ${flagRows.length} 個（與資料推導 ${expected} 一致），不含教育部（Codex 已釐清）、臺中醫院（已對源）、恆春（已校正）`);
   // 藥試所明細與臺中醫院顯示
   await pg.click('.tabs button[data-tab=search]'); await pg.fill('#q', '農業藥物試驗所'); await pg.waitForTimeout(300); await pg.click('#alist .card'); await pg.waitForTimeout(300);
   const det = await pg.$eval('#adetail', e => e.textContent);

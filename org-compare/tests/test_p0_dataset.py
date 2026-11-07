@@ -34,13 +34,14 @@ check([p for p in P if p['機關'] == '交通部鐵道局北部工程分局' and
 
 # P0-B 品質旗標
 mixed = [r for r in A if 'Codex抽樣不一致' in r['品質註記']]
-check(len(mixed) == 12 and all(not r['可比較'] for r in mixed), f'Codex抽樣不一致 {len(mixed)} 個機關全部不可比較（11 相符混合 + 疾管署；工程材料技術所（碎片列）與軍備局（審查指示只採文職表）之 Codex 差異已由人工校正狀態取代）')
-check(not by['教育部']['可比較'] and by['教育部']['驗算結果'] == '相符', '教育部：驗算結果相符但品質註記 Codex → 不可比較')
+cleared = [r for r in A if 'Codex差異已釐清（已對源）' in r['品質註記']]
+check(len(mixed) == 0 and len(cleared) == 12 and all(r['可比較'] for r in cleared if r['驗算結果'] == '相符') and all(r['來源核對狀態'].startswith('已對源（Codex') for r in cleared), f'Codex抽樣不一致 {len(mixed)} 個；12 個機關之 Codex 差異已逐筆釐清並記於來源核對（審查同意 2026-11-07）→ 可比較')
+check(by['教育部']['可比較'] and by['教育部']['驗算結果'] == '相符' and 'Codex差異已釐清（已對源）' in by['教育部']['品質註記'], '教育部：Codex 差異已釐清 → 可比較')
 dept_group = [r['機關'] for r in A if r['層級'] == 2 and r['類型'] == '部' and r['可比較']]
-check('教育部' not in dept_group and '財政部' in dept_group and '農業部' in dept_group, f'農業部預設部級群組不含教育部（Codex 註記）、含財政部（已補登）：{dept_group}')
+check('教育部' in dept_group and '財政部' in dept_group and '農業部' in dept_group, f'農業部預設部級群組含教育部（Codex 已釐清）、財政部（已補登）：{dept_group}')
 check(all(r['驗算結果'] in ('相符', '不相符', '找不到合計', '需人工輸入', '無編制表', '條文解析（無編制表）') for r in A), '驗算結果皆為列舉值')
 check(all(isinstance(r['可比較'], bool) for r in A), '可比較為布林')
-check(all(r['可比較'] == (r['驗算結果'] in ('相符', '條文解析（無編制表）') and r['資料狀態'] in ('可用', '可用（區間）', '可用（條文區間）') and all(x in {'人工補登（已對源）', '表內驗算相符（合計取自明細控制列）', '警示：頁眉'} or x.startswith(('括號語意待審', '員額回填（原文字形解析', '法定員額（條文區間）')) for x in r['品質註記']) and not r['來源核對狀態'].startswith('官方合計待核')) for r in A), '可比較 == 規則重算結果（驗算相符 ∧ 可用／可用（區間） ∧ 註記皆白名單或括號語意待審 ∧ 非官方合計待核）')
+check(all(r['可比較'] == (r['驗算結果'] in ('相符', '條文解析（無編制表）') and r['資料狀態'] in ('可用', '可用（區間）', '可用（條文區間）') and all(x in {'人工補登（已對源）', '表內驗算相符（合計取自明細控制列）', '警示：頁眉'} or x.startswith(('括號語意待審', '員額回填（原文字形解析', '法定員額（條文區間）', 'Codex差異已釐清', '驗算結果由程式重算')) for x in r['品質註記']) and not r['來源核對狀態'].startswith('官方合計待核')) for r in A), '可比較 == 規則重算結果（驗算相符 ∧ 可用／可用（區間） ∧ 註記皆白名單或括號語意待審 ∧ 非官方合計待核）')
 pg = by['行政院人事行政總處公務人力發展學院']
 check(pg['可比較'] and '人工補登（已對源）' in pg['品質註記'] and pg['指標']['員額合計'] == 91, '公務人力發展學院：人工補登有來源／頁碼／對源且驗算相符 → 可比較')
 n_flag = sum(1 for r in A if not r['可比較'])

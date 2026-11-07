@@ -425,7 +425,7 @@ COUNT_METRICS = ['員額合計', '副首長數', '副首長兼任數', '主任�
                  '簡任員額', '簡任主管', '簡任非主管', '簡任員額_法定', '簡任非主管_法定', '得列簡任人數', '得列薦任人數', '薦任員額', '委任員額',
                  '其他官等員額', '幕僚單位員額', '主管員額', '暫列職稱數', '得列人數', '簡任非主管比', '簡任比', '主管比', '幕僚比']
 WHITELIST_NOTES = {'人工補登（已對源）', '表內驗算相符（合計取自明細控制列）', '警示：頁眉'}
-WHITELIST_PREFIX = ('括號語意待審', '員額回填（原文字形解析', '法定員額（條文區間）')
+WHITELIST_PREFIX = ('括號語意待審', '員額回填（原文字形解析', '法定員額（條文區間）', 'Codex差異已釐清', '驗算結果由程式重算')
 
 def build(master, out, fixes_path=None, attach_units_path=None):
     global ATTACH_UNITS
@@ -602,6 +602,12 @@ def build(master, out, fixes_path=None, attach_units_path=None):
         sc = log['source_check']
         src_status = sc['狀態'] if sc else '依總表（2026-10-31 自全國法規資料庫下載之編制表 PDF）'
         if sc and sc.get('狀態', '').startswith('官方合計待核'): notes.append('官方合計待核')
+        # Codex 抽樣差異已逐筆釐清（來源核對狀態記載原因）→ 註記改為「已釐清」（白名單）
+        if sc and sc.get('狀態', '').startswith('已對源') and 'Codex' in sc.get('狀態', '') and 'Codex抽樣不一致' in notes:
+            notes = [x for x in notes if x != 'Codex抽樣不一致'] + ['Codex差異已釐清（已對源）']
+        # 總表標「需人工輸入」但明細已有數字且有表列合計者：由程式重算驗算結果並註記
+        if result == '需人工輸入' and has_numbers and tbl_total is not None:
+            result = '相符' if int(n.sum()) == tbl_total else '不相符'; notes.append('驗算結果由程式重算（總表原標需人工輸入）')
         # 資料狀態
         if not has_numbers:
             data_state = '未取得（需人工輸入）' if result == '需人工輸入' else ('未取得（無編制表）' if result == '無編制表' else '未取得（明細無數字）')
