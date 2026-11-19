@@ -21,6 +21,22 @@
   R10 中央二、三級簡任非主管 ≤ 二級單位主管×7/10（第9條第5款）
   R11 職稱與列等對照實證分布（rules/title_grades.json）
   R13 舊制（111.9.23 附表三）比率對照
+  C2  一級單位雙副主管（考試院 101.4.26 決議；需人工補單位預算員額）
+  C3  三級署一級業務單位主管列 11-12 之要件（109.1.9 決議）
+  C4  四級機關首長 13 之副首長／幕僚長／一級主管列等配套（112.6.29 決議）
+  C5  公職律師得列簡任 ≤ 員額 1/2（113.8.15 決議）
+  C6  四級一級業務（派出）單位主管上限 8 → 8-9（114.5.8、114.9.4 決議；列出尚未修編者）
+  C7  四級設室輔助單位主管列等一致、不高於業務單位主管（99.10.14、114.9.4 決議）
+  C8  三級首長 13 之輔助單位主管列等 9-10／9（100.3.24 決議、96 核議標準）
+  C9  輔助單位主管職稱 主任／室主任（101.1.19、101.3.1 決議）
+  C10 一條鞭單位主管不得與所屬科長同列等（102.6.13 決議）
+  C11 研究員列等 10 或 10-11 之要件（101.2.16 決議）
+  C12 研究類職稱比照聘任等級不加「以上」（101.9.20 決議）
+  C13 三級署局參議列 10-11；社會工作師改列薦任 6-7（114.10.23 決議）
+  C14 三級社教機構組長列 9-10、研究類兩兩合併比例（101.1.5、101.5.24 決議）
+  C15 工程機關認定：工程類職稱員額 ≥50%（附表三附註六(一)、93.11.4 決議）
+  C16 備註體例：得列應載職等、出缺後改置寫法（100.12.15、100.3.24 決議）
+  C17 四級機關主任秘書限基準法第 2 條但書機關（109.7.9 決議）
 """
 import argparse
 import collections
@@ -127,8 +143,8 @@ def guess_category(name, level, parent, ministry):
         return '中央四級_調查機關', '名稱含調查處／站'
     if re.search(r'監獄|看守所|戒治所|矯正學校|觀護所|技能訓練所|少年輔育院|矯正署', n):
         return '中央四級_矯正機關', '法務部矯正署所屬'
-    if re.search(r'工程|工務|養護|河川分署|水利署', n):
-        return '中央四級_工程機關', '名稱含工程／養護／河川（仍須符合附註六(一)）'
+    if re.search(r'工程|工務|養護工程|河川分署|水資源分署|水利規劃|水利署', n) and not re.search(r'養護中心|老人|護理', n):
+        return '中央四級_工程機關', '名稱含工程／養護工程／河川／水資源（仍須符合附註六(一)）'
     if re.search(r'防疫檢疫|防檢', n):
         return '中央四級_動植物防疫檢疫機關', '名稱'
     if re.search(r'航空站|飛航服務總臺', n):
@@ -155,16 +171,26 @@ def load_or_make_categories(agencies):
                 cats[r['機關']] = r
         print(f'讀取機關類別對照表 {path}（{len(cats)} 機關）')
     missing = [a for a in agencies if a['機關'] not in cats]
-    if missing:
+    changed = 0
+    for a in agencies:   # 已有列但未人工確認者，依最新規則重算初判
+        c = cats.get(a['機關'])
+        if c and not (c.get('人工確認類別') or '').strip():
+            g, why = guess_category(a['機關'], a['層級'], a['隸屬'], a['部會'])
+            if g != c.get('程式初判類別'):
+                c['程式初判類別'] = g; c['初判依據'] = why; changed += 1
+    if changed:
+        print(f'機關類別初判重算，{changed} 機關變更')
+        missing = missing or [agencies[0]] and missing
+    if missing or changed:
         for a in missing:
             c, why = guess_category(a['機關'], a['層級'], a['隸屬'], a['部會'])
             cats[a['機關']] = {'機關': a['機關'], '層級': a['層級'], '隸屬': a['隸屬'], '部會': a['部會'], '程式初判類別': c, '初判依據': why,
                                '人工確認類別': '', '雙軌制': '是' if re.search(r'警察|警政|消防|海巡|醫院|榮民總醫院|分院|療養院|國防部', a['機關']) else '',
                                '軍文併用': '是' if re.search(r'國防部|海巡|全民防衛', a['機關']) else '', '駐外': '', '例外核備紀錄': '', '備註': ''}
         with open(path, 'w', encoding='utf-8-sig', newline='') as f:
-            w = csv.DictWriter(f, fieldnames=['機關', '層級', '隸屬', '部會', '程式初判類別', '初判依據', '人工確認類別', '雙軌制', '軍文併用', '駐外', '例外核備紀錄', '備註'])
+            w = csv.DictWriter(f, fieldnames=['機關', '層級', '隸屬', '部會', '程式初判類別', '初判依據', '人工確認類別', '雙軌制', '軍文併用', '駐外', '例外核備紀錄', '備註'], extrasaction='ignore')
             w.writeheader(); w.writerows(cats[a['機關']] for a in agencies if a['機關'] in cats)
-        print(f'已產生／補入機關類別對照表 {path}（新增 {len(missing)} 機關），請同仁於「人工確認類別」欄填寫確認結果')
+        print(f'已更新機關類別對照表 {path}（新增 {len(missing)} 機關），請同仁於「人工確認類別」欄填寫確認結果')
     return cats
 
 
@@ -204,7 +230,7 @@ def finding(rule, law, item, calc, value, threshold, result, gap='', note=''):
     return {'規則': rule, '條文': law, '項目': item, '計算': calc, '數值': value, '門檻': threshold, '結果': result, '差距': gap, '說明': note}
 
 
-def check_agency(a, rows, cat, rules):
+def check_agency(a, rows, cat, rules, ctx=None):
     level = a['層級']
     ratio_new = rules['ratio']['new']['中央']; ratio_old = rules['ratio']['old']['中央']
     category = (cat.get('人工確認類別') or '').strip() or cat['程式初判類別']
@@ -382,6 +408,13 @@ def check_agency(a, rows, cat, rules):
             r['列等狀態'] = f"實證未見此列等（主流 {info['主要列等']}）"; odd.append(f"{r['職稱']}（{code}；主流 {info['主要列等']}）")
         st[r['列等狀態'].split('（')[0]] += 1
     F.append(finding('R11', '第4條、職務列等表（實證）', '職稱與列等對照同層級實證分布', '逐列比對 rules/title_grades.json', '；'.join(f'{k}{v}' for k, v in st.most_common()), '—', '符合' if not odd else '需確認', '', '；'.join(odd[:15]) + ('…' if len(odd) > 15 else '')))
+    # ---- 考試院核議標準（通案決議）
+    if ctx is not None:
+        try:
+            from council_rules import council_checks
+            F.extend(council_checks(a, rows, cat, category, ctx))
+        except Exception as e:  # noqa: BLE001
+            F.append(finding('C0', '核議標準', '通案決議檢核', '—', '—', '—', '需確認', '', f'執行錯誤：{e}'))
     # ---- 彙總
     bad = [f for f in F if f['結果'].startswith('不符')]
     chk = [f for f in F if f['結果'] == '需確認']
@@ -389,7 +422,7 @@ def check_agency(a, rows, cat, rules):
             '編制表': a.get('編制表來源'), '驗算狀態': a.get('驗算狀態'), '員額合計': a.get('員額合計'), '計算': counts,
             '簡任比率': sj, '委任比率': sw, '簡任上限': (th or {}).get('簡任') if th else None, '委任下限': (th or {}).get('委任') if th else None,
             '不符數': len(bad), '需確認數': len(chk), '不符規則': '、'.join(f['規則'] for f in bad), '規則': F,
-            '明細': [{k: r.get(k) for k in ('序', '單位', '職稱', '官等', '職等', '員額', '備註', '拆算', '主管', '列等碼', '列等狀態')} for r in rows]}
+            '明細': [{k: r.get(k) for k in ('序', '單位', '職稱', '官等', '職等', '員額', '備註', '拆算', '主管', '列等碼', '列等狀態', '修正紀錄')} for r in rows]}
 
 
 def main():
@@ -399,29 +432,24 @@ def main():
     a = ap.parse_args()
     os.makedirs(a.out, exist_ok=True)
     rules = load_rules()
-    import openpyxl
-    wb = openpyxl.load_workbook(a.master, read_only=True)
-    ov = list(wb['機關總覽'].iter_rows(values_only=True)); oi = {h: i for i, h in enumerate(ov[0])}
-    agencies = [{h: r[i] for h, i in oi.items()} for r in ov[1:]]
+    from grade_data import load as load_master
+    agencies, by, fixlog = load_master(a.master)
+    print(f'總表 {len(agencies)} 機關；套用 org-compare 人工修正 {len(fixlog)} 機關')
+    amap = {ag['機關']: ag for ag in agencies}
+    children = collections.defaultdict(list)
     for ag in agencies:
-        ag['層級'] = str(ag['層級'])
-    det = list(wb['編制表明細'].iter_rows(values_only=True)); di = {h: i for i, h in enumerate(det[0])}
-    by = collections.defaultdict(list)
-    for r in det[1:]:
-        try:
-            n = int(r[di['員額']])
-        except (TypeError, ValueError):
-            n = 0
-        by[r[di['機關名稱']]].append({'序': r[di['序']], '單位': r[di['單位']], '職稱': (r[di['職稱']] or '').strip(), '官等': r[di['官等']], '職等': r[di['職等']], '員額': n, '備註': r[di['備註']] or ''})
+        if ag.get('隸屬'):
+            children[ag['隸屬']].append(ag)
+    ctx = {'agencies': amap, 'children': children, 'total_of': lambda ag: sum(r['員額'] for r in by.get(ag['機關'], []))}
     cats = load_or_make_categories(agencies)
     results = []
     for ag in agencies:
         rows = by.get(ag['機關'], [])
         if not rows:
             continue
-        results.append(check_agency(ag, rows, cats[ag['機關']], rules))
+        results.append(check_agency(ag, rows, cats[ag['機關']], rules, ctx))
     meta = {'產生': dt.datetime.now().strftime('%Y-%m-%d %H:%M'), '總表': os.path.basename(a.master), '機關數': len(results),
-            '準則版本': '114.12.4 修正', '規則清單': [l.strip() for l in __doc__.splitlines() if re.match(r'\s+R\d', l)]}
+            '準則版本': '114.12.4 修正', '規則清單': [l.strip() for l in __doc__.splitlines() if re.match(r'\s+[RC]\d', l)]}
     json.dump({'meta': meta, 'results': results}, open(os.path.join(a.out, 'check_results.json'), 'w', encoding='utf-8'), ensure_ascii=False)
     with open(os.path.join(a.out, '檢核結果_全機關.csv'), 'w', encoding='utf-8-sig', newline='') as f:
         w = csv.writer(f)
@@ -435,7 +463,7 @@ def main():
         for f in r['規則']:
             c[(f['規則'], f['結果'].split(' /')[0])] += 1
     print(f'檢核 {len(results)} 機關 → {a.out}/check_results.json、檢核結果_全機關.csv')
-    for rule in ['R1', 'R2', 'R3a', 'R3b', 'R4', 'R5', 'R6', 'R7', 'R9', 'R10', 'R11', 'R13']:
+    for rule in ['R1', 'R2', 'R3a', 'R3b', 'R4', 'R5', 'R6', 'R7', 'R9', 'R10', 'R11', 'R13'] + [f'C{i}' for i in range(2, 18)]:
         row = {k[1]: v for k, v in c.items() if k[0] == rule}
         if row:
             print(f'  {rule}: ' + '、'.join(f'{k}{v}' for k, v in sorted(row.items(), key=lambda kv: -kv[1])))

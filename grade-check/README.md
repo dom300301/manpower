@@ -8,8 +8,9 @@
 | `操作手冊.md` | **請先讀**：用法、更新作業、目前狀態與待辦（交接） |
 | `0_首次安裝.command`、`1_建檔.command`、`2_更新法規.command` | Mac 雙擊：安裝、建檔（三步）、更新法規 |
 | `02_第一版_操作與驗證.md` | **操作說明**：網頁四個分頁、三個更新指令、規則假設、驗證結果、限制 |
-| `check_grades.py` → `output/check_results.json`、`output/檢核結果_全機關.csv` | 規則引擎（逐機關、逐條檢核） |
+| `check_grades.py` + `council_rules.py` + `grade_data.py` → `output/check_results.json`、`output/檢核結果_全機關.csv` | 規則引擎（準則 R 規則＋考試院核議標準 C 規則；載入總表並套用 org-compare 人工補登） |
 | `build_grade_site.py` + `grade_template.html` → `output/index.html` | 查詢網頁（離線單檔；GitHub Pages `/grade/`） |
+| `rules/council_standards.json` | 考試院核議標準（通案決議）28 項與系統處理方式 |
 | `rules/ratio_table.json`、`rules/agency_category.csv`、`rules/title_grades.json` | 附表三比率（新舊制）、機關類別初判表（請填人工確認）、職稱列等對照表 |
 | `01_職稱列等對照表_建置報告.md` | 以 585 機關編制表實證分布建立的職稱列等對照表：做法、結果、驗證、限制 |
 | `build_grade_table.py` → `data/職稱列等對照表_實證_日期.xlsx`、`rules/title_grades.json` | 職稱列等對照表建置程式與產出 |
