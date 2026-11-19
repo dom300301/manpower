@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>員額查詢</title>
+<style>
+:root{color-scheme:light;--page:#f9f9f7;--surface:#fcfcfb;--ink:#0b0b0b;--ink2:#52514e;--muted:#898781;--grid:#e1e0d9;--axis:#c3c2b7;--border:rgba(11,11,11,.10);--chip:#efeeea;
+--s1:#2a78d6;--s2:#eb6834;--s3:#1baf7a;--s4:#eda100;--s5:#e87ba4;--s6:#008300;--warn:#ec835a;--crit:#d03b3b;--sel:#0b0b0b;--selink:#ffffff}
+@media (prefers-color-scheme:dark){:root:where(:not([data-theme="light"])){color-scheme:dark;--page:#0d0d0d;--surface:#1a1a19;--ink:#ffffff;--ink2:#c3c2b7;--muted:#898781;--grid:#2c2c2a;--axis:#383835;--border:rgba(255,255,255,.10);--chip:#2c2c2a;
+--s1:#3987e5;--s2:#d95926;--s3:#199e70;--s4:#c98500;--s5:#d55181;--s6:#008300;--sel:#ffffff;--selink:#0b0b0b}}
+:root[data-theme="dark"]{color-scheme:dark;--page:#0d0d0d;--surface:#1a1a19;--ink:#ffffff;--ink2:#c3c2b7;--muted:#898781;--grid:#2c2c2a;--axis:#383835;--border:rgba(255,255,255,.10);--chip:#2c2c2a;
+--s1:#3987e5;--s2:#d95926;--s3:#199e70;--s4:#c98500;--s5:#d55181;--s6:#008300;--sel:#ffffff;--selink:#0b0b0b}
+*{box-sizing:border-box}
+body{margin:0;background:var(--page);color:var(--ink);font-family:system-ui,-apple-system,"PingFang TC","Noto Sans TC","Microsoft JhengHei","Segoe UI",sans-serif;font-size:15px;line-height:1.6}
+.wrap{max-width:1120px;margin:0 auto;padding:20px 16px 60px}
+h1{font-size:22px;margin:0 0 2px}
+.sub{color:var(--ink2);font-size:13px;margin:0 0 14px}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--grid);margin-bottom:16px;overflow-x:auto}
+.tab{appearance:none;border:0;background:none;color:var(--ink2);font:inherit;font-size:15px;padding:9px 14px;cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap}
+.tab[aria-selected="true"]{color:var(--ink);font-weight:600;border-bottom-color:var(--s1)}
+.tab:focus-visible,.yr:focus-visible,.lg:focus-visible{outline:2px solid var(--s1);outline-offset:2px}
+.years{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:14px}
+.years .lab{color:var(--ink2);font-size:13px;margin-right:4px}
+.yr{appearance:none;border:1px solid var(--border);background:var(--surface);color:var(--ink);font:inherit;font-size:15px;padding:5px 13px;border-radius:999px;cursor:pointer;font-variant-numeric:tabular-nums}
+.yr[aria-pressed="true"]{background:var(--sel);color:var(--selink);border-color:var(--sel);font-weight:600}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px 18px;margin-bottom:14px}
+.card h2{font-size:16px;margin:0 0 2px}
+.card .hint{color:var(--ink2);font-size:13px;margin:0 0 12px}
+.hero{font-size:17px;line-height:1.75}
+.hero b{font-size:21px;font-weight:650}
+.badge{display:inline-block;font-size:12px;padding:1px 8px;border-radius:999px;background:var(--chip);color:var(--ink2);margin-left:6px;vertical-align:middle;white-space:nowrap}
+.note{color:var(--ink2);font-size:13px;margin-top:8px;padding-left:10px;border-left:3px solid var(--grid)}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:10px;margin-bottom:14px}
+.tile{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:2px}
+.tile .lbl{font-size:13px;color:var(--ink2)}
+.tile .val{font-size:26px;font-weight:650;line-height:1.25}
+.tile .val.pending{font-size:16px;font-weight:500;color:var(--muted);padding:7px 0}
+.tile .delta{font-size:13px;color:var(--ink2)}
+.tile .desc{font-size:12px;color:var(--muted);margin-top:4px}
+.chips{display:flex;gap:4px;flex-wrap:wrap;margin-top:6px}
+.chip{font-size:11px;padding:0 7px;border-radius:999px;background:var(--chip);color:var(--ink2);white-space:nowrap}
+.chip.dot::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--c);margin-right:4px}
+/* meters */
+.meter{display:grid;grid-template-columns:minmax(150px,230px) 1fr minmax(150px,210px);gap:6px 14px;align-items:center;padding:7px 0;border-top:1px solid var(--grid)}
+.meter:first-of-type{border-top:0}
+.meter .name{font-weight:600}.meter .name small{display:block;font-weight:400;color:var(--muted);font-size:12px;line-height:1.35}
+.track{height:14px;border-radius:4px;background:color-mix(in srgb,var(--f) 20%,var(--surface));position:relative;cursor:default}
+.fill{height:100%;border-radius:4px;background:var(--f);min-width:2px}
+.meter .nums{font-size:13px;color:var(--ink2);font-variant-numeric:tabular-nums;text-align:right}
+.meter .nums b{color:var(--ink);font-size:15px}
+.flag{font-size:12px;color:var(--ink);margin-left:6px;white-space:nowrap}
+/* stacked */
+.stack{display:flex;gap:2px;height:30px;margin:6px 0 10px}
+.seg{height:100%;display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff;font-weight:600;overflow:visible;white-space:nowrap;min-width:3px}
+.seg:first-child{border-radius:4px 0 0 4px}.seg:last-child{border-radius:0 4px 4px 0}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13px;color:var(--ink2)}
+.legend .k{display:inline-block;width:11px;height:11px;border-radius:2px;background:var(--c);margin-right:6px;vertical-align:-1px}
+.legend .k.line{height:3px;width:16px;border-radius:2px;vertical-align:3px}
+.legend b{color:var(--ink);font-variant-numeric:tabular-nums}
+/* hbars */
+.hb{display:grid;grid-template-columns:minmax(190px,330px) 1fr;gap:4px 14px;align-items:center;padding:7px 0;border-top:1px solid var(--grid)}
+.hb:first-of-type{border-top:0}
+.hb .name{font-size:14px;font-weight:600;line-height:1.35}
+.hb .name small{display:block;font-weight:400;color:var(--muted);font-size:12px}
+.hb .barrow{display:flex;align-items:center;gap:8px;min-width:0}
+.hb .bar{height:18px;border-radius:0 4px 4px 0;background:var(--c);min-width:2px;flex:none}
+.hb .v{font-size:14px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.hb .v.pending{color:var(--muted);font-size:13px}
+.hb.simple{grid-template-columns:90px 1fr;padding:4px 0;border-top:0}
+.hb.simple .bar{height:14px}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{border-bottom:1px solid var(--grid);padding:6px 8px;text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+th{color:var(--ink2);font-weight:600;background:var(--surface)}
+td:first-child,th:first-child{text-align:left;white-space:normal;min-width:190px}
+.scroll{overflow-x:auto}
+.scroll td:first-child,.scroll th:first-child{position:sticky;left:0;background:var(--surface)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:820px){.grid2{grid-template-columns:1fr}.meter{grid-template-columns:1fr}.meter .nums{text-align:left}.hb{grid-template-columns:1fr}}
+.lg{appearance:none;border:1px solid var(--border);background:var(--surface);color:var(--ink);font:inherit;font-size:13px;padding:3px 10px;border-radius:999px;cursor:pointer}
+.lg[aria-pressed="false"]{color:var(--muted);text-decoration:line-through}
+.lg .k{display:inline-block;width:16px;height:3px;border-radius:2px;background:var(--c);margin-right:6px;vertical-align:4px}
+.lg[aria-pressed="false"] .k{background:var(--muted)}
+svg text{fill:var(--muted);font-size:12px;font-variant-numeric:tabular-nums}
+.tip{position:fixed;z-index:10;pointer-events:none;background:var(--surface);border:1px solid var(--border);box-shadow:0 4px 16px rgba(0,0,0,.14);border-radius:8px;padding:8px 10px;font-size:13px;max-width:320px;display:none}
+.tip .t{color:var(--ink2);font-size:12px;margin-bottom:2px}
+.tip .r{display:flex;gap:10px;justify-content:space-between;align-items:baseline}
+.tip .r b{font-variant-numeric:tabular-nums}
+.tip .r span{color:var(--ink2)}
+.tip .r i{display:inline-block;width:12px;height:3px;border-radius:2px;background:var(--c);margin-right:6px;vertical-align:3px}
+.defs{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:10px}
+.def{border:1px solid var(--border);border-radius:10px;padding:12px 14px;background:var(--surface)}
+.def h3{margin:0 0 4px;font-size:15px}.def p{margin:0;font-size:13px;color:var(--ink2)}
+a{color:var(--s1)}
+ul.plain{margin:6px 0 0;padding-left:20px;font-size:14px;color:var(--ink2)}
+.src td,.src th{text-align:left;white-space:normal;word-break:break-all}
+.dt td:first-child,.dt th:first-child{min-width:0;white-space:nowrap}
+.dt td.l{text-align:left}
+.dt.md td,.dt.md th{text-align:left;white-space:normal;min-width:120px;vertical-align:top}
+details summary{cursor:pointer;color:var(--s1);font-size:14px;padding:4px 0}
+.md h3{font-size:15px;margin:18px 0 6px}.md h4{font-size:14px;margin:12px 0 4px}.md p{font-size:14px;color:var(--ink2);margin:6px 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>中央政府員額查詢</h1>
+  <p class="sub" id="meta"></p>
+  <div class="tabs" role="tablist">
+    <button class="tab" role="tab" data-tab="year">年度查詢</button>
+    <button class="tab" role="tab" data-tab="trend">歷年趨勢</button>
+    <button class="tab" role="tab" data-tab="detail">詳細資料表</button>
+    <button class="tab" role="tab" data-tab="terms">名詞與差異說明</button>
+    <button class="tab" role="tab" data-tab="src">資料來源</button>
+  </div>
+
+  <section id="p-year" role="tabpanel">
+    <div class="years" id="years"><span class="lab">選擇年度</span></div>
+    <div class="card"><div class="hero" id="hero"></div><div id="ynotes"></div></div>
+    <div class="tiles" id="tiles"></div>
+    <div class="card"><h2>離法定上限還有多遠</h2><p class="hint">《中央政府機關總員額法》把員額分成五類，各有上限。深色是已編列的員額，淺色是還剩下的空間。使用超過 95% 會以橘色標示「接近上限」。</p><div id="meters"></div></div>
+    <div class="card"><h2>中央政府的員額，有多少受總員額法控管</h2><p class="hint" id="stackhint"></p><div class="stack" id="stack"></div><div class="legend" id="stacklegend"></div></div>
+    <div class="card"><h2>同一年，為什麼各機關公布的數字不一樣</h2>
+      <p class="hint">數字不同，是因為算的「範圍」和「性質」不同。預算員額是可以進用的上限，現員是年底實際在職的人數。</p>
+      <div class="legend" style="margin-bottom:6px"><span><span class="k" style="--c:var(--s1)"></span>預算員額（上限）</span><span><span class="k" style="--c:var(--s2)"></span>現員（年底實際在職）</span></div>
+      <div id="compare"></div></div>
+    <div class="grid2">
+      <div class="card"><h2>總員額法員額由哪些人力組成</h2><p class="hint">依人力類型區分（主計總處彙計表）。</p><div id="staff"></div></div>
+      <div class="card"><h2>與前一年比較</h2><p class="hint" id="deltahint"></p><div class="scroll"><table id="delta"></table></div></div>
+    </div>
+  </section>
+
+  <section id="p-trend" role="tabpanel" hidden>
+    <div class="card"><h2>受總員額法控管的員額與法定上限</h2><p class="hint">點選任一年度的長條，可以跳到該年度的查詢頁。110 年度起公立醫院職員不再計入，上限同步由 173,000 調降為 160,900，所以 109 到 110 的下降不是實際精簡。</p>
+      <div class="legend" style="margin-bottom:4px"><span><span class="k" style="--c:var(--s1)"></span>適用總員額法員額</span><span><span class="k line" style="--c:var(--ink2)"></span>法定上限</span></div>
+      <div id="colchart"></div></div>
+    <div class="card"><h2>三個來源的歷年數字</h2><p class="hint">點選圖例可以顯示或隱藏線條。滑鼠移到圖上可看各年數字。</p>
+      <div class="legend" id="linelegend" style="margin-bottom:6px"></div><div id="linechart"></div></div>
+    <div class="card"><h2>完整比對表</h2><p class="hint">A＝主計總處總預算；B＝人事總處統計年報；C＝銓敘部統計年報。「–」表示該來源尚未公布；標「註」的數字不採計，原因見表末。</p><div class="scroll"><table id="overview"></table></div><div id="footnotes"></div></div>
+  </section>
+
+  <section id="p-detail" role="tabpanel" hidden>
+<div class="card"><h2>總員額法各類員額與上限</h2><p class="hint">108、109 年度適用修法前上限（總數 173,000）；110 年度起適用新上限（總數 160,900），公立醫院職員不再計入。</p><div class="scroll"><table class="dt"><thead><tr><th>年度</th><th>版本</th><th>適用總數</th><th>上限總數</th><th>距上限</th><th>第一類</th><th>第二類</th><th>第三類</th><th>第四類</th><th>第五類</th><th>上限一</th><th>上限二</th><th>上限三</th><th>上限四</th><th>上限五</th><th>距上限一</th><th>距上限二</th><th>距上限三</th><th>距上限四</th><th>距上限五</th></tr></thead><tbody><tr><td class="">108</td><td class="l">法定預算</td><td class="">153,667</td><td class="">173,000</td><td class="">19,333</td><td class="">83,166</td><td class="">30,091</td><td class="">13,752</td><td class="">5,743</td><td class="">20,915</td><td class="">86,700</td><td class="">41,200</td><td class="">13,900</td><td class="">6,900</td><td class="">24,300</td><td class="">3,534</td><td class="">11,109</td><td class="">148</td><td class="">1,157</td><td class="">3,385</td></tr><tr><td class="">109</td><td class="l">法定預算</td><td class="">154,976</td><td class="">173,000</td><td class="">18,024</td><td class="">83,435</td><td class="">29,221</td><td class="">13,900</td><td class="">5,850</td><td class="">22,570</td><td class="">86,700</td><td class="">41,200</td><td class="">13,900</td><td class="">6,900</td><td class="">24,300</td><td class="">3,265</td><td class="">11,979</td><td class="">0</td><td class="">1,050</td><td class="">1,730</td></tr><tr><td class="">110</td><td class="l">法定預算</td><td class="">138,668</td><td class="">160,900</td><td class="">22,232</td><td class="">70,044</td><td class="">28,484</td><td class="">14,087</td><td class="">6,036</td><td class="">20,017</td><td class="">74,600</td><td class="">40,100</td><td class="">15,000</td><td class="">6,900</td><td class="">24,300</td><td class="">4,556</td><td class="">11,616</td><td class="">913</td><td class="">864</td><td class="">4,283</td></tr><tr><td class="">111</td><td class="l">法定預算</td><td class="">139,350</td><td class="">160,900</td><td class="">21,550</td><td class="">70,477</td><td class="">27,364</td><td class="">14,302</td><td class="">6,251</td><td class="">20,956</td><td class="">74,600</td><td class="">40,100</td><td class="">15,000</td><td class="">6,900</td><td class="">24,300</td><td class="">4,123</td><td class="">12,736</td><td class="">698</td><td class="">649</td><td class="">3,344</td></tr><tr><td class="">112</td><td class="l">法定預算</td><td class="">140,034</td><td class="">160,900</td><td class="">20,866</td><td class="">71,539</td><td class="">26,709</td><td class="">14,437</td><td class="">6,389</td><td class="">20,960</td><td class="">74,600</td><td class="">40,100</td><td class="">15,000</td><td class="">6,900</td><td class="">24,300</td><td class="">3,061</td><td class="">13,391</td><td class="">563</td><td class="">511</td><td class="">3,340</td></tr><tr><td class="">113</td><td class="l">法定預算</td><td class="">138,792</td><td class="">160,900</td><td class="">22,108</td><td class="">71,354</td><td class="">25,675</td><td class="">14,508</td><td class="">6,495</td><td class="">20,760</td><td class="">74,600</td><td class="">40,100</td><td class="">15,000</td><td class="">6,900</td><td class="">24,300</td><td class="">3,246</td><td class="">14,425</td><td class="">492</td><td class="">405</td><td class="">3,540</td></tr><tr><td class="">114</td><td class="l">預算案</td><td class="">137,894</td><td class="">160,900</td><td class="">23,006</td><td class="">71,426</td><td class="">24,809</td><td class="">14,736</td><td class="">6,610</td><td class="">20,313</td><td class="">74,600</td><td class="">40,100</td><td class="">15,000</td><td class="">6,900</td><td class="">24,300</td><td class="">3,174</td><td class="">15,291</td><td class="">264</td><td class="">290</td><td class="">3,987</td></tr><tr><td class="">115</td><td class="l">預算案</td><td class="">138,315</td><td class="">160,900</td><td class="">22,585</td><td class="">72,334</td><td class="">23,991</td><td class="">14,836</td><td class="">6,605</td><td class="">20,549</td><td class="">74,600</td><td class="">40,100</td><td class="">15,000</td><td class="">6,900</td><td class="">24,300</td><td class="">2,266</td><td class="">16,109</td><td class="">164</td><td class="">295</td><td class="">3,751</td></tr><tr><td class="">116</td><td class="l">預算案</td><td class="">138,061</td><td class="">160,900</td><td class="">22,839</td><td class="">72,719</td><td class="">23,348</td><td class="">14,836</td><td class="">6,604</td><td class="">20,554</td><td class="">74,600</td><td class="">40,100</td><td class="">15,000</td><td class="">6,900</td><td class="">24,300</td><td class="">1,881</td><td class="">16,752</td><td class="">164</td><td class="">296</td><td class="">3,746</td></tr></tbody></table></div></div>
+<div class="card"><h2>總員額法適用範圍拆解</h2><p class="hint">從總預算加特種基金的員額總計，扣掉依法不列入與不受上限限制的員額，得到適用總員額法的員額。</p><div class="scroll"><table class="dt"><thead><tr><th>年度</th><th>版本</th><th>總預算預算員額</th><th>非營業特種基金</th><th>墊償基金</th><th>員額總計</th><th>適用總員額法</th><th>不適用總員額法</th><th>依法不列入</th><th>不受上限限制</th></tr></thead><tbody><tr><td class="">108</td><td class="l">法定預算</td><td class="">130,320</td><td class="">89,200</td><td class="">22</td><td class="">219,542</td><td class="">153,667</td><td class="">65,875</td><td class="">62,770</td><td class="">3,105</td></tr><tr><td class="">109</td><td class="l">法定預算</td><td class="">131,564</td><td class="">89,291</td><td class="">22</td><td class="">220,877</td><td class="">154,976</td><td class="">65,901</td><td class="">62,808</td><td class="">3,093</td></tr><tr><td class="">110</td><td class="l">法定預算</td><td class="">129,528</td><td class="">89,248</td><td class="">22</td><td class="">218,798</td><td class="">138,668</td><td class="">80,130</td><td class="">77,047</td><td class="">3,083</td></tr><tr><td class="">111</td><td class="l">法定預算</td><td class="">130,689</td><td class="">89,361</td><td class="">22</td><td class="">220,072</td><td class="">139,350</td><td class="">80,722</td><td class="">77,648</td><td class="">3,074</td></tr><tr><td class="">112</td><td class="l">法定預算</td><td class="">131,799</td><td class="">89,840</td><td class="">22</td><td class="">221,661</td><td class="">140,034</td><td class="">81,627</td><td class="">78,563</td><td class="">3,064</td></tr><tr><td class="">113</td><td class="l">法定預算</td><td class="">131,037</td><td class="">90,264</td><td class="">22</td><td class="">221,323</td><td class="">138,792</td><td class="">82,531</td><td class="">79,481</td><td class="">3,050</td></tr><tr><td class="">114</td><td class="l">預算案</td><td class="">130,518</td><td class="">92,918</td><td class="">22</td><td class="">223,458</td><td class="">137,894</td><td class="">85,564</td><td class="">79,033</td><td class="">6,531</td></tr><tr><td class="">115</td><td class="l">預算案</td><td class="">131,331</td><td class="">89,447</td><td class="">22</td><td class="">220,800</td><td class="">138,315</td><td class="">82,485</td><td class="">79,472</td><td class="">3,013</td></tr><tr><td class="">116</td><td class="l">預算案</td><td class="">131,408</td><td class="">89,313</td><td class="">22</td><td class="">220,743</td><td class="">138,061</td><td class="">82,682</td><td class="">79,688</td><td class="">2,994</td></tr></tbody></table></div></div>
+<div class="card"><h2>總預算各機關預算員額（人力別）</h2><p class="hint">主計總處「各機關預算員額彙計總表」，公務預算，不含特種基金。</p><div class="scroll"><table class="dt"><thead><tr><th>年度</th><th>版本</th><th>職員</th><th>警察</th><th>法警</th><th>駐警</th><th>工友</th><th>技工</th><th>駕駛</th><th>小計</th><th>聘用</th><th>約僱</th><th>駐外雇員</th><th>小計</th><th>合計</th></tr></thead><tbody><tr><td class="">108</td><td class="l">法定預算</td><td class="">95,824</td><td class="">10,675</td><td class="">1,872</td><td class="">698</td><td class="">3,930</td><td class="">4,471</td><td class="">2,314</td><td class="">119,784</td><td class="">4,660</td><td class="">5,147</td><td class="">729</td><td class="">10,536</td><td class="">130,320</td></tr><tr><td class="">109</td><td class="l">法定預算</td><td class="">96,283</td><td class="">11,801</td><td class="">1,878</td><td class="">670</td><td class="">3,661</td><td class="">4,255</td><td class="">2,208</td><td class="">120,756</td><td class="">4,885</td><td class="">5,194</td><td class="">729</td><td class="">10,808</td><td class="">131,564</td></tr><tr><td class="">110</td><td class="l">法定預算</td><td class="">94,479</td><td class="">11,806</td><td class="">1,912</td><td class="">645</td><td class="">3,416</td><td class="">4,018</td><td class="">2,114</td><td class="">118,390</td><td class="">4,979</td><td class="">5,412</td><td class="">747</td><td class="">11,138</td><td class="">129,528</td></tr><tr><td class="">111</td><td class="l">法定預算</td><td class="">95,271</td><td class="">12,667</td><td class="">1,959</td><td class="">612</td><td class="">3,143</td><td class="">3,819</td><td class="">2,046</td><td class="">119,517</td><td class="">5,035</td><td class="">5,390</td><td class="">747</td><td class="">11,172</td><td class="">130,689</td></tr><tr><td class="">112</td><td class="l">法定預算</td><td class="">96,524</td><td class="">12,667</td><td class="">1,974</td><td class="">590</td><td class="">2,939</td><td class="">3,632</td><td class="">1,987</td><td class="">120,313</td><td class="">5,193</td><td class="">5,546</td><td class="">747</td><td class="">11,486</td><td class="">131,799</td></tr><tr><td class="">113</td><td class="l">法定預算</td><td class="">96,538</td><td class="">12,490</td><td class="">1,993</td><td class="">556</td><td class="">2,631</td><td class="">3,409</td><td class="">1,898</td><td class="">119,515</td><td class="">5,114</td><td class="">5,661</td><td class="">747</td><td class="">11,522</td><td class="">131,037</td></tr><tr><td class="">114</td><td class="l">預算案</td><td class="">97,099</td><td class="">11,936</td><td class="">2,008</td><td class="">510</td><td class="">2,317</td><td class="">3,222</td><td class="">1,737</td><td class="">118,829</td><td class="">5,208</td><td class="">5,734</td><td class="">747</td><td class="">11,689</td><td class="">130,518</td></tr><tr><td class="">115</td><td class="l">預算案</td><td class="">98,432</td><td class="">11,898</td><td class="">2,009</td><td class="">481</td><td class="">2,037</td><td class="">3,013</td><td class="">1,652</td><td class="">119,522</td><td class="">5,216</td><td class="">5,846</td><td class="">747</td><td class="">11,809</td><td class="">131,331</td></tr><tr><td class="">116</td><td class="l">預算案</td><td class="">98,840</td><td class="">11,898</td><td class="">2,009</td><td class="">437</td><td class="">1,795</td><td class="">2,830</td><td class="">1,579</td><td class="">119,388</td><td class="">5,344</td><td class="">5,929</td><td class="">747</td><td class="">12,020</td><td class="">131,408</td></tr></tbody></table></div></div>
+<div class="card"><h2>適用總員額法員額（人力別）</h2><p class="hint">主計總處「機關總員額法員額彙計表」合計列。</p><div class="scroll"><table class="dt"><thead><tr><th>年度</th><th>版本</th><th>職員</th><th>警察</th><th>法警</th><th>駐警</th><th>工友</th><th>技工</th><th>駕駛</th><th>聘用</th><th>約僱</th><th>駐外雇員</th><th>合計</th></tr></thead><tbody><tr><td class="">108</td><td class="l">法定預算</td><td class="">106,065</td><td class="">12,410</td><td class="">1,872</td><td class="">1,094</td><td class="">7,113</td><td class="">7,000</td><td class="">2,452</td><td class="">8,322</td><td class="">6,610</td><td class="">729</td><td class="">153,667</td></tr><tr><td class="">109</td><td class="l">法定預算</td><td class="">106,608</td><td class="">13,956</td><td class="">1,878</td><td class="">1,045</td><td class="">6,589</td><td class="">6,640</td><td class="">2,330</td><td class="">8,563</td><td class="">6,638</td><td class="">729</td><td class="">154,976</td></tr><tr><td class="">110</td><td class="l">法定預算</td><td class="">91,011</td><td class="">13,961</td><td class="">1,912</td><td class="">993</td><td class="">6,053</td><td class="">6,273</td><td class="">2,226</td><td class="">8,655</td><td class="">6,837</td><td class="">747</td><td class="">138,668</td></tr><tr><td class="">111</td><td class="l">法定預算</td><td class="">91,840</td><td class="">14,900</td><td class="">1,959</td><td class="">916</td><td class="">5,491</td><td class="">5,826</td><td class="">2,151</td><td class="">8,728</td><td class="">6,792</td><td class="">747</td><td class="">139,350</td></tr><tr><td class="">112</td><td class="l">法定預算</td><td class="">93,123</td><td class="">14,900</td><td class="">1,974</td><td class="">853</td><td class="">5,006</td><td class="">5,502</td><td class="">2,078</td><td class="">8,915</td><td class="">6,936</td><td class="">747</td><td class="">140,034</td></tr><tr><td class="">113</td><td class="l">法定預算</td><td class="">93,142</td><td class="">14,723</td><td class="">1,993</td><td class="">782</td><td class="">4,446</td><td class="">5,141</td><td class="">1,981</td><td class="">8,791</td><td class="">7,046</td><td class="">747</td><td class="">138,792</td></tr><tr><td class="">114</td><td class="l">預算案</td><td class="">93,695</td><td class="">14,204</td><td class="">2,008</td><td class="">710</td><td class="">3,937</td><td class="">4,812</td><td class="">1,785</td><td class="">8,895</td><td class="">7,101</td><td class="">747</td><td class="">137,894</td></tr><tr><td class="">115</td><td class="l">預算案</td><td class="">95,060</td><td class="">14,166</td><td class="">2,009</td><td class="">644</td><td class="">3,415</td><td class="">4,460</td><td class="">1,690</td><td class="">8,921</td><td class="">7,203</td><td class="">747</td><td class="">138,315</td></tr><tr><td class="">116</td><td class="l">預算案</td><td class="">95,505</td><td class="">14,166</td><td class="">2,009</td><td class="">582</td><td class="">2,987</td><td class="">4,174</td><td class="">1,602</td><td class="">9,057</td><td class="">7,232</td><td class="">747</td><td class="">138,061</td></tr></tbody></table></div></div>
+<div class="card"><h2>人事總處年報：近十年中央政府預算員額（附表5）</h2><p class="hint">標「註」的數字不採計，原因見表末。</p><div class="scroll"><table class="dt"><thead><tr><th>年度</th><th>行政院所屬合計</th><th>行政院所屬公務預算</th><th>行政院所屬作業基金</th><th>行政院以外機關</th><th>中央政府合計</th></tr></thead><tbody><tr><td class="">105</td><td class="">209,785</td><td class="">114,123</td><td class="">95,662</td><td class="">19,471</td><td class="">229,256</td></tr><tr><td class="">106</td><td class="">203,571</td><td class="">112,129</td><td class="">91,442</td><td class="">19,458</td><td class="">223,029</td></tr><tr><td class="">107</td><td class="">200,670</td><td class="">111,373</td><td class="">89,297</td><td class="">19,619</td><td class="">220,289</td></tr><tr><td class="">108</td><td class="">199,740</td><td class="">110,518</td><td class="">89,222</td><td class="">19,802</td><td class="">219,542</td></tr><tr><td class="">109</td><td class="">201,035</td><td class="">111,722</td><td class="">89,313</td><td class="">19,842</td><td class="">220,877</td></tr><tr><td class="">110</td><td class="">198,800</td><td class="">109,530</td><td class="">89,270</td><td class="">19,998</td><td class="">218,798</td></tr><tr><td class="">111</td><td class="">199,848</td><td class="">110,465</td><td class="">89,383</td><td class="">20,224</td><td class="">220,072</td></tr><tr><td class="">112</td><td class="">201,292</td><td class="">111,430</td><td class="">89,862</td><td class="">20,369</td><td class="">221,661</td></tr><tr><td class="">113</td><td class="l">註1</td><td class="">110,564</td><td class="l">註1</td><td class="">20,473</td><td class="l">註1</td></tr><tr><td class="">114</td><td class="">199,265</td><td class="">109,832</td><td class="">89,433</td><td class="">20,685</td><td class="">219,950</td></tr></tbody></table></div><div class="note">註1：人事總處 113 年及 114 年公教人力統計年報附表5 所載 113 年度「行政院所屬—作業基金」89,862 人，與 112 年度數字完全相同，研判為沿用前一年度數字；主計總處 113 年度中央政府總預算所載非營業特種基金加積欠工資墊償基金為 90,286 人，兩者相差 424 人。本系統自 115 年 9 月 30 日起不採計年報該筆數字，以及由其加總的「行政院所屬合計」200,426 人與「中央政府合計」220,899 人。同年度「行政院所屬—公務預算」110,564 人及「行政院以外機關」20,473 人與主計總處一致，照常採計。年報原載數字仍保留於 data/02_人事總處_中央政府預算員額.csv，可與紙本核對。</div></div>
+<div class="card"><h2>人事總處年報：近十年行政院所屬公教人力實有人數（表1）</h2><p class="hint">年底實際在職人數，含教師、醫事人員、聘僱與事務性人力。</p><div class="scroll"><table class="dt"><thead><tr><th>年度</th><th>實有總數</th><th>政務人員</th><th>公務人員</th><th>警察人員</th><th>醫事人員</th><th>檢察官</th><th>教師</th><th>聘用人員</th><th>約僱人員</th><th>事務性人力</th></tr></thead><tbody><tr><td class="">105</td><td class="">183,190</td><td class="">108</td><td class="">82,998</td><td class="">14,197</td><td class="">16,647</td><td class="">1,384</td><td class="">37,172</td><td class="">6,018</td><td class="">6,667</td><td class="">17,999</td></tr><tr><td class="">106</td><td class="">177,546</td><td class="">114</td><td class="">81,358</td><td class="">14,580</td><td class="">16,646</td><td class="">1,364</td><td class="">34,713</td><td class="">5,777</td><td class="">6,565</td><td class="">16,429</td></tr><tr><td class="">107</td><td class="">175,750</td><td class="">113</td><td class="">81,761</td><td class="">15,151</td><td class="">16,644</td><td class="">1,351</td><td class="">33,251</td><td class="">5,841</td><td class="">6,422</td><td class="">15,216</td></tr><tr><td class="">108</td><td class="">176,189</td><td class="">126</td><td class="">82,343</td><td class="">15,953</td><td class="">16,785</td><td class="">1,355</td><td class="">33,221</td><td class="">5,883</td><td class="">6,426</td><td class="">14,097</td></tr><tr><td class="">109</td><td class="">178,120</td><td class="">135</td><td class="">83,483</td><td class="">17,404</td><td class="">16,757</td><td class="">1,393</td><td class="">33,264</td><td class="">5,894</td><td class="">6,680</td><td class="">13,110</td></tr><tr><td class="">110</td><td class="">176,337</td><td class="">132</td><td class="">82,748</td><td class="">17,240</td><td class="">16,863</td><td class="">1,393</td><td class="">33,350</td><td class="">5,914</td><td class="">6,659</td><td class="">12,038</td></tr><tr><td class="">111</td><td class="">175,969</td><td class="">130</td><td class="">83,383</td><td class="">16,972</td><td class="">17,058</td><td class="">1,409</td><td class="">33,339</td><td class="">5,996</td><td class="">6,698</td><td class="">10,984</td></tr><tr><td class="">112</td><td class="">175,280</td><td class="">136</td><td class="">83,885</td><td class="">16,737</td><td class="">17,229</td><td class="">1,416</td><td class="">33,296</td><td class="">5,838</td><td class="">6,744</td><td class="">9,999</td></tr><tr><td class="">113</td><td class="">174,186</td><td class="">132</td><td class="">84,058</td><td class="">16,368</td><td class="">17,388</td><td class="">1,433</td><td class="">33,316</td><td class="">5,770</td><td class="">6,778</td><td class="">8,943</td></tr><tr><td class="">114</td><td class="">172,462</td><td class="">133</td><td class="">83,562</td><td class="">15,963</td><td class="">17,508</td><td class="">1,456</td><td class="">33,223</td><td class="">5,785</td><td class="">6,824</td><td class="">8,008</td></tr></tbody></table></div></div>
+<div class="card"><h2>銓敘部年報：全國公務人員人數</h2><p class="hint">年底現員。中央與地方按機關性質的分列，取自各年年報提要分析表2。</p><div class="scroll"><table class="dt"><thead><tr><th>年底</th><th>總計</th><th>較上年%</th><th>行政機關</th><th>公營事業</th><th>衛生醫療</th><th>公立學校職員</th><th>中央各機關</th><th>中央行政機關</th><th>中央公營事業</th><th>中央衛生醫療</th><th>中央公立學校職員</th><th>地方各機關</th><th>地方行政機關</th></tr></thead><tbody><tr><td class="">104</td><td class="">347,552</td><td class="">-0.08</td><td class="">234,517</td><td class="">65,814</td><td class="">20,081</td><td class="">27,140</td><td class="">–</td><td class="">–</td><td class="">–</td><td class="">–</td><td class="">–</td><td class="">–</td><td class="">–</td></tr><tr><td class="">105</td><td class="">347,572</td><td class="">0.01</td><td class="">235,591</td><td class="">64,972</td><td class="">19,852</td><td class="">27,157</td><td class="">–</td><td class="">–</td><td class="">–</td><td class="">–</td><td class="">–</td><td class="">–</td><td class="">–</td></tr><tr><td class="">106</td><td class="">349,676</td><td class="">0.61</td><td class="">237,834</td><td class="">64,756</td><td class="">19,732</td><td class="">27,354</td><td class="">–</td><td class="">–</td><td class="">–</td><td class="">–</td><td class="">–</td><td class="">–</td><td class="">–</td></tr><tr><td class="">107</td><td class="">356,878</td><td class="">2.06</td><td class="">248,805</td><td class="">59,779</td><td class="">19,700</td><td class="">28,594</td><td class="">–</td><td class="">–</td><td class="">–</td><td class="">–</td><td class="">–</td><td class="">–</td><td class="">–</td></tr><tr><td class="">108</td><td class="">361,421</td><td class="">1.27</td><td class="">253,387</td><td class="">60,270</td><td class="">19,731</td><td class="">28,033</td><td class="">189,884</td><td class="">103,674</td><td class="">59,396</td><td class="">17,619</td><td class="">9,195</td><td class="">171,537</td><td class="">149,713</td></tr><tr><td class="">109</td><td class="">366,494</td><td class="">1.40</td><td class="">257,509</td><td class="">60,642</td><td class="">19,699</td><td class="">28,644</td><td class="">193,445</td><td class="">106,364</td><td class="">59,758</td><td class="">17,616</td><td class="">9,707</td><td class="">173,049</td><td class="">151,145</td></tr><tr><td class="">110</td><td class="">363,197</td><td class="">-0.90</td><td class="">255,058</td><td class="">59,678</td><td class="">19,732</td><td class="">28,729</td><td class="">191,802</td><td class="">105,532</td><td class="">58,796</td><td class="">17,682</td><td class="">9,792</td><td class="">171,395</td><td class="">149,526</td></tr><tr><td class="">111</td><td class="">364,654</td><td class="">0.40</td><td class="">255,903</td><td class="">60,160</td><td class="">19,859</td><td class="">28,732</td><td class="">193,118</td><td class="">106,213</td><td class="">59,270</td><td class="">17,837</td><td class="">9,798</td><td class="">171,536</td><td class="">149,690</td></tr><tr><td class="">112</td><td class="">365,503</td><td class="">0.23</td><td class="">256,447</td><td class="">60,380</td><td class="">19,949</td><td class="">28,727</td><td class="">193,947</td><td class="">106,731</td><td class="">59,493</td><td class="">17,987</td><td class="">9,736</td><td class="">171,556</td><td class="">149,716</td></tr><tr><td class="">113</td><td class="">362,942</td><td class="">-0.70</td><td class="">255,669</td><td class="">58,666</td><td class="">20,005</td><td class="">28,602</td><td class="">192,139</td><td class="">106,474</td><td class="">57,791</td><td class="">18,132</td><td class="">9,742</td><td class="">170,803</td><td class="">149,195</td></tr><tr><td class="">114</td><td class="">360,080</td><td class="">-0.79</td><td class="">254,217</td><td class="">57,744</td><td class="">19,947</td><td class="">28,172</td><td class="">190,588</td><td class="">105,940</td><td class="">56,862</td><td class="">18,229</td><td class="">9,557</td><td class="">169,492</td><td class="">148,277</td></tr></tbody></table></div></div>
+  </section>
+
+  <section id="p-terms" role="tabpanel" hidden>
+    <div class="card"><h2>三種「員額」</h2><p class="hint">整理自人事總處「員額概念e點靈」。</p>
+      <div class="defs">
+        <div class="def"><h3>編制員額</h3><p>組織法規（編制表）規定可以進用的「職員」人數上限。要修法才能改，所以很少變動。只算職員。</p></div>
+        <div class="def"><h3>預算員額</h3><p>每年編進總預算、經立法院審議通過後，當年度可以進用的人數上限。包含職員、警察、法警、駐衛警、工友、技工、駕駛、聘用、約僱、駐外雇員。政府說明人力變化時用這個數字。</p></div>
+        <div class="def"><h3>現有員額（現員、實有人數）</h3><p>實際在職的人數，不含還沒補的缺額。一定小於或等於預算員額，而且每個月都在變。</p></div>
+      </div></div>
+    <div class="card"><h2>總員額法的五類員額</h2><p class="hint">第3條分類、第4條上限。108 年 12 月 31 日修法，110 年度預算起適用新上限。</p>
+      <div class="scroll"><table id="classes"></table></div></div>
+    <div class="card"><h2>三個來源各算什麼</h2>
+      <div class="scroll"><table>
+        <tr><th>比較項目</th><th style="text-align:left">主計總處 總預算</th><th style="text-align:left">人事總處 統計年報</th><th style="text-align:left">銓敘部 統計年報</th></tr>
+        <tr><td>數字性質</td><td style="text-align:left">預算員額（上限）</td><td style="text-align:left">預算員額與年底現員都有</td><td style="text-align:left">年底現員</td></tr>
+        <tr><td>機關範圍</td><td style="text-align:left;white-space:normal">中央政府各機關；另可加計特種基金</td><td style="text-align:left;white-space:normal">中央與地方分列；不含事業機構、軍事機關</td><td style="text-align:left;white-space:normal">全國：中央加地方，含公營事業、衛生醫療機構、公立學校職員</td></tr>
+        <tr><td>算哪些人</td><td style="text-align:left;white-space:normal">職員、警察、法警、駐警、工友、技工、駕駛、聘用、約僱、駐外雇員</td><td style="text-align:left;white-space:normal">政務、公務人員、警察、醫事、法官、檢察官、教師、聘用、約僱、事務性人力</td><td style="text-align:left;white-space:normal">公務人員（含警察、法官檢察官、醫事、事業人員）；不含教師、聘僱、技工工友、駐衛警</td></tr>
+        <tr><td>時間點</td><td style="text-align:left">預算年度</td><td style="text-align:left">年底</td><td style="text-align:left">12 月底</td></tr>
+      </table></div>
+      <ul class="plain">
+        <li>銓敘部的數字最大，因為包含地方政府和公營事業機構。</li>
+        <li>現員一定比預算員額少，差額就是還沒補的缺。</li>
+        <li>要談「中央機關用人規模有沒有增加」，應該看預算員額，不是現員。</li>
+      </ul></div>
+
+    <div class="card"><h2>完整的概念對照與差異說明</h2><p class="hint">各名詞的正式定義、三個來源的範圍對照、已驗證的對應關係、數字對不起來的常見原因，以及不採計數字的紀錄。</p>
+      <details><summary>展開全文</summary><div class="md">
+<h3>1. 基本名詞（依人事總處「政府員額管理相關資訊—員額概念e點靈」111.3.31 版及統計年報名詞定義）</h3>
+<div class="scroll"><table class="dt md">
+<tr><th>名詞</th><th>定義</th><th>涵蓋人力類型</th><th>穩定性</th></tr>
+<tr><td class="l">編制員額</td><td class="l">各機關組織法規（含編制表）規定可進用「職員」人數的上限，須修法才能調整</td><td class="l">只有職員</td><td class="l">高，很少變動</td></tr>
+<tr><td class="l">預算員額</td><td class="l">各機關每年度編入中央政府總預算案並經立法院審議通過後，該年度實際可進用各類人數的上限；職員預算員額 ≤ 編制員額</td><td class="l">職員（含警察、法警）、駐衛警察、工友（含技工、駕駛）、聘用、約僱、駐外雇員</td><td class="l">每年度一個數</td></tr>
+<tr><td class="l">現有員額（現員、實有人數）</td><td class="l">在預算員額額度內實際在職人數，不含未補實缺額；數字隨統計時點變動</td><td class="l">同預算員額</td><td class="l">低，逐月變動</td></tr>
+<tr><td class="l">適用總員額法員額</td><td class="l">中央政府機關總員額法第3條所列五類員額，受第4條員額總數與各類高限拘束；由總預算預算員額＋非營業特種基金員額，扣除法定不列入及不受高限限制之員額而得</td><td class="l">見下表</td><td class="l">每年度一個數</td></tr>
+<tr><td class="l">非總員額法員額（不適用）</td><td class="l">中央政府員額總計（總預算＋非營業特種基金＋墊償基金）減去適用總員額法員額；主要為總統府與國安會、公立學校教職員、公立醫院職員（110 年度起）、健保署職員，以及航港局、勞保局、公路局等移撥員額、農田水利事業作業基金員額等</td><td class="l">—</td><td class="l">—</td></tr>
+</table></div>
+<p>本系統中「法定員額」一詞係指使用者要求之「法定預算」版本的預算員額（立法院審議通過後主計總處公布之「中央政府總預算」），與「編制員額」不同。</p>
+<h3>2. 總員額法五類員額與高限（第3條、第4條）</h3>
+<div class="scroll"><table class="dt md">
+<tr><th>類別</th><th>內容</th><th>108.12.31 修正前高限（108、109 年度適用）</th><th>修正後高限（110 年度起適用）</th></tr>
+<tr><td class="l">員額總數</td><td class="l">—</td><td class="l">173,000</td><td class="l">160,900</td></tr>
+<tr><td class="l">第一類</td><td class="l">政務人員、定有職稱官等職等之文職人員、醫事人員及聘任人員（不含三至五類、公立學校教職員及公立醫院職員）</td><td class="l">86,700</td><td class="l">74,600</td></tr>
+<tr><td class="l">第二類</td><td class="l">依法令進用之聘僱人員、駐衛警察及工友（含技工、駕駛）（不含三、四類）</td><td class="l">41,200</td><td class="l">40,100</td></tr>
+<tr><td class="l">第三類</td><td class="l">司法院及所屬機關職員（含法警）、聘僱人員、駐衛警察及工友</td><td class="l">13,900</td><td class="l">15,000</td></tr>
+<tr><td class="l">第四類</td><td class="l">法務部所屬檢察機關職員（含法警）、聘僱人員、駐衛警察及工友</td><td class="l">6,900</td><td class="l">6,900</td></tr>
+<tr><td class="l">第五類</td><td class="l">警察、消防及海岸巡防機關職（警）員</td><td class="l">24,300</td><td class="l">24,300</td></tr>
+</table></div>
+<p>修正重點：公立醫院職員自 110 年度起排除於總員額法適用範圍，因此 110 年度適用總數（138,668）較 109 年度（154,976）大幅下降，並非實際精簡；比對趨勢時 109→110 必須分段解讀。</p>
+<h3>3. 三個來源的統計範圍對照</h3>
+<div class="scroll"><table class="dt md">
+<tr><th>項目</th><th>A. 主計總處 總預算（案）</th><th>B. 人事總處 公教人力統計年報</th><th>C. 銓敘部 銓敘統計年報</th></tr>
+<tr><td class="l">員額性質</td><td class="l">預算員額（可進用上限）</td><td class="l">附表5：預算員額；表1／附表1／附表2：實有人數（年底現員）</td><td class="l">現有人數（年底現員）</td></tr>
+<tr><td class="l">統計時點</td><td class="l">年度（預算年度）</td><td class="l">年底</td><td class="l">12 月底</td></tr>
+<tr><td class="l">機關範圍</td><td class="l">中央政府（總預算各機關；備註另加非營業特種基金）</td><td class="l">中央（行政院所屬＋行政院以外）；地方另列；不含事業機構與軍事機關</td><td class="l">全國：中央＋地方；含行政機關、公營事業機構、衛生醫療機構、公立學校（職員）</td></tr>
+<tr><td class="l">人力類型</td><td class="l">職員、警察、法警、駐警、工友、技工、駕駛、聘用、約僱、駐外雇員</td><td class="l">政務、公務人員、警察、醫事、法官、檢察官、教師、聘用、約僱、事務性人力（另含清潔隊員、測量助理）</td><td class="l">公務人員（含政務、簡薦委、法官檢察官、警察、醫事、事業人員等）；不含教師、軍職、聘僱、技工工友、駐衛警、約用人員</td></tr>
+<tr><td class="l">可比對的口徑</td><td class="l">各機關預算員額合計；適用總員額法員額；職員＋警察＋法警</td><td class="l">附表5 中央政府預算員額（行政院所屬＋行政院以外）；表1 公務人員＋警察實有</td><td class="l">中央各機關；中央行政機關</td></tr>
+</table></div>
+<h3>4. 已驗證的對應關係</h3>
+<ul class="plain">
+<li>A「總預算預算員額總數＋非營業特種基金員工總人數＋積欠工資墊償基金」（總員額法彙計表備註3）＝ B 附表5「行政院所屬合計＋行政院以外機關合計」。108、109、110、111、112 年度五年完全相等（219,542／220,877／218,798／220,072／221,661）。</li>
+<li>113 年度：A 為 221,323，B 年報原載為 220,899，差 424，差額全在基金部分（A 基金 90,264＋22＝90,286；B 作業基金 89,862）。B 的 89,862 與其 112 年度數字完全相同，113 年報與 114 年報皆如此，研判為沿用前一年度數字。本系統自 115 年 9 月 30 日起不採計 B 這一筆及由它加總的「行政院所屬合計」「中央政府合計」，各表以「註1」標示並於表末說明；年報原載數字保留於 data/02_人事總處_中央政府預算員額.csv。</li>
+<li>114 年度：A（預算案）為 223,458，B 為 219,950，差 3,508。A 這一年首次把「農田水利事業作業基金員額 3,508 人」計入基金總人數再列為不受高限限制；扣除後 A 為 219,950，與 B 相同。拆開看，公務預算 A 多 1 人（130,518 對 130,517）、基金 B 多 1 人，兩者互抵。115、116 年度預算案 A 已不再列農田水利這一項。此屬口徑差異，兩邊數字均照常呈現。</li>
+<li>B 附表5「行政院所屬公務預算＋行政院以外」＝ A 各機關預算員額彙計總表合計（108–113 年度完全相等；114 年度差 1 人）。</li>
+<li>人事總處 111.3.31 概念文件所載 111 年度數字（總預算案預算員額 220,072；適用總員額法 139,350；不適用 80,722）與本系統 111 年度資料完全一致。</li>
+</ul>
+<h3>5. 常見「數字對不起來」的原因</h3>
+<ul class="plain">
+<li>預算員額（上限）與現員（在職）混用：現員一定小於或等於預算員額，且會隨時點變動。</li>
+<li>範圍不同：銓敘部數字含地方政府與公營事業機構，人事總處年報不含事業機構，總預算只含中央政府。</li>
+<li>人力類型不同：銓敘部「公務人員」不含教師、聘僱、技工工友、駐衛警；總預算「預算員額」則含聘僱、工友等。</li>
+<li>總員額法適用範圍變動：110 年度起公立醫院職員排除；各年度備註 3 另有航港局、勞保局、公路局、農田水利等「不受高限限制」項目。</li>
+<li>預算案與法定預算：本系統 108–113 年度取法定預算，114 年度起因主計總處尚未於「中央政府總預算」清單公布法定版，暫以預算案為準；下載到的 108–113 年度預算案與法定預算員額表數字完全相同。</li>
+<li>來源檔案本身的誤植：115 與 116 年度預算案總員額法彙計表備註 3 之年度文字分別誤植為「114 年度」「115 年度」，數字仍為當年度；116 年度 Excel 檔尾端重複貼了 115 年度備註，本系統只取第一份備註。</li>
+</ul>
+<h3>6. 人工校正紀錄（不採計的原載數字）</h3>
+<div class="scroll"><table class="dt md">
+<tr><th>編號</th><th>來源</th><th>年度</th><th>欄位與原載值</th><th>處理</th><th>原因</th></tr>
+<tr><td class="l">註1</td><td class="l">人事總處年報附表5</td><td class="l">113</td><td class="l">行政院所屬作業基金 89,862；行政院所屬合計 200,426；中央政府合計 220,899</td><td class="l">不採計，表末加註</td><td class="l">作業基金與 112 年度數字相同，研判沿用未更新；主計總處同年度為 90,286</td></tr>
+</table></div>
+<p>規則檔為 data/人工校正.csv。原始資料檔不修改，只在產出報表時排除。來源日後若更正（原載值改變），程式會提示該規則不再套用。</p>
+<h3>7. 建議的比對用法</h3>
+<ul class="plain">
+<li>看「中央政府用人規模」：用 A 各機關預算員額合計（公務預算）或 A 總計（含基金），再對照 B 附表5 確認兩機關一致。</li>
+<li>看「總員額法控管」：用 A 適用總員額法員額與各類高限差距；110 年度前後分段。</li>
+<li>看「實際在職」：用 B 表1（行政院所屬實有）與 C 中央行政機關；兩者仍有範圍差異（B 含醫事、教師、事務性人力；C 只含公務人員）。</li>
+<li>對外回應銓敘部數字時，先說明 C 為現員且含地方與事業機構，再以 A 或 B 說明中央機關預算員額變化。</li>
+</ul>
+      </div></details></div>
+  </section>
+
+  <section id="p-src" role="tabpanel" hidden>
+
+    <div class="card"><h2>資料來源與抓取日期</h2><div class="scroll"><table class="src" id="sources"></table></div></div>
+  </section>
+</div>
+<div class="tip" id="tip"></div>
+<script>
+const D = {"generated": "2026-09-30", "years": [108, 109, 110, 111, 112, 113, 114, 115, 116], "notes": {"108": ["這一年適用修法前的上限（總數 173,000 人），公立醫院職員仍計入總員額法。"], "109": ["這一年適用修法前的上限（總數 173,000 人），公立醫院職員仍計入總員額法。"], "110": ["這一年起適用新上限（總數 160,900 人），公立醫院職員不再計入總員額法，所以員額比前一年大幅減少，並不是實際精簡。"], "113": ["人事總處年報附表5 的 113 年度作業基金（89,862 人）與前一年度數字相同，研判為沿用未更新，本系統不採計這一筆及由它加總的合計數。詳細說明見「歷年趨勢」分頁表末註1。"], "114": ["這一年「不受上限限制」的員額多了農田水利事業作業基金 3,508 人。", "主計總處尚未公布這一年的法定預算，先以行政院送立法院的預算案呈現。", "主計總處的中央政府員額總計（223,458）比人事總處年報的中央政府預算員額（219,950）多 3,508 人，正好是農田水利事業作業基金員額；扣除後兩者相同。這是計算範圍不同，不是錯誤。"], "115": ["主計總處尚未公布這一年的法定預算，先以行政院送立法院的預算案呈現。"], "116": ["主計總處尚未公布這一年的法定預算，先以行政院送立法院的預算案呈現。"]}, "law": {"108": {"version": "法定預算", "total": 153667, "c1": 83166, "c2": 30091, "c3": 13752, "c4": 5743, "c5": 20915, "ceil": {"total": 173000, "c1": 86700, "c2": 41200, "c3": 13900, "c4": 6900, "c5": 24300}, "budget_total": 130320, "fund": 89200, "wage": 22, "grand": 219542, "excluded": 62770, "other": 3105, "nonlaw": 65875, "irrigation": false, "staff": {"職員": 106065, "警察": 12410, "法警": 1872, "駐警": 1094, "工友": 7113, "技工": 7000, "駕駛": 2452, "聘用": 8322, "約僱": 6610, "駐外雇員": 729}}, "109": {"version": "法定預算", "total": 154976, "c1": 83435, "c2": 29221, "c3": 13900, "c4": 5850, "c5": 22570, "ceil": {"total": 173000, "c1": 86700, "c2": 41200, "c3": 13900, "c4": 6900, "c5": 24300}, "budget_total": 131564, "fund": 89291, "wage": 22, "grand": 220877, "excluded": 62808, "other": 3093, "nonlaw": 65901, "irrigation": false, "staff": {"職員": 106608, "警察": 13956, "法警": 1878, "駐警": 1045, "工友": 6589, "技工": 6640, "駕駛": 2330, "聘用": 8563, "約僱": 6638, "駐外雇員": 729}}, "110": {"version": "法定預算", "total": 138668, "c1": 70044, "c2": 28484, "c3": 14087, "c4": 6036, "c5": 20017, "ceil": {"total": 160900, "c1": 74600, "c2": 40100, "c3": 15000, "c4": 6900, "c5": 24300}, "budget_total": 129528, "fund": 89248, "wage": 22, "grand": 218798, "excluded": 77047, "other": 3083, "nonlaw": 80130, "irrigation": false, "staff": {"職員": 91011, "警察": 13961, "法警": 1912, "駐警": 993, "工友": 6053, "技工": 6273, "駕駛": 2226, "聘用": 8655, "約僱": 6837, "駐外雇員": 747}}, "111": {"version": "法定預算", "total": 139350, "c1": 70477, "c2": 27364, "c3": 14302, "c4": 6251, "c5": 20956, "ceil": {"total": 160900, "c1": 74600, "c2": 40100, "c3": 15000, "c4": 6900, "c5": 24300}, "budget_total": 130689, "fund": 89361, "wage": 22, "grand": 220072, "excluded": 77648, "other": 3074, "nonlaw": 80722, "irrigation": false, "staff": {"職員": 91840, "警察": 14900, "法警": 1959, "駐警": 916, "工友": 5491, "技工": 5826, "駕駛": 2151, "聘用": 8728, "約僱": 6792, "駐外雇員": 747}}, "112": {"version": "法定預算", "total": 140034, "c1": 71539, "c2": 26709, "c3": 14437, "c4": 6389, "c5": 20960, "ceil": {"total": 160900, "c1": 74600, "c2": 40100, "c3": 15000, "c4": 6900, "c5": 24300}, "budget_total": 131799, "fund": 89840, "wage": 22, "grand": 221661, "excluded": 78563, "other": 3064, "nonlaw": 81627, "irrigation": false, "staff": {"職員": 93123, "警察": 14900, "法警": 1974, "駐警": 853, "工友": 5006, "技工": 5502, "駕駛": 2078, "聘用": 8915, "約僱": 6936, "駐外雇員": 747}}, "113": {"version": "法定預算", "total": 138792, "c1": 71354, "c2": 25675, "c3": 14508, "c4": 6495, "c5": 20760, "ceil": {"total": 160900, "c1": 74600, "c2": 40100, "c3": 15000, "c4": 6900, "c5": 24300}, "budget_total": 131037, "fund": 90264, "wage": 22, "grand": 221323, "excluded": 79481, "other": 3050, "nonlaw": 82531, "irrigation": false, "staff": {"職員": 93142, "警察": 14723, "法警": 1993, "駐警": 782, "工友": 4446, "技工": 5141, "駕駛": 1981, "聘用": 8791, "約僱": 7046, "駐外雇員": 747}}, "114": {"version": "預算案", "total": 137894, "c1": 71426, "c2": 24809, "c3": 14736, "c4": 6610, "c5": 20313, "ceil": {"total": 160900, "c1": 74600, "c2": 40100, "c3": 15000, "c4": 6900, "c5": 24300}, "budget_total": 130518, "fund": 92918, "wage": 22, "grand": 223458, "excluded": 79033, "other": 6531, "nonlaw": 85564, "irrigation": true, "staff": {"職員": 93695, "警察": 14204, "法警": 2008, "駐警": 710, "工友": 3937, "技工": 4812, "駕駛": 1785, "聘用": 8895, "約僱": 7101, "駐外雇員": 747}}, "115": {"version": "預算案", "total": 138315, "c1": 72334, "c2": 23991, "c3": 14836, "c4": 6605, "c5": 20549, "ceil": {"total": 160900, "c1": 74600, "c2": 40100, "c3": 15000, "c4": 6900, "c5": 24300}, "budget_total": 131331, "fund": 89447, "wage": 22, "grand": 220800, "excluded": 79472, "other": 3013, "nonlaw": 82485, "irrigation": false, "staff": {"職員": 95060, "警察": 14166, "法警": 2009, "駐警": 644, "工友": 3415, "技工": 4460, "駕駛": 1690, "聘用": 8921, "約僱": 7203, "駐外雇員": 747}}, "116": {"version": "預算案", "total": 138061, "c1": 72719, "c2": 23348, "c3": 14836, "c4": 6604, "c5": 20554, "ceil": {"total": 160900, "c1": 74600, "c2": 40100, "c3": 15000, "c4": 6900, "c5": 24300}, "budget_total": 131408, "fund": 89313, "wage": 22, "grand": 220743, "excluded": 79688, "other": 2994, "nonlaw": 82682, "irrigation": false, "staff": {"職員": 95505, "警察": 14166, "法警": 2009, "駐警": 582, "工友": 2987, "技工": 4174, "駕駛": 1602, "聘用": 9057, "約僱": 7232, "駐外雇員": 747}}}, "bud": {"108": {"version": "法定預算", "total": 130320}, "109": {"version": "法定預算", "total": 131564}, "110": {"version": "法定預算", "total": 129528}, "111": {"version": "法定預算", "total": 130689}, "112": {"version": "法定預算", "total": 131799}, "113": {"version": "法定預算", "total": 131037}, "114": {"version": "預算案", "total": 130518}, "115": {"version": "預算案", "total": 131331}, "116": {"version": "預算案", "total": 131408}}, "dgpaB": {"107": {"central": 220289, "ey_total": 200670, "ey_budget": 111373, "ey_fund": 89297, "non_ey": 19619, "excluded": null}, "108": {"central": 219542, "ey_total": 199740, "ey_budget": 110518, "ey_fund": 89222, "non_ey": 19802, "excluded": null}, "109": {"central": 220877, "ey_total": 201035, "ey_budget": 111722, "ey_fund": 89313, "non_ey": 19842, "excluded": null}, "110": {"central": 218798, "ey_total": 198800, "ey_budget": 109530, "ey_fund": 89270, "non_ey": 19998, "excluded": null}, "111": {"central": 220072, "ey_total": 199848, "ey_budget": 110465, "ey_fund": 89383, "non_ey": 20224, "excluded": null}, "112": {"central": 221661, "ey_total": 201292, "ey_budget": 111430, "ey_fund": 89862, "non_ey": 20369, "excluded": null}, "113": {"central": null, "ey_total": null, "ey_budget": 110564, "ey_fund": null, "non_ey": 20473, "excluded": "註1"}, "114": {"central": 219950, "ey_total": 199265, "ey_budget": 109832, "ey_fund": 89433, "non_ey": 20685, "excluded": null}}, "dgpaA": {"107": {"total": 175750, "civil": 81761, "police": 15151}, "108": {"total": 176189, "civil": 82343, "police": 15953}, "109": {"total": 178120, "civil": 83483, "police": 17404}, "110": {"total": 176337, "civil": 82748, "police": 17240}, "111": {"total": 175969, "civil": 83383, "police": 16972}, "112": {"total": 175280, "civil": 83885, "police": 16737}, "113": {"total": 174186, "civil": 84058, "police": 16368}, "114": {"total": 172462, "civil": 83562, "police": 15963}}, "mocs": {"107": {"total": 356878, "central": null, "central_admin": null, "local": null}, "108": {"total": 361421, "central": 189884, "central_admin": 103674, "local": 171537}, "109": {"total": 366494, "central": 193445, "central_admin": 106364, "local": 173049}, "110": {"total": 363197, "central": 191802, "central_admin": 105532, "local": 171395}, "111": {"total": 364654, "central": 193118, "central_admin": 106213, "local": 171536}, "112": {"total": 365503, "central": 193947, "central_admin": 106731, "local": 171556}, "113": {"total": 362942, "central": 192139, "central_admin": 106474, "local": 170803}, "114": {"total": 360080, "central": 190588, "central_admin": 105940, "local": 169492}}, "footnotes": [{"id": "註1", "text": "人事總處 113 年及 114 年公教人力統計年報附表5 所載 113 年度「行政院所屬—作業基金」89,862 人，與 112 年度數字完全相同，研判為沿用前一年度數字；主計總處 113 年度中央政府總預算所載非營業特種基金加積欠工資墊償基金為 90,286 人，兩者相差 424 人。本系統自 115 年 9 月 30 日起不採計年報該筆數字，以及由其加總的「行政院所屬合計」200,426 人與「中央政府合計」220,899 人。同年度「行政院所屬—公務預算」110,564 人及「行政院以外機關」20,473 人與主計總處一致，照常採計。年報原載數字仍保留於 data/02_人事總處_中央政府預算員額.csv，可與紙本核對。"}], "sources": [{"name": "主計總處_116案_總員額法", "url": "https://ws.dgbas.gov.tw/001/Upload/461/relfile/11333/236582/b機關總員額法員額彙計表.xlsx", "retrieved": "2026-09-30"}, {"name": "主計總處_116案_預算員額總表", "url": "https://ws.dgbas.gov.tw/001/Upload/461/relfile/11333/236582/b各機關預算員額彙計總表.xlsx", "retrieved": "2026-09-30"}, {"name": "主計總處_115案_總員額法", "url": "https://ws.dgbas.gov.tw/001/Upload/461/relfile/11333/235176/b機關總員額法員額彙計表.xlsx", "retrieved": "2026-09-30"}, {"name": "主計總處_115案_預算員額總表", "url": "https://ws.dgbas.gov.tw/001/Upload/461/relfile/11333/235176/b各機關預算員額彙計總表.xlsx", "retrieved": "2026-09-30"}, {"name": "主計總處_114案_總員額法", "url": "https://ws.dgbas.gov.tw/001/Upload/461/relfile/11333/233556/b機關總員額法員額彙計表.xlsx", "retrieved": "2026-09-30"}, {"name": "主計總處_114案_預算員額總表", "url": "https://ws.dgbas.gov.tw/001/Upload/461/relfile/11333/233556/b各機關預算員額彙計總表.xlsx", "retrieved": "2026-09-30"}, {"name": "主計總處_113法_總員額法", "url": "https://ws.dgbas.gov.tw/001/Upload/461/relfile/11333/232850/C機關總員額法員額彙計表.xlsx", "retrieved": "2026-09-30"}, {"name": "主計總處_113法_預算員額總表", "url": "https://ws.dgbas.gov.tw/001/Upload/461/relfile/11333/232850/C各機關預算員額彙計總表.xlsx", "retrieved": "2026-09-30"}, {"name": "主計總處_113案_總員額法", "url": "https://ws.dgbas.gov.tw/001/Upload/461/relfile/11333/231560/b機關總員額法員額彙計表.xlsx", "retrieved": "2026-09-30"}, {"name": "主計總處_113案_預算員額總表", "url": "https://ws.dgbas.gov.tw/001/Upload/461/relfile/11333/231560/b各機關預算員額彙計總表.xls", "retrieved": "2026-09-30"}, {"name": "主計總處_112法_總員額法", "url": "https://ws.dgbas.gov.tw/public/data/dgbas01/112/112Ctab/112C機關總員額法員額彙計表.xlsx", "retrieved": "2026-09-30"}, {"name": "主計總處_112法_預算員額總表", "url": "https://ws.dgbas.gov.tw/public/data/dgbas01/112/112Ctab/112C各機關預算員額彙計總表.xls", "retrieved": "2026-09-30"}, {"name": "主計總處_112案_總員額法", "url": "https://ws.dgbas.gov.tw/public/data/dgbas01/112/112btab/112b機關總員額法員額彙計表.xlsx", "retrieved": "2026-09-30"}, {"name": "主計總處_112案_預算員額總表", "url": "https://ws.dgbas.gov.tw/public/data/dgbas01/112/112btab/112b各機關預算員額彙計總表.xls", "retrieved": "2026-09-30"}, {"name": "主計總處_111法_總員額法", "url": "https://ws.dgbas.gov.tw/public/data/dgbas01/111/111Ctab/111C機關總員額法員額彙計表.xlsx", "retrieved": "2026-09-30"}, {"name": "主計總處_111法_預算員額總表", "url": "https://ws.dgbas.gov.tw/public/data/dgbas01/111/111Ctab/111C各機關預算員額彙計總表.xls", "retrieved": "2026-09-30"}, {"name": "主計總處_111案_總員額法", "url": "https://ws.dgbas.gov.tw/public/data/dgbas01/111/111btab/111b機關總員額法員額彙計表.xlsx", "retrieved": "2026-09-30"}, {"name": "主計總處_111案_預算員額總表", "url": "https://ws.dgbas.gov.tw/public/data/dgbas01/111/111btab/111b各機關預算員額彙計總表.xls", "retrieved": "2026-09-30"}, {"name": "主計總處_110法_總員額法", "url": "https://ws.dgbas.gov.tw/public/data/dgbas01/110/110ctab/110c機關總員額法員額彙計表.xls", "retrieved": "2026-09-30"}, {"name": "主計總處_110法_預算員額總表", "url": "https://ws.dgbas.gov.tw/public/data/dgbas01/110/110ctab/110c各機關預算員額彙計總表.xls", "retrieved": "2026-09-30"}, {"name": "主計總處_110案_總員額法", "url": "https://ws.dgbas.gov.tw/public/data/dgbas01/110/110btab/110b機關總員額法員額彙計表.xls", "retrieved": "2026-09-30"}, {"name": "主計總處_110案_預算員額總表", "url": "https://ws.dgbas.gov.tw/public/data/dgbas01/110/110btab/110b各機關預算員額彙計總表.xls", "retrieved": "2026-09-30"}, {"name": "主計總處_109法_總員額法", "url": "https://ws.dgbas.gov.tw/public/data/dgbas01/109/109ctab/109c機關總員額法員額彙計表.xls", "retrieved": "2026-09-30"}, {"name": "主計總處_109法_預算員額總表", "url": "https://ws.dgbas.gov.tw/public/data/dgbas01/109/109ctab/109c各機關預算員額彙計總表.xls", "retrieved": "2026-09-30"}, {"name": "主計總處_109案_總員額法", "url": "https://ws.dgbas.gov.tw/public/data/dgbas01/109/109btab/109b機關總員額法員額彙計表.xls", "retrieved": "2026-09-30"}, {"name": "主計總處_109案_預算員額總表", "url": "https://ws.dgbas.gov.tw/public/data/dgbas01/109/109btab/109b各機關預算員額彙計總表.xls", "retrieved": "2026-09-30"}, {"name": "主計總處_108案_總員額法", "url": "https://ws.dgbas.gov.tw/public/data/dgbas01/108/108btab/108b機關總員額法員額彙計表.xls", "retrieved": "2026-09-30"}, {"name": "主計總處_108案_預算員額總表", "url": "https://ws.dgbas.gov.tw/public/data/dgbas01/108/108btab/108b各機關預算員額彙計總表.xls", "retrieved": "2026-09-30"}, {"name": "主計總處_108法_總員額法", "url": "https://ws.dgbas.gov.tw/public/data/dgbas01/108/108ctab/108c機關總員額法員額彙計表.xls", "retrieved": "2026-09-30"}, {"name": "主計總處_108法_預算員額總表", "url": "https://ws.dgbas.gov.tw/public/data/dgbas01/108/108ctab/108c各機關預算員額彙計總表.xls", "retrieved": "2026-09-30"}, {"name": "人事總處_114年報_附表5_近十年中央政府預算員額數", "url": "https://www.dgpa.gov.tw/FileConversion?filename=dgpa/files/202602/575c3555-0ba0-4608-b8ef-63e24da9eac1.xlsx&nfix=&name=%e9%99%84%e8%a1%a85+%e8%bf%91%e5%8d%81%e5%b9%b4%e4%b8%ad%e5%a4%ae%e6%94%bf%e5%ba%9c%e9%a0%90%e7%ae%97%e5%93%a1%e9%a1%8d%e6%95%b8.xlsx", "retrieved": "2026-09-30"}, {"name": "人事總處_114年報_表1_近十年行政院所屬公教人力實有人數", "url": "https://www.dgpa.gov.tw/FileConversion?filename=dgpa/files/202602/a93aff2a-6b3e-4792-80a1-2ca8975e6b95.xlsx&nfix=&name=%e8%a1%a81+%e8%bf%91%e5%8d%81%e5%b9%b4%e8%a1%8c%e6%94%bf%e9%99%a2%e6%89%80%e5%b1%ac%e5%85%ac%e6%95%99%e4%ba%ba%e5%8a%9b%e5%af%a6%e6%9c%89%e4%ba%ba%e6%95%b8.xlsx", "retrieved": "2026-09-30"}, {"name": "人事總處_114年報_附表1_全國公教人力實有人數依政府別", "url": "https://www.dgpa.gov.tw/FileConversion?filename=dgpa/files/202602/aad5088a-31bc-46b5-81b9-97969cc53dd7.xlsx&nfix=&name=%e9%99%84%e8%a1%a81+%e5%85%a8%e5%9c%8b%e5%85%ac%e6%95%99%e4%ba%ba%e5%8a%9b%e5%af%a6%e6%9c%89%e4%ba%ba%e6%95%b8(%e4%be%9d%e6%94%bf%e5%ba%9c%e5%88%a5).xlsx", "retrieved": "2026-09-30"}, {"name": "人事總處_114年報_附表2_實有人數依機關類型別", "url": "https://www.dgpa.gov.tw/FileConversion?filename=dgpa/files/202602/cabcae20-c405-49ca-b225-9a9ff351c386.xlsx&nfix=&name=%e9%99%84%e8%a1%a82+%e8%a1%8c%e6%94%bf%e9%99%a2%e6%89%80%e5%b1%ac%e5%8f%8a%e5%9c%b0%e6%96%b9%e6%94%bf%e5%ba%9c%e5%85%ac%e6%95%99%e4%ba%ba%e5%8a%9b%e5%af%a6%e6%9c%89%e4%ba%ba%e6%95%b8(%e4%be%9d%e6%a9%9f%e9%97%9c%e9%a1%9e%e5%9e%8b%e5%88%a5).xlsx", "retrieved": "2026-09-30"}, {"name": "人事總處_統計年報相關名詞定義", "url": "https://www.dgpa.gov.tw/FileConversion?filename=dgpa/files/202602/137e7241-209e-42dd-ba33-c23ad06754c3.docx&nfix=&name=名詞定義.docx", "retrieved": "2026-09-30"}, {"name": "人事總處_員額概念e點靈(政府員額管理相關資訊111.3.31)", "url": "https://www.dgpa.gov.tw/FileConversion?filename=dgpa%2Ffiles%2F202204%2Fbb635fb2-25e1-4aae-bc90-b7f05791bf2e.pdf&name=政府員額管理相關資訊.pdf", "retrieved": "2026-09-30"}, {"name": "法規_中央政府機關總員額法", "url": "https://law.moj.gov.tw/LawClass/LawAll.aspx?pcode=S0110038", "retrieved": "2026-09-30"}, {"name": "銓敘部_114年報_提要分析", "url": "https://www.mocs.gov.tw/FileUpload/2133-15323/Documents//6.114年報提要分析.pdf", "retrieved": "2026-09-30"}, {"name": "銓敘部_113年報_提要分析", "url": "https://www.mocs.gov.tw/FileUpload/2086-13900/Documents//6.113年報提要分析.pdf", "retrieved": "2026-09-30"}, {"name": "銓敘部_112年報_提要分析", "url": "https://www.mocs.gov.tw/FileUpload/2070-12263/Documents//6.112年報提要分析.pdf", "retrieved": "2026-09-30"}, {"name": "銓敘部_111年報_提要分析", "url": "https://www.mocs.gov.tw/FileUpload/1962-11418/Documents//6.111年報提要分析.pdf", "retrieved": "2026-09-30"}, {"name": "銓敘部_110年報_提要分析", "url": "https://www.mocs.gov.tw/FileUpload/1838-9852/Documents//6.110年報提要分析.pdf", "retrieved": "2026-09-30"}, {"name": "銓敘部_109年報_提要分析", "url": "https://www.mocs.gov.tw/FileUpload/1417-6954/Documents//6.年報提要分析_final.pdf", "retrieved": "2026-09-30"}, {"name": "銓敘部_108年報_提要分析", "url": "https://www.mocs.gov.tw/FileUpload/1389-6538/Documents//6.提要分析.pdf", "retrieved": "2026-09-30"}, {"name": "銓敘部_114年報_表一_全國公務人員概況_ods", "url": "https://www.mocs.gov.tw/FileUpload/2137-15330/Documents//9.(一)全國公務人員概況.ods", "retrieved": "2026-09-30"}, {"name": "銓敘部_114年報_表一_全國公務人員概況_pdf", "url": "https://www.mocs.gov.tw/FileUpload/2137-15330/Documents//9.(一)全國公務人員概況.pdf", "retrieved": "2026-09-30"}, {"name": "人事總處_114年報_統計年報相關名詞定義", "url": "https://www.dgpa.gov.tw/FileConversion?filename=dgpa/files/202602/137e7241-209e-42dd-ba33-c23ad06754c3.docx&nfix=&name=%e7%b5%b1%e8%a8%88%e5%b9%b4%e5%a0%b1%e7%9b%b8%e9%97%9c%e5%90%8d%e8%a9%9e%e5%ae%9a%e7%be%a9.docx", "retrieved": "2026-09-30"}]};
+const $ = (s, r) => (r || document).querySelector(s);
+const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+const fmt = v => v == null ? '–' : Number(v).toLocaleString('en-US');
+const sgn = v => v == null ? '–' : (v > 0 ? '＋' : v < 0 ? '－' : '±') + Math.abs(v).toLocaleString('en-US');
+const pct = (a, b) => (a == null || !b) ? null : a / b * 100;
+const SVGNS = 'http://www.w3.org/2000/svg';
+const sv = (tag, attrs, text) => { const e = document.createElementNS(SVGNS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (text != null) e.textContent = text; return e; };
+const tipEl = $('#tip');
+function showTip(ev, title, rows) {
+  tipEl.replaceChildren();
+  if (title) tipEl.append(el('div', 't', title));
+  rows.forEach(r => { const d = el('div', 'r'); const s = el('span'); if (r.c) { const i = el('i'); i.style.setProperty('--c', r.c); s.append(i); } s.append(document.createTextNode(r.k)); d.append(s, el('b', null, r.v)); tipEl.append(d); });
+  tipEl.style.display = 'block';
+  const x = ev.clientX ?? ev.target.getBoundingClientRect().right, y = ev.clientY ?? ev.target.getBoundingClientRect().top;
+  const w = tipEl.offsetWidth, h = tipEl.offsetHeight;
+  tipEl.style.left = Math.max(8, Math.min(window.innerWidth - w - 8, x + 14)) + 'px';
+  tipEl.style.top = Math.max(8, Math.min(window.innerHeight - h - 8, y + 14)) + 'px';
+}
+const hideTip = () => { tipEl.style.display = 'none'; };
+function hover(node, title, rowsFn) {
+  node.tabIndex = 0;
+  node.addEventListener('pointermove', e => showTip(e, title, rowsFn()));
+  node.addEventListener('pointerleave', hideTip);
+  node.addEventListener('focus', e => showTip(e, title, rowsFn()));
+  node.addEventListener('blur', hideTip);
+}
+const YEARS = D.years;
+const hasLaw = y => !!D.law[y];
+let state = { tab: 'year', year: YEARS.filter(hasLaw).slice(-1)[0] };
+const CLASSES = [
+  ['總數', 'total', '五類合計'],
+  ['第一類', 'c1', '一般機關職員：政務人員、文職人員、醫事人員、聘任人員'],
+  ['第二類', 'c2', '聘僱人員、駐衛警察、工友（含技工、駕駛）'],
+  ['第三類', 'c3', '司法院及所屬機關'],
+  ['第四類', 'c4', '法務部所屬檢察機關'],
+  ['第五類', 'c5', '警察、消防、海岸巡防機關職（警）員'],
+];
+const pendB = db => (db && db.excluded) ? `年報數字不採計（${db.excluded}，見歷年趨勢表末）` : null;
+const PENDING = { B: '人事總處年報尚未公布（通常次年 2 至 3 月）', C: '銓敘部年報尚未公布（通常次年年中）', A: '主計總處尚未公布' };
+
+/* ---------- 年度查詢 ---------- */
+function renderYear() {
+  const y = state.year, L = D.law[y], P = D.law[y - 1], B = D.bud[y], DB = D.dgpaB[y], DA = D.dgpaA[y], M = D.mocs[y];
+  document.querySelectorAll('.yr').forEach(b => b.setAttribute('aria-pressed', String(+b.dataset.y === y)));
+  // hero
+  const hero = $('#hero'); hero.replaceChildren();
+  if (L) {
+    const used = pct(L.total, L.ceil.total);
+    hero.append(document.createTextNode(`${y} 年度，受總員額法控管的中央機關員額是 `), el('b', null, fmt(L.total)), document.createTextNode(' 人'));
+    hero.append(el('span', 'badge', L.version === '法定預算' ? '法定預算' : '預算案（法定預算尚未公布）'));
+    if (P) { const d = L.total - P.total; hero.append(document.createTextNode(`，比 ${y - 1} 年度${d > 0 ? '增加' : d < 0 ? '減少' : '持平'}${d ? ' ' + fmt(Math.abs(d)) + ' 人' : ''}`)); }
+    hero.append(document.createTextNode(`。法定上限 ${fmt(L.ceil.total)} 人，還有 `), el('b', null, fmt(L.ceil.total - L.total)), document.createTextNode(` 人的空間（已使用 ${used.toFixed(1)}%）。`));
+  } else hero.textContent = `${y} 年度的總預算資料尚未收錄。`;
+  const yn = $('#ynotes'); yn.replaceChildren(); (D.notes[y] || []).forEach(t => yn.append(el('div', 'note', t)));
+  // tiles
+  const tiles = $('#tiles'); tiles.replaceChildren();
+  const T = [
+    { lbl: '受總員額法控管的員額', v: L && L.total, p: P && P.total, desc: '總預算與特種基金中，適用總員額法的部分', chips: ['預算員額', '主計總處'], src: 'A', unit: `${y} 年度` },
+    { lbl: '總預算各機關預算員額', v: B && B.total, p: D.bud[y - 1] && D.bud[y - 1].total, desc: '編在中央政府總預算（公務預算）的員額，不含特種基金', chips: ['預算員額', '主計總處'], src: 'A', unit: `${y} 年度` },
+    { lbl: '中央政府員額總計', v: L && L.grand, p: P && P.grand, desc: '總預算加上特種基金（國立學校、公立醫院等）', chips: ['預算員額', '主計總處'], src: 'A', unit: `${y} 年度` },
+    { lbl: '人事總處：中央政府預算員額', v: DB && DB.central, p: D.dgpaB[y - 1] && D.dgpaB[y - 1].central, desc: '行政院所屬加行政院以外機關，含作業基金', chips: ['預算員額', '人事總處'], src: 'B', unit: `${y} 年度`, why: pendB(DB) },
+    { lbl: '人事總處：行政院所屬實有人數', v: DA && DA.total, p: D.dgpaA[y - 1] && D.dgpaA[y - 1].total, desc: '年底實際在職，含教師、醫事人員、聘僱與事務性人力', chips: ['現員', '人事總處'], src: 'B', unit: `${y} 年底` },
+    { lbl: '銓敘部：中央各機關公務人員', v: M && M.central, p: D.mocs[y - 1] && D.mocs[y - 1].central, desc: '年底實際在職公務人員，含公營事業；不含教師、聘僱、工友', chips: ['現員', '銓敘部'], src: 'C', unit: `${y} 年底` },
+  ];
+  T.forEach(t => {
+    const d = el('div', 'tile'); d.append(el('div', 'lbl', t.lbl));
+    if (t.v == null) d.append(el('div', 'val pending', t.why || PENDING[t.src]));
+    else { d.append(el('div', 'val', fmt(t.v))); d.append(el('div', 'delta', t.p == null ? t.unit : `${t.unit}・較前一年 ${sgn(t.v - t.p)}`)); }
+    d.append(el('div', 'desc', t.desc));
+    const c = el('div', 'chips'); t.chips.forEach((x, i) => { const s = el('span', 'chip' + (i === 0 ? ' dot' : ''), x); if (i === 0) s.style.setProperty('--c', x === '現員' ? 'var(--s2)' : 'var(--s1)'); c.append(s); }); d.append(c);
+    tiles.append(d);
+  });
+  // meters
+  const mt = $('#meters'); mt.replaceChildren();
+  if (L) CLASSES.forEach(([name, key, desc]) => {
+    const v = L[key], c = L.ceil[key], u = pct(v, c), row = el('div', 'meter');
+    const nm = el('div', 'name', name); nm.append(el('small', null, desc));
+    const tr = el('div', 'track'), fl = el('div', 'fill');
+    const col = u >= 100 ? 'var(--crit)' : u >= 95 ? 'var(--warn)' : 'var(--s1)';
+    tr.style.setProperty('--f', col); fl.style.width = Math.min(100, u) + '%'; tr.append(fl);
+    hover(tr, `${y} 年度 ${name}`, () => [{ k: '員額', v: fmt(v) }, { k: '上限', v: fmt(c) }, { k: '尚餘', v: fmt(c - v) }, { k: '已使用', v: u.toFixed(1) + '%' }]);
+    const nums = el('div', 'nums'); nums.append(el('b', null, fmt(v)), document.createTextNode(` / ${fmt(c)}・尚餘 ${fmt(c - v)}`));
+    if (u >= 95) nums.append(el('span', 'flag', u >= 100 ? '⛔ 已達上限' : '⚠ 接近上限'));
+    row.append(nm, tr, nums); mt.append(row);
+  }); else mt.textContent = '尚無資料';
+  // stacked
+  const st = $('#stack'), sl = $('#stacklegend'); st.replaceChildren(); sl.replaceChildren();
+  if (L && L.grand) {
+    $('#stackhint').textContent = `${y} 年度中央政府員額總計 ${fmt(L.grand)} 人（總預算 ${fmt(L.budget_total)} 人，加特種基金 ${fmt(L.fund + L.wage)} 人）。其中一部分依法不計入總員額法。`;
+    const parts = [
+      ['適用總員額法', L.total, 'var(--s1)', '受五類上限控管'],
+      ['依法不列入', L.excluded, 'var(--s2)', '總統府與國安會、公立學校教職員、公立醫院職員、健保署職員等'],
+      ['不受上限限制', L.other, 'var(--s3)', L.irrigation ? '航港局、勞保局、公路局移撥員額，以及農田水利事業作業基金員額' : '航港局、勞保局、公路局移撥員額等'],
+    ];
+    parts.forEach(([k, v, c, d]) => {
+      const p = v / L.grand * 100, s = el('div', 'seg'); s.style.flex = `${v} 1 0`; s.style.background = c;
+      if (p > 16) s.textContent = `${fmt(v)}（${p.toFixed(1)}%）`;
+      hover(s, `${y} 年度`, () => [{ k, v: fmt(v), c }, { k: '占總計', v: p.toFixed(1) + '%' }]);
+      st.append(s);
+      const li = el('span'); const kk = el('span', 'k'); kk.style.setProperty('--c', c); li.append(kk, document.createTextNode(k + ' '), el('b', null, fmt(v)), document.createTextNode(`（${p.toFixed(1)}%）${d}`)); sl.append(li);
+    });
+  } else { $('#stackhint').textContent = '尚無資料'; }
+  // compare bars
+  const cp = $('#compare'); cp.replaceChildren();
+  const rows = [
+    ['銓敘部：全國公務人員', '中央加地方，含公營事業；不含教師、聘僱、工友', M && M.total, 2, 'C'],
+    ['主計總處：中央政府員額總計', '總預算加特種基金', L && L.grand, 1, 'A'],
+    ['人事總處：中央政府預算員額', '行政院所屬加行政院以外機關，含作業基金', DB && DB.central, 1, 'B', pendB(DB)],
+    ['銓敘部：中央各機關公務人員', '含公營事業、公立醫院、公立學校職員', M && M.central, 2, 'C'],
+    ['人事總處：行政院所屬實有人數', '含教師、醫事人員、聘僱、事務性人力', DA && DA.total, 2, 'B'],
+    ['主計總處：受總員額法控管的員額', '適用總員額法的五類員額', L && L.total, 1, 'A'],
+    ['主計總處：總預算各機關預算員額', '公務預算，不含特種基金', B && B.total, 1, 'A'],
+    ['銓敘部：中央行政機關公務人員', '只算行政機關的公務人員', M && M.central_admin, 2, 'C'],
+  ];
+  const mx = Math.max(...rows.map(r => r[2] || 0));
+  rows.forEach(([k, d, v, n, src, why]) => {
+    const r = el('div', 'hb'); const nm = el('div', 'name', k); nm.append(el('small', null, d));
+    const br = el('div', 'barrow');
+    if (v == null) br.append(el('span', 'v pending', why || PENDING[src]));
+    else { const b = el('div', 'bar'); b.style.width = (v / mx * 78) + '%'; b.style.setProperty('--c', `var(--s${n})`); br.append(b, el('span', 'v', fmt(v)));
+      hover(b, k, () => [{ k: n === 1 ? '預算員額（上限）' : '現員（年底在職）', v: fmt(v), c: `var(--s${n})` }]); }
+    r.append(nm, br); cp.append(r);
+  });
+  // staff
+  const sf = $('#staff'); sf.replaceChildren();
+  if (L) { const ks = Object.keys(L.staff), m2 = Math.max(...ks.map(k => L.staff[k]));
+    ks.forEach(k => { const r = el('div', 'hb simple'); const br = el('div', 'barrow'); const b = el('div', 'bar'); b.style.width = (L.staff[k] / m2 * 72) + '%'; b.style.setProperty('--c', 'var(--s1)');
+      hover(b, `${y} 年度 ${k}`, () => [{ k: '員額', v: fmt(L.staff[k]) }, { k: '占比', v: (L.staff[k] / L.total * 100).toFixed(1) + '%' }]);
+      br.append(b, el('span', 'v', fmt(L.staff[k]))); r.append(el('div', 'name', k), br); sf.append(r); }); }
+  // delta table
+  const dt = $('#delta'); dt.replaceChildren(); $('#deltahint').textContent = `${y} 對 ${y - 1}。「–」表示其中一年尚未公布或不採計。`;
+  const hr = el('tr'); ['項目', String(y), String(y - 1), '增減', '增減率'].forEach(h => hr.append(el('th', null, h))); dt.append(hr);
+  const dm = D.mocs[y - 1], dbp = D.dgpaB[y - 1], dap = D.dgpaA[y - 1], bp = D.bud[y - 1];
+  [['受總員額法控管的員額', L && L.total, P && P.total], ['　第一類', L && L.c1, P && P.c1], ['　第二類', L && L.c2, P && P.c2], ['　第三類', L && L.c3, P && P.c3], ['　第四類', L && L.c4, P && P.c4], ['　第五類', L && L.c5, P && P.c5],
+   ['不適用總員額法的員額', L && L.nonlaw, P && P.nonlaw], ['總預算各機關預算員額', B && B.total, bp && bp.total], ['中央政府員額總計', L && L.grand, P && P.grand],
+   ['人事總處：中央政府預算員額', DB && DB.central, dbp && dbp.central], ['人事總處：行政院所屬實有人數', DA && DA.total, dap && dap.total],
+   ['銓敘部：全國公務人員', M && M.total, dm && dm.total], ['銓敘部：中央各機關', M && M.central, dm && dm.central], ['銓敘部：中央行政機關', M && M.central_admin, dm && dm.central_admin]
+  ].forEach(([k, a, b]) => { const tr = el('tr'); const d = (a != null && b != null) ? a - b : null;
+    tr.append(el('td', null, k), el('td', null, fmt(a)), el('td', null, fmt(b)), el('td', null, d == null ? '–' : sgn(d)), el('td', null, d == null || !b ? '–' : (d > 0 ? '＋' : d < 0 ? '－' : '') + Math.abs(d / b * 100).toFixed(2) + '%')); dt.append(tr); });
+}
+
+/* ---------- 歷年趨勢 ---------- */
+const SERIES = [
+  ['A 適用總員額法員額', y => D.law[y] && D.law[y].total],
+  ['A 總預算各機關預算員額', y => D.bud[y] && D.bud[y].total],
+  ['B 人事總處 中央政府預算員額', y => D.dgpaB[y] && D.dgpaB[y].central],
+  ['B 人事總處 行政院所屬實有人數', y => D.dgpaA[y] && D.dgpaA[y].total],
+  ['C 銓敘部 中央各機關公務人員', y => D.mocs[y] && D.mocs[y].central],
+  ['C 銓敘部 全國公務人員', y => D.mocs[y] && D.mocs[y].total],
+];
+const shown = SERIES.map(() => true);
+function niceStep(range, n) { const raw = range / n, p = Math.pow(10, Math.floor(Math.log10(raw))); const f = raw / p; return (f <= 1 ? 1 : f <= 2 ? 2 : f <= 5 ? 5 : 10) * p; }
+function renderCols() {
+  const box = $('#colchart'); box.replaceChildren(); const W = Math.max(320, box.clientWidth), H = 300, L = 62, R = 26, T = 22, B = 30;
+  const ys = YEARS.filter(hasLaw), max = 180000, step = 30000;
+  const svg = sv('svg', { viewBox: `0 0 ${W} ${H}`, width: W, height: H, role: 'img', 'aria-label': '適用總員額法員額與法定上限' });
+  const yv = v => T + (max - v) * (H - T - B) / max, band = (W - L - R) / ys.length, bw = Math.min(24, band * 0.5);
+  for (let v = 0; v <= max; v += step) { svg.append(sv('line', { x1: L, x2: W - R, y1: yv(v), y2: yv(v), stroke: v === 0 ? 'var(--axis)' : 'var(--grid)', 'stroke-width': 1 })); svg.append(sv('text', { x: L - 8, y: yv(v) + 4, 'text-anchor': 'end' }, fmt(v))); }
+  ys.forEach((y, i) => {
+    const d = D.law[y], cx = L + band * (i + .5), top = yv(d.total), h = yv(0) - top, x = cx - bw / 2, r = 4;
+    const p = sv('path', { d: `M${x},${yv(0)}V${top + r}q0,-${r} ${r},-${r}H${x + bw - r}q${r},0 ${r},${r}V${yv(0)}Z`, fill: 'var(--s1)', opacity: y === state.year ? 1 : .78 });
+    svg.append(p);
+    svg.append(sv('line', { x1: cx - bw * .95, x2: cx + bw * .95, y1: yv(d.ceil.total), y2: yv(d.ceil.total), stroke: 'var(--ink2)', 'stroke-width': 2, 'stroke-linecap': 'round' }));
+    const t = sv('text', { x: cx, y: H - 10, 'text-anchor': 'middle' }, String(y)); if (y === state.year) { t.style.fill = 'var(--ink)'; t.style.fontWeight = '600'; } svg.append(t);
+    if (i === ys.length - 1 || y === state.year) { const lb = sv('text', { x: cx, y: top - 6, 'text-anchor': 'middle' }, fmt(d.total)); lb.style.fill = 'var(--ink)'; svg.append(lb); }
+    const hit = sv('rect', { x: cx - band / 2, y: T, width: band, height: H - T - B, fill: 'transparent', style: 'cursor:pointer' });
+    hover(hit, `${y} 年度（${d.version}）`, () => [{ k: '適用總員額法員額', v: fmt(d.total), c: 'var(--s1)' }, { k: '法定上限', v: fmt(d.ceil.total), c: 'var(--ink2)' }, { k: '尚餘', v: fmt(d.ceil.total - d.total) }]);
+    hit.addEventListener('click', () => { state.year = y; setTab('year'); });
+    hit.addEventListener('keydown', e => { if (e.key === 'Enter') { state.year = y; setTab('year'); } });
+    svg.append(hit);
+  });
+  box.append(svg);
+}
+function renderLines() {
+  const lg = $('#linelegend'); lg.replaceChildren();
+  SERIES.forEach(([name], i) => { const b = el('button', 'lg'); b.setAttribute('aria-pressed', String(shown[i])); const k = el('span', 'k'); k.style.setProperty('--c', `var(--s${i + 1})`); b.append(k, document.createTextNode(name)); b.addEventListener('click', () => { shown[i] = !shown[i]; renderLines(); }); lg.append(b); });
+  const box = $('#linechart'); box.replaceChildren(); const W = Math.max(320, box.clientWidth), H = 340, L = 62, R = 16, T = 14, B = 30;
+  const vals = []; SERIES.forEach(([, f], i) => { if (shown[i]) YEARS.forEach(y => { const v = f(y); if (v != null) vals.push(v); }); });
+  if (!vals.length) { box.textContent = '請至少選擇一條線'; return; }
+  const step = niceStep(Math.max(...vals) - Math.min(...vals) || 1, 5), lo = Math.floor(Math.min(...vals) / step) * step, hi = Math.ceil(Math.max(...vals) / step) * step;
+  const svg = sv('svg', { viewBox: `0 0 ${W} ${H}`, width: W, height: H, role: 'img', 'aria-label': '三個來源歷年員額' });
+  const xv = i => L + i * (W - L - R) / (YEARS.length - 1), yv = v => T + (hi - v) * (H - T - B) / (hi - lo || 1);
+  for (let v = lo; v <= hi + 1; v += step) { svg.append(sv('line', { x1: L, x2: W - R, y1: yv(v), y2: yv(v), stroke: 'var(--grid)', 'stroke-width': 1 })); svg.append(sv('text', { x: L - 8, y: yv(v) + 4, 'text-anchor': 'end' }, fmt(v))); }
+  YEARS.forEach((y, i) => svg.append(sv('text', { x: xv(i), y: H - 10, 'text-anchor': 'middle' }, String(y))));
+  const cross = sv('line', { y1: T, y2: H - B, stroke: 'var(--axis)', 'stroke-width': 1, visibility: 'hidden' }); svg.append(cross);
+  SERIES.forEach(([, f], si) => { if (!shown[si]) return; const pts = YEARS.map((y, i) => [xv(i), f(y)]).filter(p => p[1] != null);
+    let seg = []; YEARS.concat([null]).forEach((y, i) => { const v = y == null ? null : f(y);
+      if (v != null) { seg.push(`${xv(i)},${yv(v)}`); return; }
+      if (seg.length > 1) svg.append(sv('polyline', { points: seg.join(' '), fill: 'none', stroke: `var(--s${si + 1})`, 'stroke-width': 2, 'stroke-linejoin': 'round', 'stroke-linecap': 'round' }));
+      seg = []; });
+    pts.forEach(p => svg.append(sv('circle', { cx: p[0], cy: yv(p[1]), r: 4, fill: `var(--s${si + 1})`, stroke: 'var(--surface)', 'stroke-width': 2 }))); });
+  const hit = sv('rect', { x: L - 10, y: T, width: W - L - R + 20, height: H - T - B, fill: 'transparent' });
+  const at = e => { const r = svg.getBoundingClientRect(), x = (e.clientX - r.left) * (W / r.width); let i = Math.round((x - L) / ((W - L - R) / (YEARS.length - 1))); return Math.max(0, Math.min(YEARS.length - 1, i)); };
+  hit.addEventListener('pointermove', e => { const i = at(e), y = YEARS[i]; cross.setAttribute('x1', xv(i)); cross.setAttribute('x2', xv(i)); cross.setAttribute('visibility', 'visible');
+    showTip(e, `${y} 年`, SERIES.map(([n, f], si) => shown[si] ? { k: n, v: fmt(f(y)), c: `var(--s${si + 1})` } : null).filter(Boolean)); });
+  hit.addEventListener('pointerleave', () => { cross.setAttribute('visibility', 'hidden'); hideTip(); });
+  svg.append(hit); box.append(svg);
+}
+function renderOverview() {
+  const t = $('#overview'); t.replaceChildren(); const hr = el('tr'); hr.append(el('th', null, '項目')); YEARS.forEach(y => hr.append(el('th', null, String(y)))); t.append(hr);
+  const g = (o, k) => y => o[y] && o[y][k];
+  const gb = k => y => { const r = D.dgpaB[y]; return r ? (r[k] != null ? r[k] : r.excluded) : null; };
+  [['A 資料版本', y => D.law[y] && D.law[y].version, true], ['A 適用總員額法員額', g(D.law, 'total')], ['A 法定上限', y => D.law[y] && D.law[y].ceil.total], ['A 距離上限', y => D.law[y] && D.law[y].ceil.total - D.law[y].total],
+   ['A 不適用總員額法的員額', g(D.law, 'nonlaw')], ['A 總預算各機關預算員額', g(D.bud, 'total')], ['A 中央政府員額總計（含特種基金）', g(D.law, 'grand')],
+   ['B 人事總處 中央政府預算員額', gb('central')], ['B 人事總處 行政院所屬預算員額', gb('ey_total')], ['B 人事總處 行政院所屬實有人數', g(D.dgpaA, 'total')],
+   ['C 銓敘部 全國公務人員', g(D.mocs, 'total')], ['C 銓敘部 中央各機關', g(D.mocs, 'central')], ['C 銓敘部 中央行政機關', g(D.mocs, 'central_admin')], ['C 銓敘部 地方各機關', g(D.mocs, 'local')],
+   ['A 減 B（中央政府員額總計的差異）', y => (D.law[y] && D.dgpaB[y] && D.law[y].grand != null) ? (D.dgpaB[y].central != null ? D.law[y].grand - D.dgpaB[y].central : D.dgpaB[y].excluded) : null]
+  ].forEach(([k, f, raw]) => { const tr = el('tr'); tr.append(el('td', null, k)); YEARS.forEach(y => { const v = f(y); tr.append(el('td', null, (raw || typeof v === 'string') ? (v || '–') : fmt(v))); }); t.append(tr); });
+  const fn = $('#footnotes'); fn.replaceChildren(); (D.footnotes || []).forEach(n => fn.append(el('div', 'note', `${n.id}：${n.text}`)));
+}
+/* ---------- 名詞、來源 ---------- */
+function renderStatic() {
+  const t = $('#classes'); const hr = el('tr'); ['類別', '內容', '108、109 年度上限', '110 年度起上限'].forEach((h, i) => { const th = el('th', null, h); if (i === 1) th.style.textAlign = 'left'; hr.append(th); }); t.append(hr);
+  const o = D.law[109] ? D.law[109].ceil : null, n = D.law[YEARS.filter(hasLaw).slice(-1)[0]].ceil;
+  CLASSES.forEach(([name, key, desc]) => { const tr = el('tr'); const d = el('td', null, desc); d.style.textAlign = 'left'; d.style.whiteSpace = 'normal'; tr.append(el('td', null, name), d, el('td', null, o ? fmt(o[key]) : '–'), el('td', null, fmt(n[key]))); t.append(tr); });
+  const s = $('#sources'); const h2 = el('tr'); ['項目', '網址', '抓取日期'].forEach(h => h2.append(el('th', null, h))); s.append(h2);
+  D.sources.forEach(r => { const tr = el('tr'); const a = el('a', null, r.url); a.href = r.url; a.target = '_blank'; a.rel = 'noopener'; const td = el('td'); td.append(a); tr.append(el('td', null, r.name), td, el('td', null, r.retrieved)); s.append(tr); });
+  $('#meta').textContent = `資料年度 ${YEARS[0]} 至 ${YEARS[YEARS.length - 1]}・產出日期 ${D.generated}・來源：主計總處總預算、人事總處統計年報、銓敘部統計年報`;
+  const yb = $('#years'); YEARS.forEach(y => { const b = el('button', 'yr', String(y)); b.dataset.y = y; b.addEventListener('click', () => { state.year = y; sync(); }); yb.append(b); });
+}
+function setTab(t) { state.tab = t; sync(); window.scrollTo({ top: 0 }); }
+function sync() {
+  document.querySelectorAll('.tab').forEach(b => b.setAttribute('aria-selected', String(b.dataset.tab === state.tab)));
+  ['year', 'trend', 'detail', 'terms', 'src'].forEach(t => { $('#p-' + t).hidden = t !== state.tab; });
+  if (state.tab === 'year') renderYear();
+  if (state.tab === 'trend') { renderCols(); renderLines(); renderOverview(); }
+  try { history.replaceState(null, '', `#tab=${state.tab}&y=${state.year}`); } catch (e) { /* 內嵌於 Apps Script 時可能不允許，略過 */ }
+}
+document.querySelectorAll('.tab').forEach(b => b.addEventListener('click', () => setTab(b.dataset.tab)));
+(function init() {
+  const h = new URLSearchParams(location.hash.slice(1)); if (h.get('tab') && $('#p-' + h.get('tab'))) state.tab = h.get('tab'); if (h.get('y') && YEARS.includes(+h.get('y'))) state.year = +h.get('y');
+  renderStatic(); sync();
+  let to; window.addEventListener('resize', () => { clearTimeout(to); to = setTimeout(() => { if (state.tab === 'trend') { renderCols(); renderLines(); } }, 120); });
+})();
+</script>
+</body>
+</html>
