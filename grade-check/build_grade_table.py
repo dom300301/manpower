@@ -145,35 +145,22 @@ def main():
     os.makedirs(a.outdir, exist_ok=True)
     os.makedirs(os.path.join(HERE, 'rules'), exist_ok=True)
 
-    wb = openpyxl.load_workbook(a.master, read_only=True)
-    ov = list(wb['機關總覽'].iter_rows(values_only=True))
-    oi = {h: i for i, h in enumerate(ov[0])}
-    agencies = {}
-    for r in ov[1:]:
-        agencies[r[oi['機關']]] = {'層級': str(r[oi['層級']]), '隸屬': r[oi['隸屬']], '部會': r[oi['部會']],
-                                  '類型': agency_type(r[oi['機關']]), '編制表': r[oi['編制表來源']], '驗算': r[oi['驗算狀態']]}
-    det = list(wb['編制表明細'].iter_rows(values_only=True))
-    di = {h: i for i, h in enumerate(det[0])}
-
+    from grade_data import load as load_master
+    ag_list, by, fixlog = load_master(a.master)
+    agencies = {ag['機關']: {'層級': ag['層級'], '隸屬': ag.get('隸屬'), '部會': ag.get('部會'), '類型': agency_type(ag['機關']),
+                            '編制表': ag.get('編制表來源'), '驗算': ag.get('驗算狀態')} for ag in ag_list}
+    print(f'總表 {len(agencies)} 機關；套用 org-compare 人工修正 {len(fixlog)} 機關')
     rows = []
-    for r in det[1:]:
-        name = r[di['機關名稱']]
+    for name, lines in by.items():
         ag = agencies.get(name)
         if not ag:
             continue
-        title = (r[di['職稱']] or '').strip()
-        if not title:
-            continue
-        try:
-            n = int(r[di['員額']])
-        except (TypeError, ValueError):
-            n = 0
-        guan = (r[di['官等']] or '').strip()
-        zhi = (r[di['職等']] or '').strip()
-        rem = parse_remark(r[di['備註']])
-        rows.append({'機關': name, '層級': ag['層級'], '類型': ag['類型'], '部會': ag['部會'], '職稱': title, '單位': r[di['單位']],
-                     '官等': guan, '職等': zhi, '碼': grade_code(guan, zhi), '職等數': parse_grades(zhi), '員額': n, **rem,
-                     '備註': (r[di['備註']] or '').strip(), '來源': ag['編制表']})
+        for r in lines:
+            rem = parse_remark(r['備註'])
+            guan = (r['官等'] or '').strip(); zhi = (r['職等'] or '').strip()
+            rows.append({'機關': name, '層級': ag['層級'], '類型': ag['類型'], '部會': ag['部會'], '職稱': r['職稱'], '單位': r['單位'],
+                         '官等': guan, '職等': zhi, '碼': grade_code(guan, zhi), '職等數': parse_grades(zhi), '員額': r['員額'], **rem,
+                         '備註': r['備註'], '來源': ag['編制表']})
 
     # ---- 彙整：層級 × 職稱 ----
     agg = {}

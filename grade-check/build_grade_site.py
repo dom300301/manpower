@@ -28,7 +28,8 @@ def main():
     titles = json.load(open(os.path.join(HERE, 'rules', 'title_grades.json'), encoding='utf-8'))
     ratio = json.load(open(os.path.join(HERE, 'rules', 'ratio_table.json'), encoding='utf-8'))
     cats = list(csv.DictReader(open(os.path.join(HERE, 'rules', 'agency_category.csv'), encoding='utf-8-sig')))
-    data = {'meta': res['meta'], 'results': res['results'], 'titles': titles, 'ratio': ratio, 'categories': cats,
+    council = json.load(open(os.path.join(HERE, 'rules', 'council_standards.json'), encoding='utf-8'))
+    data = {'meta': res['meta'], 'results': res['results'], 'titles': titles, 'ratio': ratio, 'categories': cats, 'council': council,
             'built': dt.datetime.now().strftime('%Y-%m-%d %H:%M')}
     raw = json.dumps(data, ensure_ascii=False, separators=(',', ':')).encode('utf-8')
     payload = base64.b64encode(gzip.compress(raw, 9)).decode('ascii')

@@ -42,6 +42,7 @@ details summary{cursor:pointer;color:var(--accent)}
    <div style="margin:6px 0;display:flex;gap:6px;flex-wrap:wrap">
     <select id="flv"><option value="">全部層級</option><option value="1">一級</option><option value="2">二級</option><option value="3">三級</option><option value="4">四級</option></select>
     <select id="fbad"><option value="">全部</option><option value="bad">只看有不符</option><option value="chk">只看需確認</option></select>
+    <select id="frule" title="只列出該規則結果為不符或需確認的機關"><option value="">依規則篩選…</option></select>
    </div>
    <div class="small muted" id="cnt"></div>
    <div id="aglist"></div>
@@ -77,6 +78,7 @@ details summary{cursor:pointer;color:var(--accent)}
 </section>
 <section class="page" id="p-about">
  <div class="card"><h2>規則清單（第一版）</h2><div id="rules"></div></div>
+ <div class="card"><h2>考試院核議標準（通案決議）與系統處理方式</h2><div class="small muted" id="councilmeta"></div><div id="council" style="margin-top:6px"></div></div>
  <div class="card"><h2>機關類別（附表三）初判表</h2><div class="small muted">由機關名稱、層級、隸屬推定，尚待人工確認。<button class="b sm sec" id="dlcat">下載 CSV</button></div><div id="catsum" style="margin-top:6px"></div></div>
  <div class="card"><h2>限制與提醒</h2>
   <ul class="small">
@@ -85,6 +87,8 @@ details summary{cursor:pointer;color:var(--accent)}
    <li>主管／非主管以職稱判定（…長、主任），第 8 條「薦任第七職等以下」以職務列等上限 ≤ 7 計；第 9 條第 5 款二級單位主管以科長員額計。這三項假設待與銓敘部試算表核對。</li>
    <li>114 年 12 月 4 日前核備之編制表，依第 12 條得於下次修編時再調整；「舊制」欄供判斷是否為修正前已不符。</li>
    <li>各機關經考試院同意之例外（第 13 條）本版未納入；不符者請先查明有無同意紀錄。</li>
+   <li>C 開頭的規則是考試院歷年核議標準（通案決議），多數為「需確認」性質：系統只能從編制表判讀表面條件，立法院附帶決議、預算員額、組改前列等、全國唯一業務等仍需人工判斷。</li>
+   <li>資料已套用組織法規查詢系統的人工補登（org-compare/manual_fixes.json），例如公務人力發展學院補登之科員 32 人。</li>
   </ul>
  </div>
 </section>
@@ -130,7 +134,8 @@ function evalRows(rows,lv,K,W,J7){let w=0,j=0,k=0,tot=0;const cov=new Set();let 
 function tagOf(res){const r=(res||'').split(' ')[0];const c=r.startsWith('不符')?'bad':r==='符合'?'ok':r==='需確認'?'warn':'na';return`<span class="tag ${c}">${esc(res)}</span>`}
 // ---------- 機關檢核
 function listAgencies(){const q=$('#q').value.trim().split(/\s+/).filter(Boolean);const lv=$('#flv').value;const fb=$('#fbad').value;
- const L=D.results.filter(r=>(!lv||r.層級===lv)&&(!fb||(fb==='bad'?r.不符數>0:r.需確認數>0))&&q.every(t=>(r.機關+r.隸屬+r.部會+r.類別).includes(t)));
+ const fr=$('#frule').value;
+ const L=D.results.filter(r=>(!lv||r.層級===lv)&&(!fb||(fb==='bad'?r.不符數>0:r.需確認數>0))&&(!fr||r.規則.some(f=>f.規則===fr&&(f.結果.startsWith('不符')||f.結果==='需確認')))&&q.every(t=>(r.機關+r.隸屬+r.部會+r.類別).includes(t)));
  $('#cnt').textContent=`${L.length} 個機關`;
  $('#aglist').innerHTML=L.map(r=>`<div data-n="${esc(r.機關)}" class="${cur&&cur.機關===r.機關?'on':''}"><span>${esc(r.機關)} <span class="small muted">${r.層級}級</span></span><span>${r.不符數?`<span class="tag bad">不符${r.不符數}</span>`:'<span class="tag ok">符合</span>'}${r.需確認數?` <span class="tag warn">確認${r.需確認數}</span>`:''}</span></div>`).join('');
  $('#aglist').querySelectorAll('div').forEach(d=>d.onclick=()=>{showAgency(d.dataset.n);$('#aglist').querySelectorAll('div').forEach(x=>x.classList.toggle('on',x===d))})}
@@ -180,6 +185,11 @@ function showTitle(){const lv=$('#tlv').value,t=$('#tq').value.trim();const g=D.
 function fillTitleList(){const lv=$('#tlv').value;const names=Object.keys(D.titles.data[lv]||{}).sort((a,b)=>D.titles.data[lv][b].機關數-D.titles.data[lv][a].機關數);$('#tlist').innerHTML=names.map(n=>`<option value="${esc(n)}">`).join('')}
 // ---------- 說明
 function fillAbout(){$('#rules').innerHTML='<ul class="small">'+D.meta.規則清單.map(x=>`<li>${esc(x)}</li>`).join('')+'</ul>';
+ if(D.council){const M={auto:'<span class="tag ok">自動檢核</span>',partial:'<span class="tag warn">部分檢核</span>',info:'<span class="tag na">僅供對照</span>',superseded:'<span class="tag na">已納入準則</span>'};
+  $('#councilmeta').textContent=D.council.來源+'。'+D.council.說明;
+  let h='<table class="small"><thead><tr><th>項次</th><th>會議</th><th>決議要旨</th><th>規則</th><th>處理</th><th>備註</th></tr></thead><tbody>';
+  D.council.sections.forEach(sec=>{h+=`<tr><td colspan="6" style="background:#f1f5f9"><b>${esc(sec.id)}、${esc(sec.title)}</b></td></tr>`;sec.items.forEach(it=>{h+=`<tr><td>${esc(it.no)}</td><td>${esc(it.date)}<br>${esc(it.meeting||'')}</td><td>${esc(it.text)}</td><td>${esc(it.rule||'—')}</td><td>${M[it.mode]||esc(it.mode)}</td><td class="muted">${esc(it.note||'')}</td></tr>`})});
+  h+='</tbody></table>';if(D.council.待補資料)h+='<h3>待補資料</h3><ul class="small">'+D.council.待補資料.map(x=>`<li>${esc(x)}</li>`).join('')+'</ul>';$('#council').innerHTML=h}
  const c={};D.categories.forEach(x=>{const k=(x.人工確認類別||x.程式初判類別);c[k]=(c[k]||0)+1});
  $('#catsum').innerHTML='<table class="small"><thead><tr><th>類別</th><th class="num">機關數</th></tr></thead><tbody>'+Object.entries(c).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<tr><td>${esc(k)}</td><td class="num">${v}</td></tr>`).join('')+'</tbody></table>';
  $('#dlcat').onclick=()=>{const cols=Object.keys(D.categories[0]);const csv='﻿'+[cols.join(','),...D.categories.map(r=>cols.map(k=>`"${(r[k]||'').replace(/"/g,'""')}"`).join(','))].join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='agency_category.csv';a.click()}}
@@ -187,7 +197,8 @@ function go(p){document.querySelectorAll('nav button').forEach(b=>b.classList.to
 async function init(){try{const bin=Uint8Array.from(atob(B64),c=>c.charCodeAt(0));const ds=new DecompressionStream('gzip');const st=new Blob([bin]).stream().pipeThrough(ds);D=JSON.parse(await new Response(st).text())}catch(e){$('#loading').textContent='資料載入失敗：'+e;return}
  $('#loading').style.display='none';$('#meta').textContent=`準則 ${D.meta.準則版本}｜資料 ${D.meta.總表}｜檢核 ${D.meta.機關數} 機關｜建檔 ${D.built}`;
  document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>go(b.dataset.p));
- ['#q','#flv','#fbad'].forEach(s=>$(s).addEventListener('input',listAgencies));listAgencies();
+ const ruleIds=[...new Set(D.results.flatMap(r=>r.規則.map(f=>f.規則)))].sort((a,b)=>a.localeCompare(b,undefined,{numeric:true}));$('#frule').innerHTML='<option value="">依規則篩選…</option>'+ruleIds.map(x=>`<option value="${x}">${x}</option>`).join('');
+ ['#q','#flv','#fbad','#frule'].forEach(s=>$(s).addEventListener('input',listAgencies));listAgencies();
  $('#simrun').onclick=runSim;$('#simadd').onclick=()=>{$('#simtable tbody').insertAdjacentHTML('beforeend',simRowHtml({職稱:'',官等:'',職等:'',員額:1,備註:''}));bindDel()};$('#simclear').onclick=()=>{simBase=null;$('#simname').textContent='（自行填表）';$('#simtable tbody').innerHTML='';$('#simout').innerHTML=''};
  $('#tgo').onclick=showTitle;$('#tq').addEventListener('keydown',e=>{if(e.key==='Enter')showTitle()});$('#tlv').onchange=fillTitleList;fillTitleList();fillAbout();
  const h=location.hash.replace('#','');if(h){const r=D.results.find(x=>x.機關===decodeURIComponent(h));if(r)showAgency(r.機關)}}
