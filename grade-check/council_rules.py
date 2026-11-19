@@ -29,6 +29,19 @@ def is_aux_head(r):
     return r['職稱'] in AUX_HEAD_TITLES and bool(AUX_UNIT.search(r.get('單位') or ''))
 
 
+def engineering_share(a, rows, total):
+    """工程類職稱員額 ÷（編制員額 − 首長副首長 − 一級單位主管）。回傳 (share%, eng, heads, first_level)。"""
+    level = a['層級']
+    head = rows[0] if rows else None
+    heads = [rows[0]] if rows else []
+    heads += [r for r in rows if head and r['職稱'] == '副' + head['職稱']]
+    first_level = [r for r in rows if r['職稱'] in ('司長', '處長', '組長', '主任', '室主任') or (level == '4' and r['職稱'] in ('科長', '課長'))]
+    base = total - sum(r['員額'] for r in heads) - sum(r['員額'] for r in first_level)
+    eng = sum(r['員額'] for r in rows if ENG_TITLE.search(r['職稱']))
+    share = round(eng / base * 100, 1) if base > 0 else None
+    return share, eng, sum(r['員額'] for r in heads), sum(r['員額'] for r in first_level)
+
+
 def council_checks(a, rows, cat, category, ctx):
     """ctx：{'children': {機關: [子機關 dict]}, 'agencies': {機關: dict}, 'total_of': fn}。"""
     F = []
@@ -209,12 +222,7 @@ def council_checks(a, rows, cat, category, ctx):
 
     # ---- C15 工程機關認定（八）
     total = ctx['total_of'](a)
-    heads = [rows[0]] if rows else []
-    heads += [r for r in rows if head and r['職稱'] == '副' + head['職稱']]
-    first_level = [r for r in rows if r['職稱'] in ('司長', '處長', '組長', '主任', '室主任') or (level == '4' and r['職稱'] in ('科長', '課長'))]
-    base = total - sum(r['員額'] for r in heads) - sum(r['員額'] for r in first_level)
-    eng = sum(r['員額'] for r in rows if ENG_TITLE.search(r['職稱']))
-    share = round(eng / base * 100, 1) if base > 0 else None
+    share, eng, n_heads, n_first = engineering_share(a, rows, total)
     is_eng_cat = '工程' in category
     if share is not None and (is_eng_cat or share >= 50):
         if is_eng_cat and share < 50:
@@ -222,8 +230,8 @@ def council_checks(a, rows, cat, category, ctx):
         elif not is_eng_cat and share >= 50:
             res, note = '需確認', f'工程類職稱員額達50%以上，可能屬附表三「工程機關」（委任下限 {"5" if level == "3" else "10"}%，現依「{category}」計算）；另需業務單位50%以上辦理工程'
         else:
-            res, note = '符合', ''
-        F.append(finding('C15', '附表三附註六(一)；考試院93.11.4第10屆第107次會議', '工程機關認定（工程類職稱員額比例）', f'工程類職稱 {eng} ÷（編制員額 {total} − 首長副首長 {sum(r["員額"] for r in heads)} − 一級單位主管 {sum(r["員額"] for r in first_level)}）',
+            res, note = '符合', '署、局具工程機關性質者依處內決定（2026-11-19）以工程機關類別計算比率' if cat.get('初判依據', '').startswith('工程類職稱') else ''
+        F.append(finding('C15', '附表三附註六(一)；考試院93.11.4第10屆第107次會議', '工程機關認定（工程類職稱員額比例）', f'工程類職稱 {eng} ÷（編制員額 {total} − 首長副首長 {n_heads} − 一級單位主管 {n_first}）',
                          f'{share}%', '≥50%', res, '', note))
 
     # ---- C16 體例（九）

@@ -442,6 +442,25 @@ def main():
             children[ag['隸屬']].append(ag)
     ctx = {'agencies': amap, 'children': children, 'total_of': lambda ag: sum(r['員額'] for r in by.get(ag['機關'], []))}
     cats = load_or_make_categories(agencies)
+    # 處內決定（2026-11-19）：署、局等機關具工程機關性質（工程類職稱員額≥50%）者，以附表三「工程機關」計算比率
+    from council_rules import engineering_share
+    changed = 0
+    for ag in agencies:
+        c = cats.get(ag['機關']); rows = by.get(ag['機關'], [])
+        if not c or not rows or (c.get('人工確認類別') or '').strip() or ag['層級'] not in ('3', '4'):
+            continue
+        if re.search(r'醫|警|消防|海巡|研究|試驗', ag['機關']) or '工程' in c['程式初判類別']:
+            continue
+        share, *_ = engineering_share(ag, rows, sum(r['員額'] for r in rows))
+        if share is not None and share >= 50:
+            c['程式初判類別'] = f"中央{'三' if ag['層級'] == '3' else '四'}級_工程機關"
+            c['初判依據'] = f'工程類職稱員額占 {share}%（≥50%，處內決定：具工程機關性質者以工程機關計）'; changed += 1
+    if changed:
+        path = os.path.join(HERE, 'rules', 'agency_category.csv')
+        with open(path, 'w', encoding='utf-8-sig', newline='') as f:
+            w = csv.DictWriter(f, fieldnames=['機關', '層級', '隸屬', '部會', '程式初判類別', '初判依據', '人工確認類別', '雙軌制', '軍文併用', '駐外', '例外核備紀錄', '備註'], extrasaction='ignore')
+            w.writeheader(); w.writerows(cats[a_['機關']] for a_ in agencies if a_['機關'] in cats)
+        print(f'依工程類職稱占比改列工程機關：{changed} 機關')
     results = []
     for ag in agencies:
         rows = by.get(ag['機關'], [])
