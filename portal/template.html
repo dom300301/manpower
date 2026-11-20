@@ -1,0 +1,383 @@
+<title>組編人力整合入口</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* 版面概念：上方一列分頁；內容區單欄，寬表格各自橫向捲動；「架構」頁以四條橫帶表示層級 */
+:root{
+  --bg:#f3f6f8; --surface:#ffffff; --sunken:#e9eef2; --ink:#15232e; --muted:#566775; --line:#d3dbe2;
+  --accent:#0b5d7a; --accent-ink:#ffffff; --accent-soft:#deedf3;
+  --good:#1b7548; --good-soft:#e0f2e8; --warn:#8f5200; --warn-soft:#fbeed6; --bad:#b0281f; --bad-soft:#fbe4e1;
+  --l1:#0b5d7a; --l2:#3a6f4f; --l3:#7a5a12; --l0:#5d6470;
+  --font:"PingFang TC","Microsoft JhengHei","Noto Sans TC","Heiti TC",system-ui,sans-serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0f161c; --surface:#17212a; --sunken:#1e2a34; --ink:#e5ecf1; --muted:#9badba; --line:#2c3a46;
+  --accent:#62bcd9; --accent-ink:#06222c; --accent-soft:#15323d;
+  --good:#63c794; --good-soft:#153324; --warn:#e2a657; --warn-soft:#38290f; --bad:#f08a82; --bad-soft:#3d1b18;
+  --l1:#62bcd9; --l2:#7fc49a; --l3:#d9b35c; --l0:#9aa3b0; color-scheme:dark } }
+:root[data-theme="dark"]{
+  --bg:#0f161c; --surface:#17212a; --sunken:#1e2a34; --ink:#e5ecf1; --muted:#9badba; --line:#2c3a46;
+  --accent:#62bcd9; --accent-ink:#06222c; --accent-soft:#15323d;
+  --good:#63c794; --good-soft:#153324; --warn:#e2a657; --warn-soft:#38290f; --bad:#f08a82; --bad-soft:#3d1b18;
+  --l1:#62bcd9; --l2:#7fc49a; --l3:#d9b35c; --l0:#9aa3b0; color-scheme:dark }
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:15px;line-height:1.65}
+.wrap{max-width:1180px;margin:0 auto;padding-block:20px 56px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  display:flex;flex-direction:column;gap:18px}
+header.top{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px}
+header.top h1{font-size:22px;margin:0;letter-spacing:.02em}
+header.top p{margin:0;color:var(--muted);font-size:13px}
+nav.tabs{display:flex;flex-wrap:wrap;gap:6px;border-bottom:1px solid var(--line);padding-bottom:10px}
+nav.tabs button{font:inherit;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:7px 14px;border-radius:6px;cursor:pointer}
+nav.tabs button[aria-current="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:600}
+button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+section.view{display:flex;flex-direction:column;gap:18px}
+h2{font-size:18px;margin:0;text-wrap:balance}
+h3{font-size:15px;margin:0}
+p{margin:0}
+.lead{max-width:46em;color:var(--muted)}
+a{color:var(--accent)}
+.num{font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+.small{font-size:13px;color:var(--muted)}
+.pill{display:inline-block;font-size:12px;line-height:1.5;padding:1px 8px;border-radius:999px;border:1px solid var(--line);background:var(--sunken);color:var(--ink);white-space:nowrap}
+.pill.good{background:var(--good-soft);color:var(--good);border-color:transparent}
+.pill.warn{background:var(--warn-soft);color:var(--warn);border-color:transparent}
+.pill.bad{background:var(--bad-soft);color:var(--bad);border-color:transparent}
+.scroll{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{padding:7px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{background:var(--sunken);font-weight:600;font-size:13px;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+tbody tr.click{cursor:pointer}
+tbody tr.click:hover{background:var(--accent-soft)}
+.todo{color:var(--warn)}
+
+/* 架構圖 */
+.layers{display:flex;flex-direction:column;gap:0}
+.layer{display:grid;grid-template-columns:150px 1fr;gap:14px;padding:14px;background:var(--surface);border:1px solid var(--line);border-left:6px solid var(--lc)}
+.layer + .flow{margin:0}
+.layer .tag{display:flex;flex-direction:column;gap:2px;min-width:0}
+.layer .tag b{color:var(--lc);font-size:15px}
+.layer .tag span{font-size:12.5px;color:var(--muted)}
+.layer .items{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;min-width:0}
+.box{border:1px solid var(--line);border-radius:6px;padding:9px 11px;background:var(--bg);display:flex;flex-direction:column;gap:3px;min-width:0}
+.box b{font-size:14px}
+.box span{font-size:12.5px;color:var(--muted)}
+.box.planned{border-style:dashed;background:transparent}
+.box a{font-size:13px}
+.flow{text-align:center;color:var(--muted);font-size:12.5px;padding:5px 0}
+@media (max-width:640px){ .layer{grid-template-columns:1fr} }
+
+/* 機關一頁式 */
+.finder{display:flex;flex-wrap:wrap;gap:8px}
+.finder input,.finder select{font:inherit;padding:7px 10px;border:1px solid var(--line);border-radius:6px;background:var(--surface);color:var(--ink);min-width:0}
+.finder input{flex:1 1 240px}
+.hits{display:flex;flex-wrap:wrap;gap:6px}
+.hits button{font:inherit;font-size:13px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:6px;padding:3px 9px;cursor:pointer}
+.hits button:hover{background:var(--accent-soft)}
+.idline{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center}
+.idline h2{font-size:21px}
+.crumbs{font-size:13px;color:var(--muted)}
+.crumbs button,.kids button{font:inherit;font-size:13px;background:none;border:0;color:var(--accent);cursor:pointer;padding:0;text-decoration:underline}
+.kids{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:13px}
+.panels{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:14px}
+.panel{background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--lc,var(--l2));border-radius:6px;padding:14px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.panel header{display:flex;flex-wrap:wrap;justify-content:space-between;gap:4px 10px;align-items:baseline}
+.panel header span{font-size:12px;color:var(--muted)}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:14px;margin:0}
+.kv dt{color:var(--muted)}
+.kv dd{margin:0;font-variant-numeric:tabular-nums}
+.big{font-size:26px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.2}
+.bar{height:8px;background:var(--sunken);border-radius:4px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent)}
+.note{font-size:13px;background:var(--warn-soft);color:var(--warn);padding:7px 10px;border-radius:6px}
+.go{align-self:flex-start;font-size:13px}
+
+/* 並列 */
+.frames{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,520px),1fr));gap:12px}
+.frame{border:1px solid var(--line);border-radius:6px;background:var(--surface);display:flex;flex-direction:column;min-width:0}
+.frame header{display:flex;justify-content:space-between;gap:8px;padding:6px 10px;font-size:13px;border-bottom:1px solid var(--line)}
+.frame iframe{border:0;width:100%;height:560px;background:#fff}
+.checks{display:flex;flex-wrap:wrap;gap:6px 16px}
+.checks label{display:flex;gap:5px;align-items:center}
+ol.steps{margin:0;padding-left:1.4em;display:flex;flex-direction:column;gap:8px;max-width:52em}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;background:var(--sunken);padding:1px 5px;border-radius:4px}
+pre{margin:0;padding:10px 12px;background:var(--sunken);border-radius:6px;overflow-x:auto;font-size:13px}
+footer{font-size:12.5px;color:var(--muted);border-top:1px solid var(--line);padding-top:10px}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <h1>組編人力整合入口</h1>
+    <p>概念驗證版｜第一層：整合四個現行查詢系統，以機關代碼串接</p>
+  </header>
+  <nav class="tabs" id="tabs" aria-label="分頁">
+    <button data-v="arch">系統架構</button>
+    <button data-v="agency">機關一頁式</button>
+    <button data-v="ministry">部會總覽</button>
+    <button data-v="side">四系統並列</button>
+    <button data-v="next">資料接入與下一步</button>
+  </nav>
+  <main id="main"><p class="small">資料載入中…</p></main>
+  <footer id="foot"></footer>
+</div>
+
+<script>
+const INLINE=/*__DATA__*/null;
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fmt=v=>v==null||v===''?'—':Number(v).toLocaleString('zh-TW');
+const SITE='https://dom300301.github.io/manpower/';
+// 與四個系統放在同一個網站時用相對路徑（才能內嵌並列）；其他情況連到線上網站
+const SAME=/github\.io$|^localhost$|^127\./.test(location.hostname);
+const BASE=SAME?'../':SITE;
+const L2={
+  org:{name:'組織法規與編制表查詢',path:'',deep:n=>'#compare='+encodeURIComponent(n),what:'組織法規、處務規程、編制表與同層級比對',key:'機關代碼＋機關名稱',grain:'單一機關'},
+  grade:{name:'官職等配置審核',path:'grade/',deep:n=>'#'+encodeURIComponent(n),what:'依配置準則檢核簡任、委任比率與考試院核議標準',key:'機關名稱（無代碼）',grain:'單一機關'},
+  contract:{name:'契約人力制度查詢',path:'contract/',deep:()=>'',what:'聘用、約僱、約用等法規沿革與歷年員額統計',key:'機關分組名稱（無代碼）',grain:'主管機關合計'},
+  staffing:{name:'中央政府員額查詢',path:'staffing/',deep:()=>'',what:'總員額法五類員額上限與預算員額、年報對照',key:'年度',grain:'全國合計'}
+};
+const url=(k,n)=>BASE+L2[k].path+(n?L2[k].deep(n):'');
+let D,byName={},kids={},state={agency:'農業部',side:['org','grade']};
+
+function latest(obj){ if(!obj) return [null,null]; const ys=Object.keys(obj).map(Number).sort((a,b)=>a-b); const y=ys[ys.length-1]; return [y,obj[y]]; }
+function subtree(name){ const out=[]; (function walk(n){ out.push(byName[n]); (kids[n]||[]).forEach(c=>walk(c.name)); })(name); return out; }
+function sumHc(list){ let s=0,miss=0; list.forEach(a=>{ if(a.hc!=null) s+=a.hc; else miss++; }); return {s,miss}; }
+function extraFor(code){ return D.extra.filter(r=>r.code===code); }
+
+/* ---------- 系統架構 ---------- */
+function viewArch(){
+  const l2=D.layer2;
+  const info={org:`${fmt(l2.org.n)} 個機關｜${esc(l2.org.built)}`,grade:`${fmt(l2.grade.n)} 個機關｜${esc(l2.grade.built)}`,
+    contract:`${fmt(l2.contract.n)} 筆統計｜${esc(l2.contract.built)}`,staffing:`${l2.staffing.years[0]}–${l2.staffing.years.at(-1)} 年度｜${esc(l2.staffing.built)}`};
+  const matched={org:'主檔本身',grade:`${l2.grade.n}／${l2.org.n} 以名稱對上`,
+    contract:`${Object.keys(D.ministries).length}／${Object.keys(D.ministries).length+D.ministryNoStat.length} 個部會以名稱對上`,staffing:'不分機關'};
+  const gap={org:'無',grade:'輸出未帶機關代碼，機關改名時會斷線',
+    contract:`只到主管機關層級；另有 ${D.unmatchedGroups.length} 個分組（舊名、合計列、非行政院）對不到主檔`,staffing:'只有全國數字，無法下鑽到機關'};
+  return `<section class="view">
+  <h2>三層架構與目前的串接狀況</h2>
+  <p class="lead">現行四個系統維持原狀，作為第二層。第一層是本頁，只讀取第二層已發布的資料。要讓不同系統的數字能在同一個機關底下並列，靠的是第三層的共用資料，其中最關鍵的是機關代碼。</p>
+  <div class="layers">
+    <div class="layer" style="--lc:var(--l1)"><div class="tag"><b>第一層　整合入口</b><span>本頁。查詢時看整體</span></div>
+      <div class="items">
+        <div class="box"><b>機關一頁式</b><span>選一個機關，四個系統的資料同頁呈現</span></div>
+        <div class="box"><b>部會總覽</b><span>${Object.keys(D.ministries).length+D.ministryNoStat.length} 個部會的編制、預算、實有人力並列</span></div>
+        <div class="box"><b>四系統並列</b><span>同一畫面開啟多個系統原頁面</span></div>
+      </div></div>
+    <div class="flow">▲ 只讀取，不回寫　｜　以機關代碼、年度對接</div>
+    <div class="layer" style="--lc:var(--l2)"><div class="tag"><b>第二層　專題系統</b><span>現行四個系統，各自維護、各自更新</span></div>
+      <div class="items">
+        ${Object.keys(L2).map(k=>`<div class="box"><b>${L2[k].name}</b><span>${L2[k].what}</span><span>${info[k]}</span><a href="${url(k)}" target="_blank" rel="noopener">開啟系統</a></div>`).join('')}
+        <div class="box planned"><b>約用、承攬等人力（待建）</b><span>尚無專屬系統；可先用接口檔帶入，日後再決定是否獨立成第五個系統</span></div>
+      </div></div>
+    <div class="flow">▲ 各系統建檔時取用</div>
+    <div class="layer" style="--lc:var(--l3)"><div class="tag"><b>第三層　共用資料</b><span>讓各系統講同一種語言</span></div>
+      <div class="items">
+        <div class="box"><b>機關主檔</b><span>${fmt(l2.org.n)} 個機關，機關代碼無缺漏、無重複</span><span class="pill warn">目前放在組織法規系統內，尚未獨立</span></div>
+        <div class="box"><b>人力統計表</b><span>一列＝年度 × 機關代碼 × 人力類別 × 口徑</span><span class="pill ${D.extra.length?'good':'warn'}">接口檔已備妥，目前 ${D.extra.length} 列</span></div>
+        <div class="box planned"><b>機關沿革對照</b><span>舊名、改制前後對應到現行代碼（如農業委員會→農業部）</span><span class="pill bad">尚未建立</span></div>
+        <div class="box planned"><b>名詞與口徑定義</b><span>預算員額、實有人數、編制員額、契約件數的區別</span><span class="pill bad">散在各系統說明中</span></div>
+      </div></div>
+    <div class="flow">▲ 下載、解析、人工補登</div>
+    <div class="layer" style="--lc:var(--l0)"><div class="tag"><b>資料來源</b><span>機關外部與內部</span></div>
+      <div class="items">
+        <div class="box"><span>全國法規資料庫</span></div><div class="box"><span>考試院法規與院會決議</span></div>
+        <div class="box"><span>主計總處總預算</span></div><div class="box"><span>人事總處公教人力統計年報</span></div>
+        <div class="box"><span>銓敘部統計年報</span></div><div class="box planned"><span>約用、承攬調查資料（待確認來源）</span></div>
+      </div></div>
+  </div>
+  <h3>各系統目前用什麼辨識機關</h3>
+  <div class="scroll"><table><thead><tr><th>第二層系統</th><th>辨識機關的方式</th><th>資料細到哪一層</th><th>與機關主檔對接</th><th>缺口</th></tr></thead><tbody>
+  ${Object.keys(L2).map(k=>`<tr><td>${L2[k].name}</td><td>${L2[k].key}</td><td>${L2[k].grain}</td><td>${matched[k]}</td><td class="${gap[k]==='無'?'':'todo'}">${gap[k]}</td></tr>`).join('')}
+  </tbody></table></div>
+  </section>`;
+}
+
+/* ---------- 機關一頁式 ---------- */
+function viewAgency(){
+  const mins=[...new Set(D.agencies.map(a=>a.min))].sort((a,b)=>a.localeCompare(b,'zh-TW'));
+  return `<section class="view">
+  <h2>機關一頁式</h2>
+  <p class="lead">輸入機關名稱或代碼。同一頁列出四個系統對這個機關各自掌握的資料，並標明每個數字的口徑。</p>
+  <div class="finder">
+    <input id="q" type="search" placeholder="機關名稱或代碼，例如 農糧署、A19010000G" autocomplete="off">
+    <select id="qmin"><option value="">全部部會</option>${mins.map(m=>`<option>${esc(m)}</option>`).join('')}</select>
+  </div>
+  <div class="hits" id="hits"></div>
+  <div id="card"></div></section>`;
+}
+function renderHits(){
+  const q=$('#q').value.trim(), m=$('#qmin').value;
+  if(!q&&!m){ $('#hits').innerHTML=''; return; }
+  const list=D.agencies.filter(a=>(!m||a.min===m)&&(!q||a.name.includes(q)||a.code.includes(q.toUpperCase())));
+  $('#hits').innerHTML=list.slice(0,60).map(a=>`<button data-a="${esc(a.name)}">${esc(a.name)}</button>`).join('')
+    +(list.length>60?`<span class="small">共 ${list.length} 個，請再輸入關鍵字縮小範圍</span>`:'')+(list.length?'':'<span class="small">查無符合的機關</span>');
+}
+function ratioRow(label,val,limit,cmp){
+  if(val==null) return '';
+  const ok=limit==null?null:(cmp==='max'?val<=limit:val>=limit);
+  return `<dt>${label}</dt><dd>${val}%　<span class="small">${cmp==='max'?'上限':'下限'} ${limit==null?'—':limit+'%'}</span> ${ok==null?'':`<span class="pill ${ok?'good':'bad'}">${ok?'符合':'不符'}</span>`}</dd>`;
+}
+function renderCard(){
+  const a=byName[state.agency]; if(!a){ $('#card').innerHTML=''; return; }
+  const chain=[]; let p=a; while(p&&p.up&&byName[p.up]&&p.up!==p.name){ p=byName[p.up]; chain.unshift(p.name); }
+  const ch=kids[a.name]||[]; const tree=subtree(a.name); const tot=sumHc(tree);
+  const M=D.ministries[a.min]; const g=a.g;
+  const hcText=a.hc!=null?fmt(a.hc):(a.hcMin!=null?`${fmt(a.hcMin)}–${fmt(a.hcMax)}`:'—');
+  // 第一欄：組織與編制
+  const p1=`<div class="panel"><header><h3>組織與編制</h3><span>來源：${L2.org.name}｜口徑：本機關</span></header>
+    <div class="big">${hcText} <span class="small">人　編制員額</span></div>
+    <dl class="kv">
+      <dt>簡任／薦任／委任</dt><dd>${fmt(a.k)}／${fmt(a.j)}／${fmt(a.w)}</dd>
+      <dt>內部單位數</dt><dd>${fmt(a.units)}</dd>
+      <dt>編制表驗算</dt><dd><span class="pill ${a.chk==='相符'?'good':'warn'}">${esc(a.chk||'—')}</span> ${a.cmp?'':'<span class="pill warn">暫不列入比較</span>'}</dd>
+      <dt>組織法規</dt><dd>${a.lawUrl?`<a href="${esc(a.lawUrl)}" target="_blank" rel="noopener">${esc(a.law||'法規')}</a>`:esc(a.law||'—')}</dd>
+      <dt>組織法規明定聘用約僱上限</dt><dd>${a.capClause==null?'未明定':fmt(a.capClause)+' 人'}</dd>
+      ${tree.length>1?`<dt>含所屬 ${tree.length-1} 個機關</dt><dd>${fmt(tot.s)} 人${tot.miss?`　<span class="small">（${tot.miss} 個機關無定額，未計入）</span>`:''}</dd>`:''}
+    </dl>
+    <a class="go" href="${url('org',a.name)}" target="_blank" rel="noopener">到第二層看同層級比對</a></div>`;
+  // 第二欄：官職等
+  const p2=`<div class="panel"><header><h3>官職等配置檢核</h3><span>來源：${L2.grade.name}｜口徑：本機關</span></header>
+    ${g?`<dl class="kv"><dt>機關類別</dt><dd>${esc(g.cat||'—')}</dd>
+      ${ratioRow('簡任比率',g.kr,g.kmax,'max')}${ratioRow('委任比率',g.wr,g.wmin,'min')}
+      <dt>檢核結果</dt><dd>${g.bad?`<span class="pill bad">不符 ${g.bad} 項</span> <span class="small">${esc(g.rules||'')}</span>`:'<span class="pill good">全部符合</span>'}${g.ask?` <span class="pill warn">需確認 ${g.ask} 項</span>`:''}</dd></dl>
+      <a class="go" href="${url('grade',a.name)}" target="_blank" rel="noopener">到第二層看逐項規則與模擬</a>`
+    :`<p class="note">官職等系統未納入這個機關（共 ${D.agencies.filter(x=>!x.g).length} 個機關未納入）。</p>`}</div>`;
+  // 第三欄：預算與實有（主管機關口徑）
+  let p3;
+  if(M){
+    const rows=[['第一類（職員）','第一類','公務人員'],['聘用','第二類－聘用','聘用'],['約僱','第二類－約僱','約僱'],['技工','第二類－技工',null],['工友','第二類－工友',null],['駕駛','第二類－駕駛',null],['技工工友駐衛警合計',null,'技工工友駐衛警(事務性人力)']];
+    const by=M.src.budget?.year, ay=M.src.actual?.year;
+    p3=`<div class="panel"><header><h3>預算員額與實有人數</h3><span>來源：${L2.contract.name}｜口徑：主管機關合計</span></header>
+    ${a.name!==a.min?`<p class="note">以下是「${esc(a.min)}」主管機關合計（含所屬），不是「${esc(a.name)}」單獨的數字。目前沒有單一機關層級的預算員額與實有人數。</p>`:`<p class="small">以下為「${esc(a.min)}」含所屬機關的合計。</p>`}
+    <div class="scroll"><table><thead><tr><th>人力類別</th><th class="num">預算員額${by?`（${by}）`:''}</th><th class="num">實有人數${ay?`（${ay}）`:''}</th></tr></thead><tbody>
+    ${rows.map(r=>{ const b=r[1]&&M.budget[r[1]]?M.budget[r[1]][by]:null, v=r[2]&&M.actual[r[2]]?M.actual[r[2]][ay]:null; return `<tr><td>${r[0]}</td><td class="num">${fmt(b)}</td><td class="num">${fmt(v)}</td></tr>`; }).join('')}
+    </tbody></table></div>
+    <p class="small">預算：${esc(M.src.budget?.name||'—')}<br>實有：${esc(M.src.actual?.name||'—')}</p>
+    <a class="go" href="${url('contract')}" target="_blank" rel="noopener">到第二層看歷年統計與法規沿革</a></div>`;
+  } else {
+    p3=`<div class="panel"><header><h3>預算員額與實有人數</h3><span>來源：${L2.contract.name}</span></header><p class="note">「${esc(a.min)}」在統計資料中沒有同名的主管機關分組，目前對不上。</p></div>`;
+  }
+  // 第四欄：全國
+  const [ly,lv]=latest(D.national.law);
+  const p4=`<div class="panel"><header><h3>總員額法全國概況</h3><span>來源：${L2.staffing.name}｜口徑：全國</span></header>
+    <div class="big">${fmt(lv.total)} <span class="small">／上限 ${fmt(lv.ceil)}　${ly} 年度${esc(lv.version)}</span></div>
+    <div class="bar" title="占上限 ${(lv.total/lv.ceil*100).toFixed(1)}%"><i style="width:${(lv.total/lv.ceil*100).toFixed(1)}%"></i></div>
+    <dl class="kv"><dt>全國聘用</dt><dd>${fmt(lv.staff['聘用'])}</dd><dt>全國約僱</dt><dd>${fmt(lv.staff['約僱'])}</dd></dl>
+    <p class="small">這一欄與所選機關無關，供對照整體水位。</p>
+    <a class="go" href="${url('staffing')}" target="_blank" rel="noopener">到第二層看五類員額與歷年趨勢</a></div>`;
+  // 第五欄：尚未帶入
+  const ex=extraFor(a.code);
+  const want=['約用','勞務承攬','勞動派遣'];
+  const p5=`<div class="panel" style="--lc:var(--l3)"><header><h3>約用、承攬、派遣</h3><span>來源：新增人力資料接口檔｜口徑：依各列</span></header>
+    <div class="scroll"><table><thead><tr><th>人力類別</th><th>年度</th><th>口徑</th><th class="num">人數</th><th>來源</th></tr></thead><tbody>
+    ${want.map(t=>{ const rs=ex.filter(r=>r.type===t); return rs.length?rs.map(r=>`<tr><td>${t}</td><td>${r.y}</td><td>${esc(r.scope)}</td><td class="num">${fmt(r.v)}</td><td class="small">${esc(r.src)}</td></tr>`).join(''):`<tr><td>${t}</td><td colspan="4" class="todo">尚未帶入</td></tr>`; }).join('')}
+    ${ex.filter(r=>!want.includes(r.type)).map(r=>`<tr><td>${esc(r.type)}</td><td>${r.y}</td><td>${esc(r.scope)}</td><td class="num">${fmt(r.v)}</td><td class="small">${esc(r.src)}</td></tr>`).join('')}
+    </tbody></table></div>
+    <p class="small">資料一旦以機關代碼 <code>${esc(a.code)}</code> 填入接口檔，重新建檔後就會出現在這裡。</p></div>`;
+  $('#card').innerHTML=`<div class="view">
+    <div class="idline"><h2>${esc(a.name)}</h2><code>${esc(a.code)}</code><span class="pill">${a.lv} 級</span><span class="pill">${esc(a.type||'')}</span>${(a.special||[]).map(s=>`<span class="pill warn">${esc(s)}</span>`).join('')}</div>
+    ${chain.length?`<div class="crumbs">隸屬：${chain.map(n=>`<button data-a="${esc(n)}">${esc(n)}</button>`).join(' › ')}</div>`:''}
+    ${ch.length?`<div class="kids"><span class="small">所屬 ${ch.length} 個：</span>${ch.slice(0,40).map(c=>`<button data-a="${esc(c.name)}">${esc(c.name)}</button>`).join('')}${ch.length>40?`<span class="small">…等</span>`:''}</div>`:''}
+    <div class="panels">${p1}${p2}${p3}${p4}${p5}</div></div>`;
+}
+
+/* ---------- 部會總覽 ---------- */
+function viewMinistry(){
+  const mins=[...new Set(D.agencies.map(a=>a.min))];
+  const rows=mins.map(m=>{ const list=D.agencies.filter(a=>a.min===m); const t=sumHc(list); const M=D.ministries[m];
+    const by=M?.src.budget?.year, ay=M?.src.actual?.year; const b=k=>M&&M.budget[k]?M.budget[k][by]:null, v=k=>M&&M.actual[k]?M.actual[k][ay]:null;
+    const ex=t=>{ const codes=new Set(list.map(a=>a.code)); const rs=D.extra.filter(r=>codes.has(r.code)&&r.type===t); return rs.length?rs.reduce((s,r)=>s+r.v,0):null; };
+    return {m,n:list.length,hc:t.s,miss:t.miss,bad:list.filter(a=>a.g&&a.g.bad).length,c1:b('第一類'),pb:b('第二類－聘用'),yb:b('第二類－約僱'),pa:v('聘用'),ya:v('約僱'),yy:ex('約用'),cl:ex('勞務承攬')}; })
+    .sort((x,y)=>y.hc-x.hc);
+  const td=(v)=>`<td class="num">${fmt(v)}</td>`, tdx=v=>v==null?'<td class="num todo">未帶入</td>':td(v);
+  return `<section class="view"><h2>部會總覽</h2>
+  <p class="lead">每個部會一列。前三欄由單一機關資料加總而來，中間四欄是主管機關層級的統計，最右兩欄等待帶入。點任一列可看該部會的一頁式內容。</p>
+  <div class="scroll"><table><thead>
+    <tr><th rowspan="2">部會</th><th colspan="3">由單一機關加總（編制）</th><th colspan="3">預算員額（主管機關）</th><th colspan="2">實有人數（主管機關）</th><th colspan="2">待帶入</th></tr>
+    <tr><th class="num">機關數</th><th class="num">編制員額</th><th class="num">官職等不符機關</th><th class="num">第一類</th><th class="num">聘用</th><th class="num">約僱</th><th class="num">聘用</th><th class="num">約僱</th><th class="num">約用</th><th class="num">勞務承攬</th></tr>
+  </thead><tbody>
+  ${rows.map(r=>`<tr class="click" data-a="${esc(byName[r.m]?r.m:D.agencies.find(a=>a.min===r.m).name)}"><td>${esc(r.m)}</td>${td(r.n)}<td class="num">${fmt(r.hc)}${r.miss?`<span class="small"> *${r.miss}</span>`:''}</td>${td(r.bad)}${td(r.c1)}${td(r.pb)}${td(r.yb)}${td(r.pa)}${td(r.ya)}${tdx(r.yy)}${tdx(r.cl)}</tr>`).join('')}
+  </tbody></table></div>
+  <p class="small">* 後的數字＝該部會有幾個機關沒有定額（區間、待審或無編制表），未計入編制員額加總。編制員額是組織法規所定的上限，預算員額是當年度核給的員額，實有人數是年底在職人數，三者不能直接相減。</p></section>`;
+}
+
+/* ---------- 四系統並列 ---------- */
+function viewSide(){
+  const a=byName[state.agency];
+  const head=`<h2>四系統並列</h2><p class="lead">勾選要同時開啟的系統。組織法規與官職等兩個系統會直接帶到目前選定的機關：<b>${esc(a?a.name:'')}</b>。</p>`;
+  if(!SAME) return `<section class="view">${head}
+    <p class="note">這份預覽頁與四個系統不在同一個網站，瀏覽器不允許把它們嵌進來。整合入口發布到同一個 GitHub Pages 網站後，這一頁就會把各系統原畫面並排顯示。目前請用下列連結另開分頁。</p>
+    <div class="scroll"><table><thead><tr><th>系統</th><th>直達連結</th><th>是否帶入所選機關</th></tr></thead><tbody>
+    ${Object.keys(L2).map(k=>`<tr><td>${L2[k].name}</td><td><a href="${url(k,a&&a.name)}" target="_blank" rel="noopener">${esc(url(k,a&&a.name).slice(0,90))}</a></td><td>${L2[k].deep('x')?'<span class="pill good">會</span>':'<span class="pill">不分機關</span>'}</td></tr>`).join('')}
+    </tbody></table></div></section>`;
+  return `<section class="view">${head}
+    <div class="checks">${Object.keys(L2).map(k=>`<label><input type="checkbox" id="side-${k}" data-side="${k}" ${state.side.includes(k)?'checked':''}> ${L2[k].name}</label>`).join('')}</div>
+    <div class="frames">${state.side.map(k=>`<div class="frame"><header><b>${L2[k].name}</b><a href="${url(k,a&&a.name)}" target="_blank" rel="noopener">另開分頁</a></header><iframe title="${L2[k].name}" loading="lazy" src="${url(k,a&&a.name)}"></iframe></div>`).join('')}</div></section>`;
+}
+
+/* ---------- 資料接入與下一步 ---------- */
+function viewNext(){
+  const c=D.coverage, yy=D.national.yueyong, dp=D.national.dispatch; const [yyy,yyv]=latest(yy), [dpy,dpv]=latest(dp);
+  const y=(k)=>c[k]?`${c[k].y0}–${c[k].y1} 年`:'';
+  const Y='<span class="pill good">有</span>', N='<span class="pill bad">無</span>', P=t=>`<span class="pill warn">${t}</span>`;
+  const rows=[
+    ['編制員額（職員）',N,`${P('可由機關加總')}`,`${Y} ${D.layer2.org.n} 個機關`,'組織法規系統'],
+    ['預算員額 第一類',Y,`${Y} ${y('總員額法第一類員額')}`,N,'主計總處總預算'],
+    ['聘用',Y,`${Y} 預算與實有`,P('僅組織法規明定上限者'),'主計總處、人事總處年報'],
+    ['約僱',Y,`${Y} 預算與實有`,P('僅組織法規明定上限者'),'主計總處、人事總處年報'],
+    ['技工、工友、駕駛',Y,`${Y} 預算`,N,'主計總處總預算'],
+    ['約用（臨時人員）',`${Y} 行政院所屬合計 ${yyy} 年 ${fmt(yyv)} 人`,P('僅 107 年舊開放資料'),N,'人事總處季報'],
+    ['勞動派遣',`${Y} 全國 ${dpy} 年 ${fmt(dpv)} 人`,N,N,'歷年公布數'],
+    ['勞務承攬',N,N,N,'僅審計、監察報告中的文字數據'],
+  ];
+  const spec=D.extraSpec;
+  return `<section class="view"><h2>各類人力目前掌握到哪一層</h2>
+  <p class="lead">要在單一機關底下看到約用、承攬人數，資料必須細到單一機關。下表是現有資料的實際情形。</p>
+  <div class="scroll"><table><thead><tr><th>人力類別</th><th>全國或行政院合計</th><th>主管機關（部會）</th><th>單一機關</th><th>現有來源</th></tr></thead><tbody>
+  ${rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td class="small">${r[4]}</td></tr>`).join('')}</tbody></table></div>
+
+  <h2>帶入約用、承攬人力前，第二層要做的準備</h2>
+  <ol class="steps">
+    <li><b>各系統輸出加上機關代碼。</b>官職等系統目前只有機關名稱；契約人力系統只有分組名稱。兩者建檔時向機關主檔查代碼並寫入輸出，名稱變動就不會斷線。</li>
+    <li><b>各系統另外輸出一份小型資料檔。</b>目前整合入口是從各系統的網頁裡把資料解出來，網頁版面一改就可能失效。請各系統建檔時同時輸出一份固定格式的檔案（例如 <code>output/portal.json</code>），整合入口只讀這份。</li>
+    <li><b>把機關主檔獨立出來。</b>從組織法規系統抽出代碼、名稱、部會、層級、隸屬五欄，成為各系統共用的一份檔案，並補上沿革對照（舊名、裁併、改隸對應到現行代碼）。目前有 ${D.unmatchedGroups.length} 個統計分組因此對不上。</li>
+    <li><b>統計資料標明口徑。</b>每筆數字註明是「本機關」還是「含所屬」。契約人力系統現有的部會數字都是含所屬，不能直接掛在部會本部底下。</li>
+    <li><b>各系統支援以代碼直達。</b>組織法規與官職等已可用機關名稱直達；契約人力與員額查詢尚不能指定機關。</li>
+    <li><b>確認約用、承攬資料的來源與單位。</b>約用是人數；承攬依法不是進用人力，各機關填報的可能是契約件數、金額或派駐人數，需先定義要收哪一種，並確認是否能細到單一機關。</li>
+    <li><b>確認資料可否公開。</b>現行網站是公開網頁。約用、承攬的機關別明細若屬內部調查資料，須先決定放公開網站、加上存取限制，或只做離線檔。</li>
+  </ol>
+
+  <h2>新增人力資料接口檔</h2>
+  <p class="lead">已建立 <code>portal/data/manpower_extra.csv</code>。一列代表一個機關、一個年度、一種人力類別的一個數字。填入後重新建檔，數字就會出現在機關一頁式與部會總覽。</p>
+  <div class="scroll"><table><thead><tr><th>欄位</th><th>說明</th></tr></thead><tbody>
+    <tr><td>年度</td><td>民國年，數字</td></tr><tr><td>基準日</td><td>例如 115-12-31</td></tr>
+    <tr><td>機關代碼</td><td>須存在於機關主檔，否則該列不採用並列入問題清單</td></tr><tr><td>機關名稱</td><td>供人閱讀，系統以代碼為準</td></tr>
+    <tr><td>人力類別</td><td>${spec.types.join('、')}</td></tr><tr><td>口徑</td><td>${spec.scopes.join('、')}</td></tr>
+    <tr><td>人數</td><td>數字</td></tr><tr><td>來源</td><td>資料出處</td></tr><tr><td>備註</td><td>選填</td></tr></tbody></table></div>
+  <p>目前有效 <b>${D.extra.length}</b> 列。${D.extraProblems.length?`檢核發現 ${D.extraProblems.length} 個問題：`:'檢核未發現問題。'}</p>
+  ${D.extraProblems.length?`<pre>${D.extraProblems.map(esc).join('\n')}</pre>`:''}
+  </section>`;
+}
+
+/* ---------- 路由與事件 ---------- */
+const VIEWS={arch:viewArch,agency:viewAgency,ministry:viewMinistry,side:viewSide,next:viewNext};
+function show(v){
+  if(!VIEWS[v]) v='arch';
+  document.querySelectorAll('#tabs button').forEach(b=>b.setAttribute('aria-current',b.dataset.v===v));
+  $('#main').innerHTML=VIEWS[v]();
+  if(v==='agency'){ $('#q').addEventListener('input',renderHits); $('#qmin').addEventListener('change',renderHits); renderCard(); }
+}
+function go(v){ if(location.hash.slice(1)===v) show(v); else location.hash=v; }
+function start(data){
+  D=data; D.agencies.forEach(a=>byName[a.name]=a);
+  D.agencies.forEach(a=>{ if(a.up&&a.up!==a.name&&byName[a.up]) (kids[a.up]=kids[a.up]||[]).push(a); });
+  $('#tabs').addEventListener('click',e=>{ const b=e.target.closest('button'); if(b) go(b.dataset.v); });
+  $('#main').addEventListener('click',e=>{ const t=e.target.closest('[data-a]'); if(t){ state.agency=t.dataset.a; if(location.hash.slice(1)==='agency') renderCard(); else go('agency'); } });
+  $('#main').addEventListener('change',e=>{ const k=e.target.dataset&&e.target.dataset.side; if(k){ state.side=Object.keys(L2).filter(x=>$('#side-'+x).checked); show('side'); } });
+  window.addEventListener('hashchange',()=>show(location.hash.slice(1)));
+  $('#foot').textContent=`整合入口建檔時間 ${D.built}。本頁只讀取四個系統已發布的資料，不修改任何系統。數字的定義與限制以各系統原頁面為準。`;
+  show(location.hash.slice(1)||'arch');
+}
+(async()=>{ try{ start(INLINE||await (await fetch('portal-data.json')).json()); }catch(e){ $('#main').innerHTML='<p class="note">資料載入失敗：'+esc(e.message)+'</p>'; } })();
+</script>
