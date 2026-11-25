@@ -101,6 +101,7 @@ footer{color:var(--muted);font-size:.8em;text-align:center;padding:10px}
   <div class="tabs">
     <button data-tab="search" class="on">機關查詢</button>
     <button data-tab="compare">同級比對</button>
+    <button data-tab="pos">編制表查詢</button>
     <button data-tab="info">指標說明與資料狀態</button>
   </div>
 </header>
@@ -153,6 +154,31 @@ footer{color:var(--muted);font-size:.8em;text-align:center;padding:10px}
   </div>
 </section>
 
+<section class="page" id="page-pos">
+  <div class="box">
+    <h3>查法 <span class="spacer"></span><span class="muted small">以編制表明細列為單位（只含計入列，不含控制列與碎片列）</span></h3>
+    <div class="chips" id="pmodes"><button class="chip pmode on" data-m="title">A 職稱查詢</button><button class="chip pmode" data-m="grade">B 官職等比較</button><button class="chip pmode" data-m="track">C 資格軌別</button></div>
+    <div class="muted small" id="pmodeHelp"></div>
+    <div class="row" id="pqRow">
+      <input id="pq" type="search" placeholder="輸入職稱（例：總幹事、所長、主任）" autocomplete="off" style="flex:1;min-width:220px" list="pqlist"><datalist id="pqlist"></datalist>
+      <label class="small muted"><input type="checkbox" id="pexact" checked> 職稱完全相同（取消＝包含）</label>
+      <label class="small muted"><input type="checkbox" id="psyn" checked> 套用同義職稱表</label>
+    </div>
+    <div class="chips" id="pLv"></div>
+    <div class="row">
+      <select id="pdept"><option value="">全部部會</option></select>
+      <select id="pkind"><option value="">全部類型</option></select>
+      <select id="pucat" style="display:none"><option value="">全部單位（含未列單位之列）</option></select>
+    </div>
+    <div class="chips" id="pTracks" style="display:none"></div>
+  </div>
+  <div class="box">
+    <h3>結果 <span class="spacer"></span><span class="muted small" id="pcount"></span> <button id="pcsv" class="small">匯出 CSV</button></h3>
+    <div id="presult"><div class="empty">請輸入條件。</div></div>
+    <div class="muted small" style="margin-top:6px">「軌別」「職等列法」「單位類別」為依官等／職等／備註／單位欄文字規則推導之衍生欄位（滑鼠停在軌別標籤可看依據原文）；原文不改寫，無法歸類者標「待審」「無官等（原文）」。單位欄僅一條鞭（人事、主計、政風、會計、統計）有值，業務單位之列無單位。</div>
+  </div>
+</section>
+
 <section class="page" id="page-info">
   <div class="box"><h3>指標定義</h3><div id="defs"></div></div>
   <div class="box"><h3>資料版本</h3><div id="version"></div></div>
@@ -162,6 +188,7 @@ footer{color:var(--muted);font-size:.8em;text-align:center;padding:10px}
       <li>「機關查詢」：輸入名稱或業務關鍵字，點選機關後可看結構指標、編制表明細、組織法規與處務規程條文，並有法規資料庫連結。</li>
       <li>「同級比對」：先選目標機關，系統預設以同層級、同類型（例如三級「署」）為比較群組，可再用部會、員額範圍、業務關鍵字縮小，或排除醫療、警消、軍事等特殊機關。</li>
       <li>比對表可勾選要顯示的指標、點欄名排序、匯出 CSV 貼到 Excel。</li>
+      <li>「編制表查詢」：以職稱為單位。A 查哪些機關有相同（同義）職稱；B 看同一職稱在各機關的官等＋職等組合（單列／跨列）分布並可並列兩組合的機關清單；C 依任用軌別（單軌簡薦委、警察官、醫事、聘任；雙軌文／醫事、文／軍；多軌文／警／軍）篩機關並看依據原文。</li>
       <li>資料全部取自全國法規資料庫（條文與編制表 PDF），未經改寫；預算員額、現有員額尚未納入。</li>
     </ol>
   </div>
@@ -362,6 +389,91 @@ $('#nearBtn').onclick=()=>{ if(!C.target) return; const n=val(C.target,'員額�
 $('#csvBtn').onclick=()=>{ if(!lastRows.length) return; const csv='﻿'+lastRows.map(r=>r.map(v=>`"${String(v??'').replace(/"/g,'""')}"`).join(',')).join('\r\n'); const b=new Blob([csv],{type:'text/csv'}); const u=URL.createObjectURL(b); const a=document.createElement('a'); a.href=u; a.download=`同級比對_${C.target.機關}_${DATA.built.slice(0,10)}.csv`; a.click(); URL.revokeObjectURL(u); };
 $('#copyBtn').onclick=async()=>{ if(!lastRows.length) return; try{ await navigator.clipboard.writeText(lastRows.map(r=>r.join('\t')).join('\n')); $('#copyBtn').textContent='已複製'; setTimeout(()=>$('#copyBtn').textContent='複製表格',1500);}catch(e){ alert('無法存取剪貼簿，請改用匯出 CSV'); } };
 renderCompareChips(); renderColPick();
+
+// =====================================================================
+// 編制表查詢（A 職稱／B 官職等比較／C 資格軌別）— 以明細列為單位，資料為內嵌 P 之計入列
+// =====================================================================
+const PP = P.filter(p=>p.計入);
+const SYN = [['組長','科長','課長'],['所長','場長','館長','園長'],['主任','室主任','中心主任'],['處長','司長'],['署長','局長']];
+const TRACKS = [...new Set(PP.map(p=>p.軌別))].sort((x,y)=>PP.filter(p=>p.軌別===y).length-PP.filter(p=>p.軌別===x).length);
+const UCATS = ['人事','主計（含會計、統計）','政風','其他單位'];
+const PHELP = { title:'找出有相同（或同義）職稱的機關，列出各機關該職稱的官等、職等、員額與軌別。', grade:'同一職稱在各機關的官等＋職等組合分布（單列／跨列），可加層級、單位類別（例：三級＋人事＋主任），勾選「並列」展開最多 2 個組合的機關清單。', track:'依任用軌別篩選機關：單軌（簡薦委、警察官、醫事…）、雙軌（文／醫事、文／軍…）、多軌（文／警／軍）。未勾選軌別時顯示全部軌別的總覽。' };
+const X = { mode:'title', q:'', syn:true, exact:true, lv:null, dept:'', kind:'', ucat:'', tracks:new Set(), sel:[] };
+let lastPos = [];
+const agOf = p => byName[p.機關];
+const POS_HDR = ['機關','層級','部會','單位','職稱','官等','職等','職等列法','員額','軌別','軌別依據','備註'];
+const posCsv = p => { const a=agOf(p); return [p.機關,a.層級,a.部會,p.單位||'',p.職稱,p.官等||'',p.職等||'',p.職等列法,p.員額??'',p.軌別,p.軌別依據||'',p.備註||'']; };
+const hcCell = p => p.專任_is_range?`${p.專任_min}–${p.專任_max}`:(p.員額??'—');
+const alink = n => `<a href="#" class="plink" data-a="${esc(n)}">${esc(n)}</a>`;
+const trackBadge = p => `<span class="badge" title="${esc(p.軌別依據)}">${esc(p.軌別)}</span>`;
+const byLvName = (a,b) => agOf(a).層級-agOf(b).層級 || a.機關.localeCompare(b.機關,'zh-Hant') || (a.序||0)-(b.序||0);
+function posFilter(p){ const a=agOf(p); return a && (X.lv==null||a.層級===X.lv) && (!X.dept||a.部會===X.dept) && (!X.kind||a.類型===X.kind); }
+function titleTerms(){ const q=X.q.trim(); if(!q) return []; const g=X.syn?SYN.find(g=>g.includes(q)):null; return g||[q]; }
+const titleMatch = (p,terms) => terms.some(t => X.exact ? p.職稱===t : p.職稱.includes(t));
+function renderPosTitle(){
+  const terms=titleTerms(), host=$('#presult');
+  if(!terms.length){ host.innerHTML='<div class="empty">請輸入職稱（例：總幹事、所長）。</div>'; $('#pcount').textContent=''; lastPos=[]; return; }
+  const rows=PP.filter(p=>titleMatch(p,terms)&&posFilter(p));
+  const groups={}; rows.forEach(p=>(groups[p.職稱]=groups[p.職稱]||[]).push(p));
+  $('#pcount').textContent=`${Object.keys(groups).length} 個職稱、${new Set(rows.map(p=>p.機關)).size} 個機關、${rows.length} 列、員額合計 ${rows.reduce((s,p)=>s+(p.員額||0),0)}${terms.length>1?`（同義詞：${terms.join('／')}）`:''}`;
+  host.innerHTML = rows.length ? Object.entries(groups).sort((a,b)=>b[1].length-a[1].length).map(([t,ps])=>`<details open><summary>${esc(t)}（${new Set(ps.map(p=>p.機關)).size} 機關、${ps.length} 列、員額 ${ps.reduce((s,p)=>s+(p.員額||0),0)}）</summary><div class="tablewrap" style="max-height:60vh"><table><thead><tr><th>機關</th><th>層級</th><th>部會</th><th>單位</th><th>官等</th><th>職等</th><th>列法</th><th class="num">員額</th><th>軌別</th><th>備註</th></tr></thead><tbody>`+
+    ps.sort(byLvName).slice(0,600).map(p=>`<tr><td>${alink(p.機關)}</td><td>${agOf(p).層級}</td><td class="small">${esc(agOf(p).部會)}</td><td class="small">${esc(p.單位)}</td><td>${esc(p.官等)}</td><td>${esc(p.職等)}</td><td class="small">${esc(p.職等列法)}</td><td class="num">${hcCell(p)}</td><td class="small">${trackBadge(p)}</td><td class="small">${esc(p.備註)}</td></tr>`).join('')+`</tbody></table>${ps.length>600?'<div class="muted small">只顯示前 600 列，請縮小條件；CSV 含全部。</div>':''}</div></details>`).join('') : '<div class="empty">沒有符合的職稱。</div>';
+  lastPos=[POS_HDR,...rows.map(posCsv)];
+}
+function renderPosGrade(){
+  const terms=titleTerms(), host=$('#presult');
+  if(!terms.length){ host.innerHTML='<div class="empty">請輸入職稱（例：主任、科長、秘書），可搭配層級與單位類別（例：三級＋人事＋主任）。</div>'; $('#pcount').textContent=''; lastPos=[]; return; }
+  const rows=PP.filter(p=>titleMatch(p,terms)&&posFilter(p)&&(!X.ucat||p.單位類別===X.ucat));
+  const combos={}; rows.forEach(p=>{ const k=`${p.官等||'—'}｜${p.職等||'—'}`; const c=combos[k]=combos[k]||{k,官等:p.官等||'—',職等:p.職等||'—',列法:p.職等列法,ags:new Set(),rows:[],n:0}; c.ags.add(p.機關); c.rows.push(p); c.n+=(p.員額||0); });
+  const list=Object.values(combos).sort((a,b)=>b.ags.size-a.ags.size||b.n-a.n), totalAg=new Set(rows.map(p=>p.機關)).size;
+  $('#pcount').textContent=`${rows.length} 列、${totalAg} 個機關、${list.length} 種官職等組合（單列 ${list.filter(c=>c.列法==='單列').length}、跨列 ${list.filter(c=>c.列法==='跨列').length}、無職等 ${list.filter(c=>c.列法==='無職等').length}）`;
+  if(!rows.length){ host.innerHTML='<div class="empty">沒有符合的列。</div>'; lastPos=[]; return; }
+  let h=`<div class="tablewrap"><table id="pgrade"><thead><tr><th>並列</th><th>官等</th><th>職等</th><th>列法</th><th class="num">機關數</th><th class="num">機關占比</th><th class="num">列數</th><th class="num">員額</th></tr></thead><tbody>`+
+    list.map(c=>`<tr><td><input type="checkbox" class="pcmp" data-k="${esc(c.k)}" ${X.sel.includes(c.k)?'checked':''}></td><td>${esc(c.官等)}</td><td>${esc(c.職等)}</td><td>${esc(c.列法)}</td><td class="num">${c.ags.size}</td><td class="num">${(c.ags.size/totalAg*100).toFixed(1)}%</td><td class="num">${c.rows.length}</td><td class="num">${c.n}</td></tr>`).join('')+'</tbody></table></div>';
+  const sel=X.sel.filter(k=>combos[k]);
+  h += sel.length ? `<div class="grid2" style="margin-top:10px;grid-template-columns:1fr 1fr">`+sel.map(k=>{ const c=combos[k]; return `<div class="box"><h3>${esc(c.官等)}｜${esc(c.職等)}（${c.列法}）<span class="spacer"></span><span class="muted small">${c.ags.size} 機關</span></h3><div class="tablewrap" style="max-height:50vh"><table><thead><tr><th>機關</th><th>層級</th><th>單位</th><th class="num">員額</th><th>備註</th></tr></thead><tbody>`+c.rows.sort(byLvName).map(p=>`<tr><td>${alink(p.機關)}</td><td>${agOf(p).層級}</td><td class="small">${esc(p.單位)}</td><td class="num">${hcCell(p)}</td><td class="small">${esc(p.備註)}</td></tr>`).join('')+'</tbody></table></div></div>'; }).join('')+'</div>'
+    : '<div class="muted small" style="margin-top:6px">勾選「並列」可同時展開最多 2 個組合的機關清單；機關占比分母為符合條件的機關數。</div>';
+  host.innerHTML=h;
+  document.querySelectorAll('.pcmp').forEach(cb=>cb.onchange=()=>{ const k=cb.dataset.k; if(cb.checked){ X.sel.push(k); if(X.sel.length>2) X.sel.shift(); } else X.sel=X.sel.filter(x=>x!==k); renderPos(); });
+  lastPos=[['官等','職等','列法','機關數','列數','員額','機關清單'],...list.map(c=>[c.官等,c.職等,c.列法,c.ags.size,c.rows.length,c.n,[...c.ags].join('；')])];
+}
+function renderPosTrack(){
+  const host=$('#presult'); const base=PP.filter(posFilter);
+  if(!X.tracks.size){
+    const cnt={}; base.forEach(p=>{ const c=cnt[p.軌別]=cnt[p.軌別]||{ags:new Set(),n:0,rows:0}; c.ags.add(p.機關); c.n+=(p.員額||0); c.rows++; });
+    const list=Object.entries(cnt).sort((a,b)=>b[1].rows-a[1].rows);
+    $('#pcount').textContent=`總覽：${base.length} 列、${new Set(base.map(p=>p.機關)).size} 個機關、${list.length} 種軌別（點上方軌別可篩選）`;
+    host.innerHTML=`<div class="tablewrap"><table id="ptrackAll"><thead><tr><th>軌別</th><th class="num">列數</th><th class="num">機關數</th><th class="num">員額</th></tr></thead><tbody>`+list.map(([k,c])=>`<tr><td>${esc(k)}</td><td class="num">${c.rows}</td><td class="num">${c.ags.size}</td><td class="num">${c.n}</td></tr>`).join('')+'</tbody></table></div>';
+    lastPos=[['軌別','列數','機關數','員額'],...list.map(([k,c])=>[k,c.rows,c.ags.size,c.n])]; return;
+  }
+  const rows=base.filter(p=>X.tracks.has(p.軌別)); const byAg={}; rows.forEach(p=>(byAg[p.機關]=byAg[p.機關]||[]).push(p));
+  const ags=Object.entries(byAg).sort((a,b)=>byName[a[0]].層級-byName[b[0]].層級||b[1].length-a[1].length);
+  $('#pcount').textContent=`${ags.length} 個機關、${rows.length} 列、員額 ${rows.reduce((s,p)=>s+(p.員額||0),0)}（軌別：${[...X.tracks].join('、')}）`;
+  host.innerHTML = ags.length ? ags.map(([n,ps])=>{ const a=byName[n]; const tc={}; ps.forEach(p=>tc[p.軌別]=(tc[p.軌別]||0)+1);
+    return `<details><summary>${esc(n)} <span class="badge lv">${a.層級}級</span><span class="badge">${esc(a.類型)}</span><span class="muted small">${esc(a.部會)}・${ps.length} 列・員額 ${ps.reduce((s,p)=>s+(p.員額||0),0)}・${Object.entries(tc).map(([k,v])=>`${k} ${v}`).join('、')}</span></summary><div class="tablewrap" style="max-height:50vh"><table><thead><tr><th>序</th><th>單位</th><th>職稱</th><th>官等</th><th>職等</th><th class="num">員額</th><th>軌別</th><th>依據</th><th>備註</th></tr></thead><tbody>`+
+      ps.sort((x,y)=>(x.序||0)-(y.序||0)).map(p=>`<tr><td>${p.序??''}</td><td class="small">${esc(p.單位)}</td><td>${esc(p.職稱)}</td><td>${esc(p.官等)}</td><td>${esc(p.職等)}</td><td class="num">${hcCell(p)}</td><td class="small">${esc(p.軌別)}</td><td class="small">${esc(p.軌別依據)}</td><td class="small">${esc(p.備註)}</td></tr>`).join('')+`</tbody></table></div><div class="small" style="margin:4px 0">${alink(n)}（開啟機關詳情）</div></details>`; }).join('') : '<div class="empty">沒有符合的機關。</div>';
+  lastPos=[POS_HDR,...rows.map(posCsv)];
+}
+function renderPos(){ ({title:renderPosTitle, grade:renderPosGrade, track:renderPosTrack})[X.mode](); }
+function renderPosChips(){
+  chips($('#pLv'),'層級',[1,2,3,4],X.lv,v=>{X.lv=X.lv===v?null:v;renderPosChips();renderPos();},v=>new Set(PP.filter(p=>agOf(p)&&agOf(p).層級===v).map(p=>p.機關)).size);
+  const th=$('#pTracks'); th.innerHTML='<span class="lbl">軌別（可多選）</span>'; TRACKS.forEach(t=>{ const b=document.createElement('button'); b.className='chip'+(X.tracks.has(t)?' on':''); b.textContent=`${t} ${PP.filter(p=>p.軌別===t).length}`; b.onclick=()=>{ X.tracks.has(t)?X.tracks.delete(t):X.tracks.add(t); renderPosChips(); renderPos(); }; th.appendChild(b); });
+}
+$('#pdept').insertAdjacentHTML('beforeend',depts.map(d=>`<option>${esc(d)}</option>`).join(''));
+$('#pkind').insertAdjacentHTML('beforeend',kinds.map(d=>`<option>${esc(d)}</option>`).join(''));
+$('#pucat').insertAdjacentHTML('beforeend',UCATS.map(d=>`<option>${esc(d)}</option>`).join(''));
+$('#pqlist').innerHTML=[...new Set(PP.map(p=>p.職稱))].sort((a,b)=>a.localeCompare(b,'zh-Hant')).map(t=>`<option value="${esc(t)}">`).join('');
+function setPosMode(m){ X.mode=m; X.sel=[]; document.querySelectorAll('.pmode').forEach(b=>b.classList.toggle('on',b.dataset.m===m)); $('#pmodeHelp').textContent=PHELP[m]; $('#pqRow').style.display=m==='track'?'none':''; $('#pucat').style.display=m==='grade'?'':'none'; $('#pTracks').style.display=m==='track'?'':'none'; renderPos(); }
+document.querySelectorAll('.pmode').forEach(b=>b.onclick=()=>setPosMode(b.dataset.m));
+$('#pq').addEventListener('input',e=>{X.q=e.target.value;X.sel=[];renderPos();});
+$('#pexact').onchange=e=>{X.exact=e.target.checked;renderPos();};
+$('#psyn').onchange=e=>{X.syn=e.target.checked;renderPos();};
+$('#pdept').onchange=e=>{X.dept=e.target.value;renderPos();};
+$('#pkind').onchange=e=>{X.kind=e.target.value;renderPos();};
+$('#pucat').onchange=e=>{X.ucat=e.target.value;X.sel=[];renderPos();};
+$('#presult').addEventListener('click',e=>{ const l=e.target.closest('.plink'); if(!l) return; e.preventDefault(); const n=l.dataset.a; if(!byName[n]) return; S.q=n; $('#q').value=n; S.cur=n; searchAgencies(); showAgency(byName[n]); document.querySelector('.tabs button[data-tab=search]').click(); });
+$('#pcsv').onclick=()=>{ if(!lastPos.length) return; const csv='﻿'+lastPos.map(r=>r.map(v=>`"${String(v??'').replace(/"/g,'""')}"`).join(',')).join('\r\n'); const b=new Blob([csv],{type:'text/csv'}); const u=URL.createObjectURL(b); const a=document.createElement('a'); a.href=u; a.download=`編制表查詢_${{title:'職稱',grade:'官職等',track:'軌別'}[X.mode]}_${DATA.built.slice(0,10)}.csv`; a.click(); URL.revokeObjectURL(u); };
+renderPosChips(); setPosMode('title');
 
 // =====================================================================
 // 指標說明與資料狀態
