@@ -172,6 +172,22 @@ if a.before:
         if b['指標']['員額合計'] != r['指標']['員額合計']: diffs.append((r['機關'], b['指標']['員額合計'], r['指標']['員額合計']))
     notes.append('INFO 員額合計前後差異：' + '；'.join(f'{n} {x}→{y}' for n, x, y in diffs))
 
+
+# 編制表查詢分頁衍生欄位（2026-11-25）：職等列法／軌別／軌別依據／單位類別
+PP = [p for p in P if p['計入']]
+tk = collections.Counter(p['軌別'] for p in PP)
+check(all(all(k in p for k in ('職等列法', '軌別', '軌別依據', '單位類別')) for p in P), '每列皆有 職等列法／軌別／軌別依據／單位類別 欄')
+check(all(p['職等列法'] == ('無職等' if p['職等下限'] is None else ('單列' if p['職等下限'] == p['職等上限'] else '跨列')) for p in PP), '職等列法 = 由職等上下限推導（單列／跨列／無職等）')
+check(all(p['軌別'] and p['軌別依據'] for p in PP), '計入列皆有軌別與依據，不留空')
+check(tk['多軌（文／警／軍）'] == 141 and {p['機關'] for p in PP if p['軌別'] == '多軌（文／警／軍）'} == {p['機關'] for p in PP if p['機關'].startswith('海洋委員會海巡署')} - {'海洋委員會海巡署'}, f'多軌（文／警／軍）{tk["多軌（文／警／軍）"]} 列，機關恰為海巡署所屬 9 個分署／中心（本部署長由副主委兼任、其餘列為文職）')
+check(all(p['軌別'].startswith(('單軌（文）', '單軌（警）', '雙軌', '多軌', '兼任', '單軌（軍）')) for p in PP if re.search(r'警[佐正監]', p['官等'] or '')), '官等含警佐／警正／警監者皆歸警察官（單軌或併用）')
+check(all('醫事' in p['軌別'] or p['軌別'].startswith('兼任') for p in PP if re.search(r'師級|士（生）級|士\(生\)級', p['官等'] or '')), '官等含師級／士（生）級者皆歸醫事')
+pol = [p for p in PP if '政務' in p['軌別']]
+check(len(pol) == 70 and all(('特任' in (p['官等'] or '') + (p['備註'] or '')) or re.match(r'^(一、)?比照簡任第', p['備註'] or '') for p in pol), f'政務軌別 {len(pol)} 列（特任或備註起首比照簡任；與政務人員統計 20261118 之特任＋比照列數一致）')
+check(all(p['員額'] == 0 for p in PP if p['軌別'].startswith('兼任')) and all(p['軌別'] != '兼任（由他職兼任）' for p in PP if (p['員額'] or 0) > 0), '兼任（由他職兼任）列員額皆 0；員額 >0 者不歸兼任')
+check(tk['待審'] == 0 and tk['無官等（原文）'] <= 80, f'待審 {tk["待審"]} 列；無官等（原文）{tk["無官等（原文）"]} 列（主要為檢察機關員額表）')
+check(all((p['單位類別'] is None) == (not p['單位']) for p in PP) and all(p['單位類別'] == '人事' for p in PP if p['單位'] and '人事' in p['單位']), '單位類別僅在單位欄有值時給定；人事單位歸人事')
+check(sum(1 for p in PP if p['職稱'] == '主任' and p['單位類別'] == '人事' and by[p['機關']]['層級'] == 3) == 121, '三級機關人事單位主任 121 列（B 官職等比較基準）')
 print('\n'.join(notes)); print('\n'.join(fails))
 print(f'\n結果：PASS {len(notes)}、FAIL {len(fails)}')
 sys.exit(1 if fails else 0)

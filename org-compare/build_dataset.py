@@ -7,7 +7,7 @@
 
 輸出：
     data/agencies.json   每機關一筆：基本資料 + 結構指標 + 品質旗標
-    data/positions.json  編制表明細（每職稱一列，含數值化員額、職等上下限、是否主管、是否簡任、列品質）
+    data/positions.json  編制表明細（每職稱一列，含數值化員額、職等上下限、是否主管、是否簡任、列品質、職等列法／軌別／軌別依據／單位類別）
     data/articles.json   組織法規與處務規程條文
     data/meta.json       資料版本（總表產生時間、整備時間、機關數）
     data/建檔檢核.md     建檔時語意檢查命中的列與機關（待審清單）
@@ -428,6 +428,50 @@ COUNT_METRICS = ['員額合計', '副首長數', '副首長兼任數', '主任�
 WHITELIST_NOTES = {'人工補登（已對源）', '表內驗算相符（合計取自明細控制列）', '警示：頁眉'}
 WHITELIST_PREFIX = ('括號語意待審', '員額回填（原文字形解析', '法定員額（條文區間）', 'Codex差異已釐清', '驗算結果由程式重算', '法定員額（附表區間）')
 
+
+# ---------------------------------------------------------------------------
+# 編制表查詢分頁用衍生欄位（2026-11-25 計畫 3.1）：職等列法／軌別／軌別依據／單位類別。只讀原文字樣推導，不覆寫原文；不確定者標待審。
+# ---------------------------------------------------------------------------
+TRACK_MED_TITLE = re.compile(r'(醫師|護理師|護士|護理長|護理督導長|藥師|藥劑生|治療師|治療生|心理師|營養師|放射師|放射士|檢驗師|檢驗生|助產師|助產士|聽力師|牙體技術師|牙體技術生|驗光師|驗光生|醫事檢驗|技術師|技術士|語言治療|呼吸治療|護理佐理員)')
+TRACK_MED_RANK = re.compile(r'師級|師[（(][一二三四\S]?[)）]級|師\([一二三四]\)|士[（(]生[)）]級|士級|生級')
+TRACK_HIRE = re.compile(r'聘任|教育人員|教授|教師|研究員|講師|聘用')
+TRACK_ALT = re.compile(r'或列簡任|必要時得比照|得比照.{0,8}資格|比照.{0,6}資格聘任')
+def unit_category(unit):
+    u = nfkc(unit) if isinstance(unit, str) else ''
+    if not u: return None
+    if '人事' in u: return '人事'
+    if re.search(r'主計|會計|統計', u): return '主計（含會計、統計）'
+    if '政風' in u: return '政風'
+    return '其他單位'
+def track_fields(rank, grade, note, title, n, paren_meaning, lo, hi):
+    """回傳 (職等列法, 軌別, 軌別依據, 單位類別由呼叫端另算)。"""
+    rank, grade, note, title = (nfkc(x) if isinstance(x, str) else '' for x in (rank, grade, note, title))
+    listing = '無職等' if lo is None or (isinstance(lo, float) and pd.isna(lo)) else ('單列' if lo == hi else '跨列')
+    hits, cats = [], []
+    def add(c, why):
+        if c not in cats: cats.append(c); hits.append(why)
+    if (n == 0) and (re.search(r'由.{1,20}兼任', note) or paren_meaning == '兼任'):
+        return listing, '兼任（由他職兼任）', '員額 0；' + (f'備註「{re.search(r"由.{1,20}兼任", note).group(0)}」' if re.search(r'由.{1,20}兼任', note) else '括號語意兼任'), None
+    if re.search(r'簡任|薦任|委任', rank): add('文', f'官等「{rank}」')
+    if re.search(r'警[佐正監]', rank): add('警', f'官等「{rank}」')
+    if re.search(r'將|校|尉|士官', rank): add('軍', f'官等「{rank}」')
+    if '關務' in rank or '關務' in grade: add('關務', f'職等「{grade}」' if '關務' in grade else f'官等「{rank}」')
+    if TRACK_MED_RANK.search(rank) or TRACK_MED_RANK.search(grade): add('醫事', f'官等「{rank}」' if TRACK_MED_RANK.search(rank) else f'職等「{grade}」')
+    elif '醫事人員' in note: add('醫事', '備註「醫事人員」')
+    elif not rank and TRACK_MED_TITLE.search(title): add('醫事', f'職稱「{title}」（官等空白）')
+    if '特任' in rank or '特任' in note or re.match(r'^(一、)?比照簡任第', note): add('政務', '官等「特任」' if '特任' in rank else f'備註「{note[:14]}」')
+    if not cats and TRACK_HIRE.search(rank + note + title): add('聘任', ('官等' if TRACK_HIRE.search(rank) else '備註／職稱') + f'「{TRACK_HIRE.search(rank + note + title).group(0)}」')
+    if not cats:
+        if rank: track, basis = '待審', f'官等「{rank}」未能歸類'
+        elif grade: track, basis = '無官等（職等另列）', f'官等欄空白，職等「{grade}」（如中央銀行、檢察機關員額表）'
+        elif n == 0: track, basis = '員額 0（無官等職等）', '官等、職等欄皆空白且員額 0（多為單位主管由他職兼任而備註未載）'
+        else: track, basis = '無官等（原文）', '官等、職等欄皆空白，備註無任用字樣'
+    else:
+        track = ('單軌（' if len(cats) == 1 else '雙軌（' if len(cats) == 2 else '多軌（') + '／'.join(cats) + '）'
+        basis = '；'.join(dict.fromkeys(hits))
+    if TRACK_ALT.search(note): basis += '；備註另有擇一／比照條款「' + TRACK_ALT.search(note).group(0) + '」'
+    return listing, track, basis, None
+
 def build(master, out, fixes_path=None, attach_units_path=None):
     global ATTACH_UNITS
     if attach_units_path and os.path.exists(attach_units_path):
@@ -535,6 +579,7 @@ def build(master, out, fixes_path=None, attach_units_path=None):
 
     positions, checklog = [], []
     for _, r in det.iterrows():
+        _listing, _track, _basis, _ = track_fields(r['官等'], r['職等'], r['備註'], r['職稱'], (None if pd.isna(r['n']) else int(r['n'])), r['paren_meaning'], r['職等下限'], r['職等上限'])
         positions.append({k: (None if (isinstance(v, float) and pd.isna(v)) or v is None else v) for k, v in {
             '機關': r['機關名稱'], '分表': r['分表'], '序': int(r['序']) if r['序'] != 9999 else None, '單位': r['單位'], '職稱': r['職稱'],
             '官等': r['官等'] or None, '職等': r['職等'], '員額': None if pd.isna(r['n']) else int(r['n']),
@@ -550,7 +595,8 @@ def build(master, out, fixes_path=None, attach_units_path=None):
             '法定下限': (int(r['法定下限']) if pd.notna(r.get('法定下限')) else None), '法定上限': (int(r['法定上限']) if pd.notna(r.get('法定上限')) else None),
             '單位_原值': r['單位_原值'] if isinstance(r['單位_原值'], str) else None, '單位重組說明': r['單位重組說明'] if isinstance(r['單位重組說明'], str) else None,
             '合併計列_併入序': (int(r['合併計列_併入序']) if pd.notna(r['合併計列_併入序']) else None),
-            '原始列': (json.loads(r['原始列']) if isinstance(r['原始列'], str) else None), '修正紀錄': r['修正紀錄'] if isinstance(r['修正紀錄'], str) else None}.items()})
+            '原始列': (json.loads(r['原始列']) if isinstance(r['原始列'], str) else None), '修正紀錄': r['修正紀錄'] if isinstance(r['修正紀錄'], str) else None,
+            '職等列法': _listing, '軌別': _track, '軌別依據': _basis, '單位類別': unit_category(r['單位'])}.items()})
         if isinstance(r['列品質'], str) and r['列品質']:
             checklog.append((r['機關名稱'], int(r['序']) if r['序'] != 9999 else None, r['職稱'], r['列品質'], r['列品質說明']))
 
