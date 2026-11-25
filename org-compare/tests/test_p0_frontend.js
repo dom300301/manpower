@@ -137,6 +137,58 @@ const check = (c, m) => out.push((c ? 'PASS ' : 'FAIL ') + m);
   await pg.fill('#q', '公共工程委員會'); await pg.waitForTimeout(300); await pg.click('#alist .card'); await pg.waitForTimeout(300);
   const det4 = await pg.$eval('#adetail', e => e.textContent);
   check(/法定員額依據：行政院公共工程委員會組織條例第8條/.test(det4) && /未加總/.test(det4), '工程會詳情：法定員額依據條號與「未加總」說明');
+  // 編制表查詢分頁（A 職稱／B 官職等／C 軌別）：期望值由 positions.json 推導
+  const PJ = JSON.parse(require('fs').readFileSync(process.env.POS_JSON || (__dirname + '/../output/positions_snapshot.json'), 'utf8')).filter(p => p.計入);
+  const AJ = Object.fromEntries(JSON.parse(require('fs').readFileSync(process.env.AGENCIES_JSON || (__dirname + '/../output/agencies_snapshot.json'), 'utf8')).agencies.map(a => [a.機關, a]));
+  await pg.click('.tabs button[data-tab=pos]'); await pg.waitForTimeout(200);
+
+  check(await pg.isVisible('#page-pos') && /職稱/.test(await pg.textContent('#pmodeHelp')), '編制表查詢分頁可切換，A 模式說明顯示');
+  // A 職稱查詢：總幹事
+  await pg.fill('#pq', '總幹事'); await pg.waitForTimeout(300);
+  const expA = PJ.filter(p => p.職稱 === '總幹事'); const expAg = new Set(expA.map(p => p.機關)).size;
+  const cnt = await pg.textContent('#pcount');
+  check(new RegExp(`${expAg} 個機關、${expA.length} 列`).test(cnt), `A 總幹事：${cnt}（預期 ${expAg} 機關、${expA.length} 列）`);
+  const rowsA = await pg.$$eval('#presult tbody tr', trs => trs.length); check(rowsA === expA.length, `A 表列數 ${rowsA} = ${expA.length}`);
+  // 同義詞：科長 → 組長／科長／課長
+  await pg.fill('#pq', '科長'); await pg.waitForTimeout(300); const cS = await pg.textContent('#pcount');
+  const expS = PJ.filter(p => ['組長', '科長', '課長'].includes(p.職稱));
+  check(/同義詞：組長／科長／課長/.test(cS) && new RegExp(`${expS.length} 列`).test(cS), `A 同義詞展開：${cS}`);
+  await pg.uncheck('#psyn'); await pg.waitForTimeout(300); const cS2 = await pg.textContent('#pcount');
+  check(new RegExp(`${PJ.filter(p => p.職稱 === '科長').length} 列`).test(cS2) && !/同義詞/.test(cS2), `A 取消同義詞：${cS2}`);
+  await pg.check('#psyn');
+  // 層級篩選 3 級
+  await pg.fill('#pq', '總幹事'); const lv3 = await pg.$$('#pLv .chip'); for (const c of lv3) { if ((await c.textContent()).startsWith('3 ')) await c.click(); } await pg.waitForTimeout(300);
+  const exp3 = expA.filter(p => AJ[p.機關].層級 === 3); check(new RegExp(`${exp3.length} 列`).test(await pg.textContent('#pcount')), `A 層級 3 篩選：${exp3.length} 列`);
+  for (const c of await pg.$$('#pLv .chip')) { if ((await c.textContent()).startsWith('3 ')) await c.click(); } await pg.waitForTimeout(200);
+  // B 官職等比較：三級＋人事＋主任
+  await pg.click('.pmode[data-m=grade]'); await pg.waitForTimeout(200); await pg.fill('#pq', '主任'); await pg.uncheck('#psyn');
+  for (const c of await pg.$$('#pLv .chip')) { if ((await c.textContent()).startsWith('3 ')) await c.click(); }
+  await pg.selectOption('#pucat', '人事'); await pg.waitForTimeout(400);
+  const expB = PJ.filter(p => p.職稱 === '主任' && AJ[p.機關].層級 === 3 && p.單位類別 === '人事');
+  const combos = new Set(expB.map(p => `${p.官等 || '—'}｜${p.職等 || '—'}`));
+  const cB = await pg.textContent('#pcount'); const rowsB = await pg.$$eval('#pgrade tbody tr', trs => trs.map(t => [...t.children].map(c => c.textContent)));
+  check(new RegExp(`${expB.length} 列、${new Set(expB.map(p => p.機關)).size} 個機關、${combos.size} 種`).test(cB) && rowsB.length === combos.size, `B 三級人事主任：${cB}；分布列 ${rowsB.length}`);
+  const sumAg = rowsB.reduce((s, r) => s + Number(r[4]), 0); check(sumAg === new Set(expB.map(p => p.機關)).size || sumAg >= new Set(expB.map(p => p.機關)).size, `B 分布機關數加總 ${sumAg}（機關可能跨組合）`);
+  const top = rowsB[0]; check(/單列|跨列|無職等/.test(top[3]), `B 最多組合：${top.slice(1, 7).join('｜')}`);
+  await pg.click('#pgrade tbody tr:nth-child(1) .pcmp'); await pg.click('#pgrade tbody tr:nth-child(2) .pcmp'); await pg.waitForTimeout(300);
+  const boxes = await pg.$$eval('#presult .grid2 .box', bs => bs.map(b => b.querySelector('h3').textContent)); check(boxes.length === 2, `B 並列兩組合：${boxes.join(' ‖ ')}`);
+  // C 資格軌別：多軌（文／警／軍）
+  await pg.selectOption('#pucat', ''); await pg.click('.pmode[data-m=track]'); await pg.waitForTimeout(200);
+  for (const c of await pg.$$('#pLv .chip')) { if ((await c.textContent()).startsWith('3 ')) await c.click(); } await pg.waitForTimeout(300);
+  const allRows = await pg.$$eval('#ptrackAll tbody tr', trs => trs.map(t => t.children[0].textContent)); check(allRows.includes('多軌（文／警／軍）') && allRows.includes('單軌（文）'), `C 總覽 ${allRows.length} 種軌別`);
+  for (const c of await pg.$$('#pTracks .chip')) { if ((await c.textContent()).startsWith('多軌（文／警／軍）')) await c.click(); } await pg.waitForTimeout(400);
+  const expC = new Set(PJ.filter(p => p.軌別 === '多軌（文／警／軍）').map(p => p.機關));
+  const sums = await pg.$$eval('#presult details > summary', ss => ss.map(s => s.textContent.split(' ')[0]));
+  check(sums.length === expC.size && sums.filter(s => s.startsWith('海洋委員會海巡署')).length === 9, `C 多軌（文／警／軍）：${sums.length} 機關（海巡 9＋${sums.filter(s => !s.startsWith('海洋委員會海巡署')).join('、')}）`);
+  await pg.click('#presult details:nth-of-type(1) summary'); await pg.waitForTimeout(200);
+  const basis = await pg.$eval('#presult details[open] tbody tr td:nth-child(8)', e => e.textContent); check(/官等「/.test(basis), `C 依據欄顯示原文：${basis}`);
+  // CSV
+  const csv = await pg.evaluate(() => { const orig = URL.createObjectURL; URL.createObjectURL = (blob) => { blob.text().then(t => window.__csv = t); return 'blob:x'; }; document.getElementById('pcsv').click(); URL.createObjectURL = orig; return new Promise(r => setTimeout(() => r(window.__csv), 300)); });
+  const nCsv = (csv || '').trim().split(/\r?\n/).length - 1; check(nCsv === PJ.filter(p => p.軌別 === '多軌（文／警／軍）').length, `C CSV 列數 ${nCsv} = 明細列數`);
+  // 連結到機關詳情
+  await pg.click('#presult details[open] .plink'); await pg.waitForTimeout(300);
+  check(await pg.isVisible('#page-search') && /海巡署|軍醫局/.test(await pg.textContent('#adetail .dtitle')), `plink 跳到機關詳情：${await pg.textContent('#adetail .dtitle')}`);
+  await pg.click('.tabs button[data-tab=search]'); await pg.waitForTimeout(200);
   check(errs.length === 0, `無 console/page 錯誤（${errs.length}）${errs.slice(0, 2).join(' | ')}`);
   await b.close(); console.log(out.join('\n')); console.log(`\n結果：PASS ${out.filter(o => o.startsWith('PASS')).length}、FAIL ${out.filter(o => o.startsWith('FAIL')).length}`);
   process.exit(out.some(o => o.startsWith('FAIL')) ? 1 : 0);
